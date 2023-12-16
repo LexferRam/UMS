@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import './globals.css'
+import { ThemeProvider } from '@/context/ThemeProvider'
+import '@/styles/globals.css'
+import Providers from '@/context/Providers'
+import "react-datetime/css/react-datetime.css";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,7 +19,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Providers>
+            {children}
+          </Providers>
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

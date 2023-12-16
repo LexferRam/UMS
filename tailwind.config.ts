@@ -1,20 +1,14 @@
-import type { Config } from 'tailwindcss'
+import { shadcnPreset } from './src/lib/shadcn-preset'
+// import type { Config } from 'tailwindcss'
 
-const config: Config = {
+
+const config = {
+  presets: [shadcnPreset], // permite empaquetar y reusar funcionalidades que traigamos al config, pero en lugar de solo traer el plugin te permite traer la configuracion y hacerle merge con la configuracion existente.
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
-  theme: {
-    extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      },
-    },
-  },
-  plugins: [],
+  ]
 }
+
 export default config
