@@ -2,20 +2,20 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 
-const UsersAdmin =  () => {
+const UsersAdmin = () => {
 
     const TABLE_HEAD = ["Name", "Email", "Employed", ""];
 
     const [users, setUsers] = useState([])
-    
+
     useEffect(() => {
         const getUsers = async () => {
             let respUsers = await fetch('http://localhost:3000/api/admin')
-            let users = await respUsers.json()  
+            let users = await respUsers.json()
             setUsers(users)
         }
         getUsers()
-    },[])
+    }, [])
 
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>
@@ -39,7 +39,7 @@ const UsersAdmin =  () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map(({ fullname, email, _id, lastname }: any) => ({ name: fullname, job: email, date: _id, lastname })).map(({ name, job, date,lastname }: any, index: any) => {
+                        {users.map(({ fullname, email, _id, lastname, isActive }: any) => ({ name: fullname, job: email, date: isActive, lastname })).map(({ name, job, date, lastname }: any, index: any) => {
                             const isLast = index === users.length - 1;
                             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
@@ -71,12 +71,16 @@ const UsersAdmin =  () => {
                                         </p>
                                     </td>
                                     <td className={classes}>
-                                        <p
-                                            color="blue-gray"
-                                            className="font-normal"
-                                        >
-                                            {date}
-                                        </p>
+                                        {!date ? (
+                                            <span className="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                Activo
+                                            </span>
+                                        ) : (
+                                            <span className="inline-block bg-red-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                Desactivo
+                                            </span>
+                                        )}
+
                                     </td>
                                     <td className={classes}>
                                         <p

@@ -6,6 +6,7 @@ var eventSchema = new Schema({
   title: { type: String, required: true },
   start: { type: Date, required: true },
   end: { type: Date, required: true },
+  patient: { type: String, required: true},
 });
 
 const Event = models.Event || mongoose.model('Event', eventSchema);

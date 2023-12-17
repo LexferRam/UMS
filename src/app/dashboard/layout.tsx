@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
-import Providers from '@/context/Providers'
 import AsideMenuOptions from '@/components/sidebar/AsideMenuOptions'
 import { MainNav } from '@/components/sidebar/MainNav'
 

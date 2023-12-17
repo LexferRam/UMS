@@ -15,13 +15,16 @@ const userSchema = new Schema({
     },
     isActive: {
         type: Boolean,
-        default: true
+        default: false
     },
     role: {
         type: String,
-        required: false
+        required: false,
+        enum: ['admin', 'specialist'],
+        default: 'specialist'
     },
-    events : [{ type: Schema.Types.ObjectId, ref: 'Event' }]
+    events : [{ type: Schema.Types.ObjectId, ref: 'Event' }],
+    asignedPatients : [{ type: Schema.Types.ObjectId, ref: 'Patient' }]
 },
     { timestamps: true }
 );

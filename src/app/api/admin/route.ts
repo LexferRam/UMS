@@ -40,16 +40,22 @@ export async function POST(req: NextRequest) {
         if(token?.email !== 'lexferramirez@gmail.com') return NextResponse.json([])
 
         try {
-            const { _creator, _asignTo, title, start, end } = await req.json()
+            const { _creator, _asignTo, title, start, end, patient } = await req.json()
             await connectMongoDB()
              
-            const event = await Event.create({_creator, _asignTo, title, start, end})
+            const event = await Event.create({_creator, _asignTo, title, start, end, patient})
 
                         // ? Buscar user por campo _asignTo
                         let userFound = await User.findById({_id: _asignTo})
             
                         // ? hacer push en su propiedad "events"
                         await userFound.events.push(event)
+
+                        // ? guardar informacion del nueva del user
+                        await userFound.save()
+
+                        // ? hacer push en su propiedad "patients"
+                        await userFound.asignedPatients.push(patient)
             
                         // ? guardar informacion del nueva del user
                         await userFound.save()
