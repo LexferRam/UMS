@@ -23,7 +23,7 @@ const AdminUserPage = () => {
       <div className="flex items-start min-h-screen">
         <div className="container max-w-6xl px-5 mx-auto my-4">
           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="p-5 bg-white rounded shadow-lg hover:shadow-2xl">
+            <div className="p-5 bg-white rounded shadow-lg hover:shadow-2xl cursor-pointer">
               <div className="flex items-center space-x-4">
                 <div>
                   <div className="flex items-center justify-center w-12 h-12 rounded-full bg-fuchsia-50 text-fuchsia-400">
@@ -38,7 +38,7 @@ const AdminUserPage = () => {
                 </div>
               </div>
             </div>
-            <div className="p-5 bg-white rounded shadow-lg hover:shadow-2xl">
+            <div className="p-5 bg-white rounded shadow-lg hover:shadow-2xl cursor-pointer">
               <div className="flex items-center space-x-4">
                 <div>
                   <div className="flex items-center justify-center w-12 h-12 rounded-full bg-cyan-50 text-cyan-400">
@@ -54,7 +54,7 @@ const AdminUserPage = () => {
                 </div>
               </div>
             </div>
-            <div className="p-5 bg-white rounded shadow-lg hover:shadow-2xl">
+            <div className="p-5 bg-white rounded shadow-lg hover:shadow-2xl cursor-pointer">
               <div className="flex items-center space-x-4">
                 <div>
                   <div className="flex items-center justify-center w-12 h-12 rounded-full bg-amber-50 text-amber-400">
