@@ -9,10 +9,10 @@ export default function Home() {
       <div className='hidden md:block w-full h-ful bg-cover bg-[url("/login1.png")] bg-bottom brightness-[80%]'>
       </div>
 
-      <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 px-6 lg:px-8">
+      <div className="min-h-screen bg-[#eef2f6] flex flex-col justify-center py-12 px-6 lg:px-8">
 
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-6 shadow-2xl rounded-2xl sm:px-10">
+        <div className="mt-8 sm:mx-auto sm:w-full shadow-2xl sm:max-w-md">
+          <div className="bg-white py-12 px-6 rounded-2xl sm:px-10">
             <div className="flex flex-col items-center sm:mx-auto sm:w-full sm:max-w-md">
               <Image
                 src='/logo9.png'
@@ -23,10 +23,10 @@ export default function Home() {
               />
               <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-700">Un Mundo Sensorial</h2>
             </div>
-            <div className="mb-0 space-y-6 mt-12" >
+            <div className="mb-0 space-y-6 mt-10">
               <div>
                 <label className="block text-sm font-semibold text-gray-500">Nombre de Usuario</label>
-                <div className="mt-2">
+                <div className="mt-4">
                   <input id="userName" name="userName" type="text" autoComplete="userName" className="" />
                 </div>
               </div>
@@ -39,7 +39,7 @@ export default function Home() {
                     callbackUrl: '/dashboard'
                   })}
                 >
-                  <img src="https://berrydashboard.io/free/static/media/social-google.9887eb8eb43729cb99f402cfa0de3c44.svg" className='w-4 h-4 absolute left-[23%] top-3' />
+                  <img src="https://berrydashboard.io/free/static/media/social-google.9887eb8eb43729cb99f402cfa0de3c44.svg" className='w-4 h-4 absolute left-[10%] sm:left-[23%] top-3' />
                   Ingresar con Google
                 </button>
               </div>
