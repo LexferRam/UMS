@@ -4,15 +4,15 @@ import PatientTable from './_components/PatientTable';
 const AdminPatientsPage = async () => {
   const TABLE_HEAD = ["Name", "Email", "Employed", ""];
 
-  const respUser = await fetch('http://localhost:3000/api/admin/patient', {
+  const respPatient = await fetch('http://localhost:3000/api/admin/patient', {
     method: "GET",
     headers: headers()
   }
   )
-  let users = await respUser.json()
+  let patients = await respPatient.json()
 
   return (
-    <PatientTable tableHeaders={TABLE_HEAD} users={users}/>
+    <PatientTable tableHeaders={TABLE_HEAD} patients={patients}/>
   )
 }
 

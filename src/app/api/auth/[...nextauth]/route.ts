@@ -11,13 +11,13 @@ export const authOptions = NextAuth({
         })
     ],
     callbacks: {
-        async session({ session, token }) {
-            const sessionUser = await User.findOne({ email: session?.user?.email });
+        // async session({ session, token }) {
+        //     const sessionUser = await User.findOne({ email: session?.user?.email });
 
-            // session.user && (session.user.id = sessionUser._id.toString())
-            // console.log( {...session.user, id : sessionUser._id.toString()})
-            return {...session.user, id : sessionUser._id.toString()}
-        },
+        //     // session.user && (session.user.id = sessionUser._id.toString())
+        //     // console.log( {...session.user, id : sessionUser._id.toString()})
+        //     return {...session.user, id : sessionUser._id.toString()}
+        // },
         async signIn({ user, account }: any) {
             // console.log("User: " + JSON.stringify(user))
             // console.log("Account: " + JSON.stringify(account))

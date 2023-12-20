@@ -1,11 +1,13 @@
 'use client'
+import { AddReportModal } from '@/components/addReportModal/AddReportModal'
+import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { FC } from 'react'
 
-const PatientTable:FC<{ tableHeaders: string[], users: any}> = ({tableHeaders, users}) => {
+const PatientTable: FC<{ tableHeaders: string[], patients: any }> = ({ tableHeaders, patients }) => {
 
   const router = useRouter()
-  
+
   return (
     <div className='p-5 max-h-[700px] overflow-scroll'>
       <h3>Mis pacientes:</h3>
@@ -29,12 +31,12 @@ const PatientTable:FC<{ tableHeaders: string[], users: any}> = ({tableHeaders, u
             </tr>
           </thead>
           <tbody>
-            {users?.map(({ name, email, _id, lastname }: any) => ({ name: name, job: email, date: _id, lastname })).map(({ name, job, date, lastname }: any, index: any) => {
-              const isLast = index === users.length - 1;
+            {patients?.map(({ name, email, _id, isActive }: any) => ({ name: name, job: email, _id,isActive })).map(({ name, job, _id,isActive }: any, index: any) => {
+              const isLast = index === patients.length - 1;
               const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
               return (
-                <tr key={date}>
+                <tr key={_id}>
                   <td className={classes}>
                     <p
                       color="blue-gray"
@@ -56,17 +58,29 @@ const PatientTable:FC<{ tableHeaders: string[], users: any}> = ({tableHeaders, u
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {date}
+                      <p
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {isActive ? (
+                          <span className="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                            Activo
+                          </span>
+                        ) : (
+                          <span className="inline-block bg-red-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                            Desactivo
+                          </span>
+                        )}
+                      </p>
                     </p>
                   </td>
                   <td className={classes}>
-                    <p
-                      color="blue-gray"
-                      className="font-medium cursor-pointer"
-                      onClick={() => router.push('/dashboard/userHistory', { scroll: false })}
+                    <Button
+                      onClick={() => router.push(`/dashboard/patientHistory/${_id}`, { scroll: false })}
+                      variant="outline"
                     >
-                      ver reportes(historial)
-                    </p>
+                      ver reportes
+                    </Button>
                   </td>
                 </tr>
               );

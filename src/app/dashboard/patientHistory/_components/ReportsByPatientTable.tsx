@@ -1,18 +1,34 @@
 'use client'
+import moment from "moment";
+import Image from "next/image";
+import { FC, useEffect, useState } from "react";
 
-import { FC } from "react";
-import { AddReportModal } from "../addReportModal/AddReportModal";
+const ReportsByPatientTable: FC<{ patientId: string | string[] }> = ({ patientId }) => {
 
-const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders, events }) => {
+    const [reports, setReports] = useState([])
+    const [patient, setPatient] = useState("")
+
+    useEffect(() => {
+
+        const getPatientReports = async () => {
+            const respReports = await fetch(`http://localhost:3000/api/admin/reports/reportId?patientId=${patientId}`)
+            let reports = await respReports.json()
+            setReports(reports[0]?.reports)
+            setPatient(reports[0]?.name)
+        }
+        getPatientReports()
+
+    }, [])
+
 
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>
-            <h3>Mis citas para hoy:</h3>
+            <h3>Historial : <b className="capitalize">{patient}</b></h3>
             <div className="h-full w-full overflow-scroll">
                 <table className="w-full min-w-max table-auto text-left">
                     <thead>
                         <tr>
-                            {tableHeaders.map((head) => (
+                            {["Creado Por", "descripcion", "Fecha de creación", ""].map((head) => (
                                 <th
                                     key={head}
                                     className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
@@ -28,18 +44,19 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                         </tr>
                     </thead>
                     <tbody>
-                        {events?.map(({ title, patient, _id }: any) => ({ name: title, patient, date: _id }))?.map(({ name, patient, date }: any, index: any) => {
-                            const isLast = index === events.length - 1;
+                        {reports?.map(({ createdBy, description, _id, createdAt }: any) => ({ createdBy, description, _id,createdAt })).map(({ createdBy, description, _id,createdAt }: any, index: any) => {
+                            const isLast = index === reports.length - 1;
                             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
                             return (
-                                <tr key={date}>
+                                <tr key={_id}>
                                     <td className={classes}>
                                         <p
                                             color="blue-gray"
-                                            className="font-normal"
+                                            className="font-normal flex gap-2 items-center"
                                         >
-                                            {name}
+                                            <Image src={createdBy?.lastname || ''} alt='' height={50} width={50} className='rounded-full cursor-pointer' />
+                                            {createdBy.name}
                                         </p>
                                     </td>
                                     <td className={classes}>
@@ -47,7 +64,7 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                                             color="blue-gray"
                                             className="font-normal"
                                         >
-                                             {patient.name}
+                                            {description}
                                         </p>
                                     </td>
                                     <td className={classes}>
@@ -55,19 +72,8 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                                             color="blue-gray"
                                             className="font-normal"
                                         >
-                                            {patient.isActive ? (
-                                            <span className="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                Activo
-                                            </span>
-                                        ) : (
-                                            <span className="inline-block bg-red-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                Desactivo
-                                            </span>
-                                        )}
+                                            {moment(createdAt).format('LLLL')}
                                         </p>
-                                    </td>
-                                    <td className={classes}>
-                                        <AddReportModal eventId={date} patient={patient} />
                                     </td>
                                 </tr>
                             );
@@ -75,9 +81,8 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                     </tbody>
                 </table>
             </div>
-            
         </div>
     )
 }
 
-export default EventsTable
+export default ReportsByPatientTable

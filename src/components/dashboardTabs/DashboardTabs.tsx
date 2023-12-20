@@ -6,12 +6,13 @@ import EventsTable from '../eventsTable/EventsTable';
 
 const DashboardTabs: FC<{ userInfo: any }> = ({ userInfo }) => {
 
-    const TABLE_HEAD = ["Nombre", "correo", "Estatus", "Acciones"];
+    const TABLE_HEAD_PATIENT = ["Nombre paciente", "Correo", "Estatus", "Acciones"];
+    const TABLE_HEAD_EVENTS = ["Título de evento", "Nombre paciente", "Estatus", "Acciones"];
     const [selectedCard, setSelectedCard] = useState<'patients' | 'events'>('patients')
 
     const ActiveCard = {
-        'patients': <PatientTable tableHeaders={TABLE_HEAD} users={userInfo[0]?.asignedPatients} />,
-        'events': <EventsTable tableHeaders={TABLE_HEAD} events={eventForToday(userInfo[0]?.events)} />
+        'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={userInfo[0]?.asignedPatients} />,
+        'events': <EventsTable tableHeaders={TABLE_HEAD_EVENTS} events={eventForToday(userInfo[0]?.events)} />
     }
 
     return (

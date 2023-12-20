@@ -1,5 +1,6 @@
 'use client'
 
+import { FC, useEffect, useState } from "react"
 import Combobox from "@/components/ui/Combobox"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,50 +11,34 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@radix-ui/react-dropdown-menu"
-import { useEffect, useState } from "react"
-import Datetime from 'react-datetime';
+import { Textarea } from "../ui/textarea"
+import { useRouter } from "next/navigation"
 
-export function AddReportModal({ onEventAdded }: any) {
+export const AddReportModal: FC<{ eventId: string, patient: any }> = ({ eventId, patient }) => {
 
-    const [title, setTitle] = useState('')
-    const [start, setStart] = useState(new Date())
-    const [end, setEnd] = useState(new Date())
-    const [users, setUsers] = useState([])
-    const [patients, setPatients] = useState([])
-    const [selectedUserValue, setSelectedUserValue] = useState('')
-    const [selectedPatientValue, setSelectedPatientValue] = useState('')
+    const router = useRouter()
 
-    const handleSubmit = (event: any) => {
+    const [description, setDescription] = useState('')
+
+    const handleClick = async (event: any) => {
         event.preventDefault();
 
-        onEventAdded({
-            title,
-            start,
-            end,
-            selectedUserValue,
-            selectedPatientValue
+        const respAddReport = await fetch('http://localhost:3000/api/admin/reports', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                description,
+                associatedEvent: eventId,
+                patient: patient._id
+            })
         })
+        if (respAddReport.ok) {
+            return
+        }
     }
 
-    
-    useEffect(() => {
-        const getUsers = async () => {
-            let respUsers = await fetch('http://localhost:3000/api/admin')
-            let usersResp = await respUsers.json()
-
-            let respPatients = await fetch('http://localhost:3000/api/admin/patient')
-            let patientsResp = await respPatients.json()
-
-            let users = await usersResp.map((user: any) => ({value: user._id, label: user.name}))
-            let patients = await patientsResp.map((patient: any) => ({value: patient._id, label: patient.name}))
-
-            setUsers(users)
-            setPatients(patients)
-        }
-        getUsers()
-    },[])
 
     return (
         <Dialog>
@@ -61,50 +46,19 @@ export function AddReportModal({ onEventAdded }: any) {
                 <Button variant="outline">Agregar Reporte</Button>
             </DialogTrigger>
 
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[450px]">
                 <DialogHeader>
                     <DialogTitle>Nuevo Reporte</DialogTitle>
                 </DialogHeader>
 
                 <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label className="text-right">
-                            Título
-                        </Label>
-                        <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} className="col-span-3" />
-                    </div>
-
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label className="text-right">
-                            Fecha inicio
-                        </Label>
-                        <Datetime value={start} onChange={(date: any) => setStart(new Date(date))} className="col-span-3" />
-                    </div>
-
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label className="text-right">
-                            Fecha final
-                        </Label>
-                        <Datetime value={end} onChange={(date: any) => setEnd(new Date(date))} className="col-span-3" />
-                    </div>
-
-                    <div className="flex justify-between items-center gap-2">
-                        <Label className="text-right">
-                            Especialista
-                        </Label>
-                        <Combobox arrayValues={users} selectedValue={selectedUserValue} setSelectedValue={setSelectedUserValue}/>
-                    </div>
-
-                    <div className="flex justify-between items-center gap-2">
-                        <Label className="text-right">
-                            Paciente
-                        </Label>
-                        <Combobox arrayValues={patients} selectedValue={selectedPatientValue} setSelectedValue={setSelectedPatientValue}/>
+                    <div className="flex flex-col justify-start items-center gap-4">
+                        <Textarea placeholder="Agregue la descripción de su reporte" id="title" value={description} onChange={(e) => setDescription(e.target.value)} className="h-[450px]" required />
                     </div>
                 </div>
 
                 <DialogFooter>
-                    <Button onClick={handleSubmit} type="button">Guardar</Button>
+                    <Button onClick={handleClick} type="button">Guardar</Button>
                 </DialogFooter>
 
             </DialogContent>

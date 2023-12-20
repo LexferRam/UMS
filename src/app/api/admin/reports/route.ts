@@ -4,26 +4,34 @@ import Report from "@/models/report"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../../auth/[...nextauth]/route"
 import User from "@/models/user"
+import Patient from "@/models/patient"
+import mongoose from "mongoose"
 
 // ? Create new report
 export async function POST(req: NextRequest) {
 
     try {
 
-        const session = await getServerSession(authOptions)
-        console.log(session)
+        const session: any = await getServerSession(authOptions)
 
-        const userFound = await User.find({ email: session?.user.email }).lean() 
-        // console.log(userFound[0]._id.toString())
+        const userFound: any = await User.find({ email: session?.user.email }).lean()
+        
+        let createdBy = userFound[0]._id.toString() ;
 
-        let createdBy = userFound[0]._id.toString()
+        const { description, associatedEvent, patient } = await req.json()
 
-        const { description, associatedEvent } = await req.json()
         await connectMongoDB()
 
-        const newReport = await Report.create({ description, createdBy, associatedEvent })
+        const newReport = await Report.create({ description,  createdBy: new mongoose.Types.ObjectId(createdBy) , associatedEvent })
 
-        return NextResponse.json(newReport, { status: 201 })
+        // ? buscar en Patients usando asignTo
+        const patientFound = await Patient.find({ _id: patient }).populate({path:'reports', model: Report})
+
+        // ? actualizar paciente encontrado en su prop reports con el nuevo reporte
+        await patientFound[0]?.reports.push(newReport)
+        await patientFound[0].save()
+
+        return NextResponse.json(patientFound, { status: 201 })
 
     } catch (error) {
         console.log(error)
