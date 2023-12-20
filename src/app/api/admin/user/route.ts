@@ -1,8 +1,12 @@
 import { connectMongoDB } from "@/db/mongodb"
 import User from "@/models/user"
-import { NextApiRequest } from "next"
-import { getToken } from "next-auth/jwt"
+import { NextApiRequest, NextApiResponse } from "next"
+import { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
+import { authOptions } from "../../auth/[...nextauth]/route"
+import Event from "@/models/event"
+import Patient from "@/models/patient"
+import { getToken } from "next-auth/jwt"
 
 const secret = process.env.NEXTAUTH_SECRET
 
@@ -13,18 +17,19 @@ export async function POST(req: NextRequest) {
 
     const { email } = await req.json()
     await connectMongoDB()
-    let userFound = await User.find({ email }).populate("events").populate("asignedPatients")
+    let userFound = await User.find({ email }).populate({path:"events", model: Event}).populate({path:"asignedPatients", model: Patient})
     return NextResponse.json(userFound, { status: 201 })
 }
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
 
     try {
 
-        const token = await getToken({ req, secret })
-
+        const session = await getServerSession(authOptions)
         await connectMongoDB()
-        const userFound = await User.find({ email: token?.email }).populate('events').populate('asignedPatients')
+
+        const userFound = await User.find({ email: session?.user.email }).populate({path:'events', model:Event}).populate({path:'asignedPatients', model:Patient})
+
         return NextResponse.json(userFound, { status: 201 })
 
     } catch (error) {

@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
         // TODO: Validar con el role del usuario
         if(token?.email !== 'lexferramirez@gmail.com') {
             await connectMongoDB()
-            let updatedUser = await User.find({ email: token?.email }).populate("events")
+            let updatedUser = await User.find({ email: token?.email }).populate({path:"events", model: Event})
 
             return NextResponse.json(updatedUser[0].events)
         }

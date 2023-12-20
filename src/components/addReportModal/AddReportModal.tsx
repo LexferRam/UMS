@@ -15,7 +15,7 @@ import { Label } from "@radix-ui/react-dropdown-menu"
 import { useEffect, useState } from "react"
 import Datetime from 'react-datetime';
 
-export function AddEventModal({ onEventAdded }: any) {
+export function AddReportModal({ onEventAdded }: any) {
 
     const [title, setTitle] = useState('')
     const [start, setStart] = useState(new Date())
@@ -58,12 +58,12 @@ export function AddEventModal({ onEventAdded }: any) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Agregar Evento</Button>
+                <Button variant="outline">Agregar Reporte</Button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Nuevo Evento</DialogTitle>
+                    <DialogTitle>Nuevo Reporte</DialogTitle>
                 </DialogHeader>
 
                 <div className="grid gap-4 py-4">

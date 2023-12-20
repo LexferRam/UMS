@@ -54,11 +54,17 @@ export async function POST(req: NextRequest) {
                         // ? guardar informacion del nueva del user
                         await userFound.save()
 
+                        // ? en la prop asignedPatients del userFound filtrar por name de patient
+                        let existPatient = await userFound.asignedPatients.filter((item:any) => item?.toString() === patient)
+
                         // ? hacer push en su propiedad "patients"
-                        await userFound.asignedPatients.push(patient)
+                        if(!existPatient.length) {
+                            await userFound.asignedPatients.push(patient)
+
+                            // ? guardar informacion del nueva del user
+                            await userFound.save()
+                        } 
             
-                        // ? guardar informacion del nueva del user
-                        await userFound.save()
 
                         // // ? Updated user with events
                         // let updatedUser = await User.findById({_id:_asignTo }).populate("events")

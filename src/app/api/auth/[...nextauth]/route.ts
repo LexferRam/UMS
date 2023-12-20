@@ -1,9 +1,9 @@
-import { connectMongoDB } from '@/db/mongodb';
-import User from '@/models/user';
 import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
+import { connectMongoDB } from '@/db/mongodb';
+import User from '@/models/user';
 
-const handler = NextAuth({
+export const authOptions = NextAuth({
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -11,12 +11,19 @@ const handler = NextAuth({
         })
     ],
     callbacks: {
+        async session({ session, token }) {
+            const sessionUser = await User.findOne({ email: session?.user?.email });
+
+            // session.user && (session.user.id = sessionUser._id.toString())
+            // console.log( {...session.user, id : sessionUser._id.toString()})
+            return {...session.user, id : sessionUser._id.toString()}
+        },
         async signIn({ user, account }: any) {
             // console.log("User: " + JSON.stringify(user))
             // console.log("Account: " + JSON.stringify(account))
 
             if (account?.provider === 'google') {
-                const { name, email, image} = user;
+                const { name, email, image } = user;
 
                 try {
                     await connectMongoDB()
@@ -47,4 +54,4 @@ const handler = NextAuth({
     }
 })
 
-export { handler as GET, handler as POST }
+export { authOptions as GET, authOptions as POST }

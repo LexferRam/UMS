@@ -1,21 +1,27 @@
-'use client'
+import { headers } from 'next/headers';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react'
 
-const UsersAdmin = () => {
+const UsersAdmin = async () => {
 
     const TABLE_HEAD = ["Name", "Email", "Employed", ""];
 
-    const [users, setUsers] = useState([])
+    // const [users, setUsers] = useState([])
 
-    useEffect(() => {
-        const getUsers = async () => {
-            let respUsers = await fetch('http://localhost:3000/api/admin')
-            let users = await respUsers.json()
-            setUsers(users)
-        }
-        getUsers()
-    }, [])
+    // useEffect(() => {
+    //     const getUsers = async () => {
+    //         let respUsers = await fetch('http://localhost:3000/api/admin')
+    //         let users = await respUsers.json()
+    //         setUsers(users)
+    //     }
+    //     getUsers()
+    // }, [])
+
+    const respUser = await fetch('http://localhost:3000/api/admin', {
+        method: "GET",
+        headers: headers()
+      }
+      )
+      let users = await respUser.json()
 
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>

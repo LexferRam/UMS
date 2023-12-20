@@ -7,12 +7,13 @@ import { AddEventModal } from './_components/AddEventModal';
 import moment from 'moment'
 import { useUserInfo } from '@/hooks';
 import interactionPlugin from '@fullcalendar/interaction';
+import rrulePlugin from '@fullcalendar/rrule'
 
 const Scheduler = () => {
 
   const calendarRef = useRef(null)
   const [events, setEvents] = useState([]) as any
-  const [userInfo ] = useUserInfo()
+  const [userInfo] = useUserInfo()
 
   const onEventAdded = async (e: any) => {
     let calendarApi = calendarRef?.current?.getApi()
@@ -22,7 +23,14 @@ const Scheduler = () => {
       start: moment(e.start).toDate(),
       end: moment(e.end).toDate(),
       _asignTo: e.selectedUserValue,
-      patient: e.selectedPatientValue
+      patient: e.selectedPatientValue,
+      // rrule: {
+      //   freq: 'weekly', // monthly  yearly  DAILY  weekly
+      //   interval: 3,
+      //   byweekday: [],
+      //   dtstart: moment(e.start).toDate(), // will also accept '20120201T103000'
+      //   until: moment(e.end).toDate()// will also accept '20120201'
+      // }
     }
 
     await calendarApi.addEvent(newEvent)
@@ -57,25 +65,37 @@ const Scheduler = () => {
   return (
     <div className='flex flex-col w-full'>
 
-    {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
-      <AddEventModal onEventAdded={(e: any) => onEventAdded(e)} />
-    ): null}
+      {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
+        <AddEventModal onEventAdded={(e: any) => onEventAdded(e)} />
+      ) : null}
 
       <FullCalendar
         ref={calendarRef}
         events={events}
-        plugins={[dayGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
+        plugins={[dayGridPlugin, interactionPlugin, rrulePlugin]}
+        // initialView="dayGridMonth"
         locale={esLocale}
         droppable
         editable
-        eventDrop={(eventEl) => {
-          console.log(eventEl)
-          alert('update event')
+        selectable
+        // eventDrop={(eventEl) => {
+        //   console.log(eventEl)
+        //   alert('update event')
+        // }}
+        // dateClick= {function(info) {
+        //   alert('Clicked on: ' + info.dayEl);
+        //   alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+        //   alert('Current view: ' + info.view.type);
+        //   // change the day's background color just for fun
+        //   info.dayEl.style.backgroundColor = 'red';
+        // }}
+        // eventAdd={(event) => handleEventAdd(event)}
+        // weekends={true}
+        headerToolbar={{
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
         }}
-      // eventAdd={(event) => handleEventAdd(event)}
-      // weekends={true}
-      // headerToolbar={{center: 'dayGridMonth,timeGridWeek,timeGridDay'}}
       // eventClick={
       //   function(arg){
       //     console.log(arg.event)
