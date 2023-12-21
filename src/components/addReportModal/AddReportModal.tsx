@@ -43,7 +43,7 @@ export const AddReportModal: FC<{ eventId: string, patient: any }> = ({ eventId,
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Agregar Reporte</Button>
+                <Button variant="outline" className="bg-blue-100">Agregar Reporte</Button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[450px]">

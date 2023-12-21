@@ -1,5 +1,5 @@
 'use client'
-import { AddReportModal } from '@/components/addReportModal/AddReportModal'
+
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { FC } from 'react'
@@ -11,7 +11,7 @@ const PatientTable: FC<{ tableHeaders: string[], patients: any }> = ({ tableHead
   return (
     <div className='p-5 max-h-[700px] overflow-scroll'>
       <h3>Mis pacientes:</h3>
-      <div className="h-full w-full overflow-scroll">
+      <div className="h-full w-full overflow-scroll shadow-md rounded p-8">
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
@@ -78,8 +78,9 @@ const PatientTable: FC<{ tableHeaders: string[], patients: any }> = ({ tableHead
                     <Button
                       onClick={() => router.push(`/dashboard/patientHistory/${_id}`, { scroll: false })}
                       variant="outline"
+                      className='bg-blue-100'
                     >
-                      ver reportes
+                      Ver reportes
                     </Button>
                   </td>
                 </tr>

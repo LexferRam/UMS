@@ -36,7 +36,7 @@ const AsideMenuOptions = () => {
                 Calendario
             </h4>
             <div className='grid grid-flow-row auto-rows-max text-sm mb-4'>
-                <Link className='group flex w-full items-center rounded-md border border-transparent px-2 py-4 hover:underline text-muted-foreground' href="/dashboard/scheduler">Eventos</Link>
+                <Link className='group flex w-full items-center rounded-md border border-transparent px-2 py-4 hover:underline text-muted-foreground' href="/dashboard/scheduler">Citas</Link>
             </div>
 
 

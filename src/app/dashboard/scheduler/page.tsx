@@ -63,7 +63,7 @@ const Scheduler = () => {
 
 
   return (
-    <div className='flex flex-col w-full'>
+    <div className='flex flex-col w-full shadow-lg rounded p-1 sm:px-8'>
 
       {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
         <AddEventModal onEventAdded={(e: any) => onEventAdded(e)} />
@@ -90,7 +90,7 @@ const Scheduler = () => {
         //   info.dayEl.style.backgroundColor = 'red';
         // }}
         // eventAdd={(event) => handleEventAdd(event)}
-        // weekends={true}
+        weekends={false}
         headerToolbar={{
           left: 'prev,next today',
           center: 'title',

@@ -58,7 +58,7 @@ export function AddEventModal({ onEventAdded }: any) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Agregar Evento</Button>
+                <Button variant="outline" className="mb-6 bg-blue-100">Agregar Evento</Button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[425px]">

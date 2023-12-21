@@ -2,7 +2,7 @@ import { headers } from 'next/headers';
 import PatientTable from './_components/PatientTable';
 
 const AdminPatientsPage = async () => {
-  const TABLE_HEAD = ["Name", "Email", "Employed", ""];
+  const TABLE_HEAD = ["Nombre", "Correo", "Estatus", "Acciones"];
 
   const respPatient = await fetch('http://localhost:3000/api/admin/patient', {
     method: "GET",

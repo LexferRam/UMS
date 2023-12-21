@@ -6,7 +6,7 @@ import { FC, useEffect, useState } from "react";
 const ReportsByPatientTable: FC<{ patientId: string | string[] }> = ({ patientId }) => {
 
     const [reports, setReports] = useState([])
-    const [patient, setPatient] = useState("")
+    const [patient, setPatient] = useState<any>()
 
     useEffect(() => {
 
@@ -14,7 +14,7 @@ const ReportsByPatientTable: FC<{ patientId: string | string[] }> = ({ patientId
             const respReports = await fetch(`http://localhost:3000/api/admin/reports/reportId?patientId=${patientId}`)
             let reports = await respReports.json()
             setReports(reports[0]?.reports)
-            setPatient(reports[0]?.name)
+            setPatient(reports[0])
         }
         getPatientReports()
 
@@ -23,7 +23,7 @@ const ReportsByPatientTable: FC<{ patientId: string | string[] }> = ({ patientId
 
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>
-            <h3>Historial : <b className="capitalize">{patient}</b></h3>
+            <h3>Historia médica: <b className="capitalize">{patient?.name} {patient?.lastname}</b></h3>
             <div className="h-full w-full overflow-scroll">
                 <table className="w-full min-w-max table-auto text-left">
                     <thead>
