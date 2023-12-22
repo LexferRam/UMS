@@ -1,8 +1,10 @@
+
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
 import AsideMenuOptions from '@/components/sidebar/AsideMenuOptions'
 import { MainNav } from '@/components/sidebar/MainNav'
+import React from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,14 +18,15 @@ export default function RootLayout({
 }: {
     children: React.ReactNode
 }) {
+
     return (
         <>
-            <MainNav />
+            <MainNav/>
             <div className='sm:container flex-1 items-start md:grid md:grid-cols-[180px_minmax(0,1fr)] md:gap-4 lg:grid-cols-[200px_minmax(0,1fr)]'>
-                <aside className='z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block border-r-[0.1px]'>
+                <aside className='z-30 -ml-5 hidden w-full md:block'>
                     <AsideMenuOptions />
                 </aside>
-                <main className='py-6'>
+                <main className='py-6 m-2 sm:relative sm:top-[80px] overflow-y-scroll scrollbar-hide'>
                     {children}
                 </main>
             </div>

@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
             const { _creator, _asignTo, title, start, end, patient } = await req.json()
             await connectMongoDB()
              
-            const event = await Event.create({_creator, _asignTo, title, start, end, patient})
+            const event = await Event.create({_creator, _asignTo, title, start, end, patient, eventStatus: true})
 
                         // ? Buscar user por campo _asignTo
                         let userFound = await User.findById({_id: _asignTo})

@@ -28,18 +28,18 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                         </tr>
                     </thead>
                     <tbody>
-                        {events?.map(({ title, patient, _id }: any) => ({ name: title, patient, date: _id }))?.map(({ name, patient, date }: any, index: any) => {
+                        {events?.map(({ title, patient, _id, eventStatus }: any, index: any) => {
                             const isLast = index === events.length - 1;
                             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
                             return (
-                                <tr key={date}>
+                                <tr key={_id}>
                                     <td className={classes}>
                                         <p
                                             color="blue-gray"
                                             className="font-normal"
                                         >
-                                            {name}
+                                            {title}
                                         </p>
                                     </td>
                                     <td className={classes}>
@@ -47,7 +47,23 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                                             color="blue-gray"
                                             className="font-normal"
                                         >
-                                             {patient.name}
+                                            {eventStatus ? (
+                                                <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                    Activo
+                                                </span>
+                                            ) : (
+                                                <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                    Desactivo
+                                                </span>
+                                            )}
+                                        </p>
+                                    </td>
+                                    <td className={classes}>
+                                        <p
+                                            color="blue-gray"
+                                            className="font-normal"
+                                        >
+                                            {patient.name}
                                         </p>
                                     </td>
                                     <td className={classes}>
@@ -56,18 +72,18 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                                             className="font-normal"
                                         >
                                             {patient.isActive ? (
-                                            <span className="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                Activo
-                                            </span>
-                                        ) : (
-                                            <span className="inline-block bg-red-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                Desactivo
-                                            </span>
-                                        )}
+                                                <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                    Activo
+                                                </span>
+                                            ) : (
+                                                <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                    Desactivo
+                                                </span>
+                                            )}
                                         </p>
                                     </td>
                                     <td className={classes}>
-                                        <AddReportModal eventId={date} patient={patient} />
+                                        <AddReportModal eventId={_id} patient={patient} />
                                     </td>
                                 </tr>
                             );
@@ -75,7 +91,7 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                     </tbody>
                 </table>
             </div>
-            
+
         </div>
     )
 }

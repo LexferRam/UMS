@@ -1,6 +1,7 @@
 import { shadcnPlugin } from "./shadcd-plugin";
+const withMT = require('next-transpile-modules')(["@material-tailwind/react"]); 
 
-export const shadcnPreset = {
+export const shadcnPreset = withMT({
     darkMode: ["class"],
     content: [],
     plugins: [
@@ -10,4 +11,4 @@ export const shadcnPreset = {
         require('@tailwindcss/container-queries'),
         require('@tailwindcss/forms')
     ]
-}
+})

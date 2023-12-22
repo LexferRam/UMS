@@ -22,8 +22,18 @@ const userSchema = new Schema({
         enum: ['admin', 'specialist'],
         default: 'specialist'
     },
-    events : [{ type: Schema.Types.ObjectId, ref: 'Event' }],
-    asignedPatients : [{ type: Schema.Types.ObjectId, ref: 'Patient' }]
+    speciality: {
+        type: String,
+        required: false,
+    },
+    events : [{ 
+        type: Schema.Types.ObjectId, 
+        ref: 'Event' 
+    }],
+    asignedPatients : [{ 
+        type: Schema.Types.ObjectId, 
+        ref: 'Patient' 
+    }]
 },
     { timestamps: true }
 );

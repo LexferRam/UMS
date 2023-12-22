@@ -20,12 +20,11 @@ const PatientTable: FC<{ tableHeaders: string[], patients: any }> = ({ tableHead
                   key={head}
                   className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
                 >
-                  <p
-                    color="blue-gray"
+                  <span
                     className="font-normal leading-none opacity-70"
                   >
                     {head}
-                  </p>
+                  </span>
                 </th>
               ))}
             </tr>
@@ -63,11 +62,11 @@ const PatientTable: FC<{ tableHeaders: string[], patients: any }> = ({ tableHead
                         className="font-normal"
                       >
                         {isActive ? (
-                          <span className="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                          <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
                             Activo
                           </span>
                         ) : (
-                          <span className="inline-block bg-red-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                          <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
                             Desactivo
                           </span>
                         )}

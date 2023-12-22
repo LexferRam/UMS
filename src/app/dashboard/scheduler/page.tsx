@@ -11,12 +11,12 @@ import rrulePlugin from '@fullcalendar/rrule'
 
 const Scheduler = () => {
 
-  const calendarRef = useRef(null)
+  const calendarRef: any = useRef(null)
   const [events, setEvents] = useState([]) as any
   const [userInfo] = useUserInfo()
 
   const onEventAdded = async (e: any) => {
-    let calendarApi = calendarRef?.current?.getApi()
+    let calendarApi = calendarRef?.current?.getApi() 
 
     let newEvent = {
       title: e.title,
@@ -63,7 +63,7 @@ const Scheduler = () => {
 
 
   return (
-    <div className='flex flex-col w-full shadow-lg rounded p-1 sm:px-8'>
+    <div className='flex flex-col w-full shadow-2xl rounded py-8 sm:px-4'>
 
       {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
         <AddEventModal onEventAdded={(e: any) => onEventAdded(e)} />
@@ -73,10 +73,10 @@ const Scheduler = () => {
         ref={calendarRef}
         events={events}
         plugins={[dayGridPlugin, interactionPlugin, rrulePlugin]}
-        // initialView="dayGridMonth"
+        // initialView="dayGridWeek"
         locale={esLocale}
-        droppable
-        editable
+        // droppable
+        // editable
         selectable
         // eventDrop={(eventEl) => {
         //   console.log(eventEl)
@@ -90,11 +90,11 @@ const Scheduler = () => {
         //   info.dayEl.style.backgroundColor = 'red';
         // }}
         // eventAdd={(event) => handleEventAdd(event)}
-        weekends={false}
+        // weekends={false}
         headerToolbar={{
-          left: 'prev,next today',
+          left: 'prev,next,today',
           center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          right: 'dayGridDay dayGridWeek dayGridMonth'
         }}
       // eventClick={
       //   function(arg){

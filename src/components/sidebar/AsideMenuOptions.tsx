@@ -1,47 +1,44 @@
 'use client'
 
-import Link from "next/link";
-import { ScrollArea } from "../ui/ScrollArea";
-import { usePathname } from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
+import { ButtonNav } from "../ButtonNav";
+import { adminNavLinks, specialistNavLinks } from "@/constants/linksByUser";
+import { useUserInfo } from "@/hooks";
 
-const AsideMenuOptions = () => {
-    const pathname = usePathname();
-    console.log(pathname)
+const AsideMenuOptions = () => (
+    <div className="fixed overflow-y-scroll scrollbar-hide top-[100px] py-4 pr-4 mr-2 border-r-[0.1px] h-full">
+        <NavItems />
+    </div>
+)
+
+export const NavItems = () => {
+    const activeSegment = useSelectedLayoutSegment()
+    const [ userInfo ] = useUserInfo()
+    const arrayLinks = userInfo[0]?.role === 'admin' 
+        ? adminNavLinks 
+        : specialistNavLinks;
 
     return (
-
-        <ScrollArea className="h-[calc(100vh-3.5rem)] rounded-md p-4">
-
-            <h4 className='rounded-md px-2 py-4 text-sm font-semibold'>
-                Inicio
-            </h4>
-            <div className='grid grid-flow-row auto-rows-max text-sm mb-4'>
-                <Link
-                    className='group flex w-full items-center rounded-md border border-transparent px-2 py-4 hover:underline text-muted-foreground'
-                    href="/dashboard"
-                >Inicio</Link>
-            </div>
-
-            <h4 className='rounded-md px-2 py-4 text-sm font-semibold'>
-                Administración de usuarios
-            </h4>
-            <div className='grid grid-flow-row auto-rows-max text-sm mb-4'>
-                <Link className='group flex w-full items-center rounded-md border border-transparent px-2 py-4 hover:underline text-muted-foreground' href="/dashboard/adminUsers">Especialistas</Link>
-            </div>
-            <div className='grid grid-flow-row auto-rows-max text-sm mb-4'>
-                <Link className='group flex w-full items-center rounded-md border border-transparent px-2 py-4 hover:underline text-muted-foreground' href="/dashboard/adminPatients">Pacientes</Link>
-            </div>
-
-            <h4 className='rounded-md px-2 py-4 text-sm font-semibold'>
-                Calendario
-            </h4>
-            <div className='grid grid-flow-row auto-rows-max text-sm mb-4'>
-                <Link className='group flex w-full items-center rounded-md border border-transparent px-2 py-4 hover:underline text-muted-foreground' href="/dashboard/scheduler">Citas</Link>
-            </div>
-
-
-
-        </ScrollArea>
+        <>
+            {arrayLinks?.map(item => (
+                <>
+                    <h4 className='rounded-md px-2 py-4 text-sm font-medium'>
+                        {item.mainTitle}
+                    </h4>
+                    {item?.subItems?.map(subItem => {
+                        let isActiveLink = (subItem.href.split('/')[2] || null) === activeSegment
+                        return (
+                            <ButtonNav
+                                variant={isActiveLink ? 'active' : 'default'}
+                                href={subItem.href}
+                                iconComponent={subItem.iconComponent}
+                                buttonTitle={subItem.buttonTitle}
+                            />
+                        )
+                    })}
+                </>
+            ))}
+        </>
     )
 }
 
