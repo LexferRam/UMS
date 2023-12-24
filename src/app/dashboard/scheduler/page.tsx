@@ -63,7 +63,7 @@ const Scheduler = () => {
 
 
   return (
-    <div className='flex flex-col w-full shadow-2xl rounded py-8 sm:px-4'>
+    <div className='flex flex-col w-full shadow-xl rounded py-8 sm:px-4'>
 
       {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
         <AddEventModal onEventAdded={(e: any) => onEventAdded(e)} />

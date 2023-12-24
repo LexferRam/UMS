@@ -2,8 +2,11 @@
 
 import { FC } from "react";
 import { AddReportModal } from "../addReportModal/AddReportModal";
+import moment from "moment";
 
 const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders, events }) => {
+
+    console.log(events)
 
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>
@@ -28,7 +31,7 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                         </tr>
                     </thead>
                     <tbody>
-                        {events?.map(({ title, patient, _id, eventStatus }: any, index: any) => {
+                        {events?.map(({ title, patient, _id, eventStatus,start }: any, index: any) => {
                             const isLast = index === events.length - 1;
                             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
@@ -56,6 +59,14 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                                                     Desactivo
                                                 </span>
                                             )}
+                                        </p>
+                                    </td>
+                                    <td className={classes}>
+                                        <p
+                                            color="blue-gray"
+                                            className="font-normal"
+                                        >
+                                            {moment(start).format('h:mm a')}
                                         </p>
                                     </td>
                                     <td className={classes}>

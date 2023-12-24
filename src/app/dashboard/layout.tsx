@@ -22,11 +22,11 @@ export default function RootLayout({
     return (
         <>
             <MainNav/>
-            <div className='sm:container flex-1 items-start md:grid md:grid-cols-[180px_minmax(0,1fr)] md:gap-4 lg:grid-cols-[200px_minmax(0,1fr)]'>
+            <div className='sm:container flex-1 items-start md:grid md:grid-cols-[180px_minmax(0,1fr)] lg:grid-cols-[200px_minmax(0,1fr)] md:gap-4'>
                 <aside className='z-30 -ml-5 hidden w-full md:block'>
                     <AsideMenuOptions />
                 </aside>
-                <main className='py-6 m-2 sm:relative sm:top-[80px] overflow-y-scroll scrollbar-hide'>
+                <main className='py-6 p-1 sm:px-6 sm:relative sm:top-[80px] overflow-y-scroll scrollbar-hide'>
                     {children}
                 </main>
             </div>

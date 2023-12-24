@@ -5,11 +5,11 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
 const buttonVariants = cva(
-    "hover:bg-blue-50 hover:text-blue-800 shadow-none text-sm font-medium text-muted-foreground",
+    "hover:bg-blue-50 hover:text-blue-800 rounded-md shadow-none text-sm font-medium text-muted-foreground",
     {
         variants: {
             variant: {
-                default: "",
+                default: "bg-white",
                 active: "bg-blue-50 text-blue-800"
             },
             size: {

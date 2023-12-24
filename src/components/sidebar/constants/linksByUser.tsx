@@ -1,4 +1,4 @@
-import { CalendarDaysIcon, HomeIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import { CalendarDaysIcon, HomeIcon, UserGroupIcon, UsersIcon } from "@heroicons/react/24/outline";
 
 export const adminNavLinks = [
     {
@@ -6,7 +6,7 @@ export const adminNavLinks = [
         subItems: [
             {
                 href: '/dashboard',
-                iconComponent: <HomeIcon className="h-5 w-5 text-muted-foreground" />,
+                iconComponent: <HomeIcon className="h-6 w-6 text-muted-foreground" />,
                 buttonTitle: 'Inicio'
             }
         ]
@@ -16,12 +16,12 @@ export const adminNavLinks = [
         subItems: [
             {
                 href: '/dashboard/adminUsers',
-                iconComponent: <UserGroupIcon className="h-5 w-5 text-muted-foreground" />,
+                iconComponent: <UserGroupIcon className="h-6 w-6 text-muted-foreground" />,
                 buttonTitle: 'Especialistas'
             },
             {
                 href: '/dashboard/adminPatients',
-                iconComponent: <UserGroupIcon className="h-5 w-5 text-muted-foreground" />,
+                iconComponent: <UsersIcon className="h-6 w-6 text-muted-foreground" />,
                 buttonTitle: 'Pacientes'
             }
         ]
@@ -31,7 +31,7 @@ export const adminNavLinks = [
         subItems: [
             {
                 href: '/dashboard/scheduler',
-                iconComponent: <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />,
+                iconComponent: <CalendarDaysIcon className="h-6 w-6 text-muted-foreground" />,
                 buttonTitle: 'Calendario'
             }
         ]
@@ -44,7 +44,7 @@ export const specialistNavLinks = [
         subItems: [
             {
                 href: '/dashboard',
-                iconComponent: <HomeIcon className="h-5 w-5 text-muted-foreground" />,
+                iconComponent: <HomeIcon className="h-6 w-6 text-muted-foreground" />,
                 buttonTitle: 'Inicio'
             }
         ]
@@ -54,7 +54,7 @@ export const specialistNavLinks = [
         subItems: [
             {
                 href: '/dashboard/adminPatients',
-                iconComponent: <UserGroupIcon className="h-5 w-5 text-muted-foreground" />,
+                iconComponent: <UserGroupIcon className="h-6 w-6 text-muted-foreground" />,
                 buttonTitle: 'Pacientes'
             }
         ]
@@ -64,7 +64,7 @@ export const specialistNavLinks = [
         subItems: [
             {
                 href: '/dashboard/scheduler',
-                iconComponent: <CalendarDaysIcon className="h-5 w-5 text-muted-foreground" />,
+                iconComponent: <CalendarDaysIcon className="h-6 w-6 text-muted-foreground" />,
                 buttonTitle: 'Calendario'
             }
         ]

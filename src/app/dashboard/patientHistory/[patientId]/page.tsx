@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation"
 import ReportsByPatientTable from "../_components/ReportsByPatientTable"
+import PatientHistoryTimeline from "../_components/PatientHistoryTimeline"
 
 const PatientHistory = () => {
 
@@ -9,7 +10,7 @@ const PatientHistory = () => {
 
   return (
     <div>
-      <ReportsByPatientTable patientId={patientId} />
+      <PatientHistoryTimeline patientId={patientId} />
     </div>
   )
 }

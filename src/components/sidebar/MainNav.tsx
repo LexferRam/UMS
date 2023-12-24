@@ -12,7 +12,7 @@ import {
     Navbar,
     Typography,
 } from "@material-tailwind/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 import { DrawerWithNavigation } from "./NavegationDrawer"
 import { useUserInfo } from "@/hooks"
 
@@ -50,7 +50,7 @@ export function MainNav({
                             <div>
                                 <Typography placeholder='' variant="h6">{userInfo[0]?.name || ''}</Typography>
                                 <Typography placeholder='' variant="small" color="gray" className="font-normal text-gray-500">
-                                    {userInfo[0]?.role === 'amidn' ? 'Administrador' : 'Especialista'}
+                                    {userInfo[0]?.role === 'admin' ? 'Administrador' : 'Especialista'}
                                 </Typography>
                             </div>
                         </div>
@@ -60,8 +60,12 @@ export function MainNav({
                             <DropdownMenuComp />
                         </div> */}
 
-
-                        <Image src={userInfo[0]?.lastname || ''} alt='' height={50} width={50} className='hidden sm:block rounded-full cursor-pointer mr-2' />
+                        <Image
+                            src={userInfo[0]?.lastname || ''} 
+                            alt='' height={50} 
+                            width={50} 
+                            className='hidden sm:block rounded-full cursor-pointer mr-2' 
+                        />
 
                         <div>
                             <Button

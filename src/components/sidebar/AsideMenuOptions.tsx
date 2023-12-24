@@ -2,8 +2,8 @@
 
 import { useSelectedLayoutSegment } from "next/navigation";
 import { ButtonNav } from "../ButtonNav";
-import { adminNavLinks, specialistNavLinks } from "@/constants/linksByUser";
 import { useUserInfo } from "@/hooks";
+import { adminNavLinks, specialistNavLinks } from "./constants/linksByUser";
 
 const AsideMenuOptions = () => (
     <div className="fixed overflow-y-scroll scrollbar-hide top-[100px] py-4 pr-4 mr-2 border-r-[0.1px] h-full">
