@@ -1,6 +1,6 @@
 'use client'
 
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC } from 'react'
 import {
     Timeline,
     TimelineItem,
@@ -56,7 +56,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
         </div>
     )
 
-    if (error) return 'An error has occurred: ' + error.message
+    if (error) return <h2>An error has occurred</h2>
 
     return (
         <>
@@ -64,7 +64,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                 <h2 className='font-bold text-gray-600'>
                     Historia médica:
                 </h2>
-                <b className="capitalize font-semibold">
+                <b className="capitalize font-light">
                     {patientInfo[0]?.name} {patientInfo[0]?.lastname}
                 </b>
             </div>
@@ -73,7 +73,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                 <h4 className='font-bold text-gray-600'>
                     Cantidad de reportes:
                 </h4>
-                <b className="capitalize font-semibold">
+                <b className="capitalize font-light">
                     {patientInfo[0]?.reports?.length}
                 </b>
             </div>
@@ -96,7 +96,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                                         <Avatar size="md" src={createdBy?.lastname} alt={createdBy?.name} withBorder />
                                     </TimelineIcon>
                                     <div className="flex flex-col">
-                                        <Typography variant="h5" color="blue-gray">
+                                        <Typography variant="h6" color="blue-gray">
                                             {createdBy?.name}
                                         </Typography>
                                         <Typography color="gary" className="font-extralight text-sm text-gray-600">

@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { FC } from 'react';
 
@@ -20,7 +21,7 @@ const AdminUsersTable:FC<AdminUsersTableProps> = ({
                             {headers.map((head) => (
                                 <th
                                     key={head}
-                                    className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+                                    className="border-b border-blue-gray-100 bg-[#f8fafc] p-4"
                                 >
                                     <p
                                         color="blue-gray"
@@ -71,11 +72,11 @@ const AdminUsersTable:FC<AdminUsersTableProps> = ({
                                             className="font-normal"
                                         >
                                             {role === 'admin' ? (
-                                                <span className="inline-block bg-blue-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                <span className="inline-block bg-blue-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
                                                     Administrador
                                                 </span>
                                             ) : (
-                                                <span className="inline-block bg-orange-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                <span className="inline-block bg-orange-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
                                                     Especialista
                                                 </span>
                                             )}
@@ -91,23 +92,30 @@ const AdminUsersTable:FC<AdminUsersTableProps> = ({
                                     </td>
                                     <td className={classes}>
                                         {isActive ? (
-                                            <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                            <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
                                                 Activo
                                             </span>
                                         ) : (
-                                            <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                            <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
                                                 Desactivo
                                             </span>
                                         )}
 
                                     </td>
                                     <td className={classes}>
-                                        <Button
-                                            variant="outline"
-                                            className='bg-blue-100'
+                                        <div
+                                            // onClick={() => router.push(`/dashboard/patientHistory/${_id}`, { scroll: false })}
+                                            className="flex gap-2 cursor-pointer items-center"
                                         >
-                                            Editar
-                                        </Button>
+                                            <PencilSquareIcon
+                                                className="h-6 w-6 text-green-500"
+                                            />
+                                            <span
+                                                className='text-sm font-semibold text-gray-600'
+                                            >
+                                                Editar
+                                            </span>
+                                        </div>
                                     </td>
                                 </tr>
                             );

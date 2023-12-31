@@ -1,19 +1,21 @@
-import { headers } from 'next/headers';
-import PatientTable from './_components/PatientTable';
+'use client'
 
-const AdminPatientsPage = async () => {
+import AdmiPageSkeleton from './_components/AdmiPageSkeleton';
+import PatientTable from './_components/PatientTable';
+import { useQuery } from 'react-query';
+
+const AdminPatientsPage =  () => {
   const TABLE_HEAD = ["Nombre", "Correo", "Estatus", "Acciones"];
 
-  const respPatient = await fetch('http://localhost:3000/api/admin/patient', {
-    method: "GET",
-    headers: headers()
-  }
-  )
-  let patients = await respPatient.json()
+  // TODO: 
+  const { isLoading, error, data: patientList = [], refetch } = useQuery(['patientList'], () =>
+    fetch('http://localhost:3000/api/admin/patient').then(res =>
+      res.json()
+    ))
 
-  return (
-    <PatientTable tableHeaders={TABLE_HEAD} patients={patients}/>
-  )
+  if (isLoading) return <AdmiPageSkeleton />
+
+  return <PatientTable tableHeaders={TABLE_HEAD} patients={patientList} refetch={refetch} />
 }
 
 export default AdminPatientsPage

@@ -21,7 +21,7 @@ export const NavItems = () => {
     return (
         <>
             {arrayLinks?.map(item => (
-                <>
+                <div key={item.mainTitle}>
                     <h4 className='rounded-md px-2 py-4 text-sm font-medium'>
                         {item.mainTitle}
                     </h4>
@@ -29,6 +29,7 @@ export const NavItems = () => {
                         let isActiveLink = (subItem.href.split('/')[2] || null) === activeSegment
                         return (
                             <ButtonNav
+                                key={subItem.buttonTitle}
                                 variant={isActiveLink ? 'active' : 'default'}
                                 href={subItem.href}
                                 iconComponent={subItem.iconComponent}
@@ -36,7 +37,7 @@ export const NavItems = () => {
                             />
                         )
                     })}
-                </>
+                </div>
             ))}
         </>
     )

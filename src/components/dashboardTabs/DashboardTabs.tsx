@@ -4,16 +4,20 @@ import { eventForToday } from '@/util/dates';
 import { FC, useState } from 'react'
 import EventsTable from '../eventsTable/EventsTable';
 import { CalendarDaysIcon, ExclamationTriangleIcon, FolderIcon, UserIcon } from '@heroicons/react/24/outline';
+import ReportsTable from '../ReportsTable';
 
-const DashboardTabs: FC<{ userInfo: any }> = ({ userInfo }) => {
+const DashboardTabs: FC<{ userInfo: any, userReports: any }> = ({ userInfo, userReports }) => {
 
     const TABLE_HEAD_PATIENT = ["Nombre paciente", "Correo", "Estatus", "Acciones"];
-    const TABLE_HEAD_EVENTS = ["Cita","Estatus de la cita", "Hora", "Nombre paciente", "Estatus paciente", "Acciones"];
-    const [selectedCard, setSelectedCard] = useState<'patients' | 'events'>('patients')
+    const TABLE_HEAD_EVENTS = ["Cita", "Estatus de la cita", "Hora", "Nombre paciente", "Estatus paciente", "Acciones"];
+    const TABLE_HEAD_REPORTS = ["Descripción", "Creado", "Cita asociada", ""];
+
+    const [selectedCard, setSelectedCard] = useState<'patients' | 'events' | 'reports'>('patients')
 
     const ActiveCard = {
         'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={userInfo[0]?.asignedPatients} />,
-        'events': <EventsTable tableHeaders={TABLE_HEAD_EVENTS} events={eventForToday(userInfo[0]?.events)} />
+        'events': <EventsTable tableHeaders={TABLE_HEAD_EVENTS} events={eventForToday(userInfo[0]?.events)} />,
+        'reports': <ReportsTable tableHeaders={TABLE_HEAD_REPORTS} events={userReports} />
     }
 
     return (
@@ -66,7 +70,7 @@ const DashboardTabs: FC<{ userInfo: any }> = ({ userInfo }) => {
                             </div>
                         </div>
 
-                        <div onClick={() => setSelectedCard('patients')} className="relative overflow-hidden p-5 bg-emerald-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer">
+                        <div onClick={() => setSelectedCard('reports')} className="relative overflow-hidden p-5 bg-emerald-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer">
                             <div className="flex items-center space-x-2 space-y-3">
 
                                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-50 ">
@@ -75,7 +79,7 @@ const DashboardTabs: FC<{ userInfo: any }> = ({ userInfo }) => {
 
                                 <div className='flex flex-col items-center'>
                                     <div className="text-esmerald-800 text-center font-semibold">Mis reportes</div>
-                                    <div className="text-2xl font-bold text-esmerald-900">0</div>
+                                    <div className="text-2xl font-bold text-esmerald-900">{userReports.length}</div>
                                 </div>
 
                                 <div>

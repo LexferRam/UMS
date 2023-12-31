@@ -1,6 +1,7 @@
 
 import { connectMongoDB } from "@/db/mongodb"
 import Event from "@/models/event"
+import Patient from "@/models/patient"
 import User from "@/models/user"
 import { getToken } from "next-auth/jwt"
 import { NextRequest, NextResponse } from "next/server"
@@ -16,13 +17,20 @@ export async function GET(req: NextRequest) {
         // TODO: Validar con el role del usuario
         if(token?.email !== 'lexferramirez@gmail.com') {
             await connectMongoDB()
-            let updatedUser = await User.find({ email: token?.email }).populate({path:"events", model: Event})
+            let updatedUser = await User
+                .find({ email: token?.email })
+                .populate({path:"events", model: Event})
+                .populate({path:"patient", model: Patient})
 
             return NextResponse.json(updatedUser[0].events)
         }
 
         await connectMongoDB()
-        const events = await Event.find()
+        const events = await Event
+            .find()
+            .populate({path:"patient", model: Patient})
+            .populate({path:"_asignTo", model: User})
+
         return NextResponse.json(events)
 
     } catch (error) {

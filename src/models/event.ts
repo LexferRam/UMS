@@ -5,7 +5,10 @@ var eventSchema = new Schema({
     type: String,
     ref: 'User'
   },
-  _asignTo: { type: String },
+  _asignTo: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   title: {
     type: String,
     required: true
@@ -22,13 +25,17 @@ var eventSchema = new Schema({
     required: true
   },
   patient: {
-    type: String,
-    required: true
+    type: Schema.Types.ObjectId,
+    ref: 'Patient'
   },
   reports: [{
     type: Schema.Types.ObjectId,
     ref: 'Report'
   }],
+  eventType:{
+    type: String,
+    required: true   
+  }
 });
 
 const Event = models.Event || mongoose.model('Event', eventSchema);

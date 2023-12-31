@@ -17,6 +17,10 @@ const patientSchema = new Schema({
         type: Boolean,
         default: true
     },
+    historyDescription: {
+        type: String,
+        required: true
+    },
     reports : [{ type: Schema.Types.ObjectId, ref: 'Report' }]
 },
     { timestamps: true }

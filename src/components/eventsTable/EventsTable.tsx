@@ -6,11 +6,9 @@ import moment from "moment";
 
 const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders, events }) => {
 
-    console.log(events)
-
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>
-            <h3>Mis citas para hoy:</h3>
+            <h3 className='font-semibold text-gray-600 text-xl'>Mis citas para hoy:</h3>
             <div className="h-full w-full overflow-scroll shadow-md rounded p-8">
                 <table className="w-full min-w-max table-auto text-left">
                     <thead>
@@ -18,7 +16,7 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                             {tableHeaders.map((head) => (
                                 <th
                                     key={head}
-                                    className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+                                    className="border-b border-blue-gray-100 bg-[#f8fafc] p-4"
                                 >
                                     <p
                                         color="blue-gray"

@@ -6,6 +6,7 @@ import { getToken } from "next-auth/jwt"
 
 const secret = process.env.NEXTAUTH_SECRET
 
+// ? ingresar nuevo paciente
 export async function POST(req: NextRequest) {
 
     try {
@@ -13,17 +14,20 @@ export async function POST(req: NextRequest) {
         // const token = await getToken({ req, secret })
         // if (token?.email !== 'lexferramirez@gmail.com') return NextResponse.json([])
 
-        try {
-            const { email, name, lastname, isActive, reports } = await req.json()
-            await connectMongoDB()
+        const {
+            email,
+            name,
+            lastname,
+            isActive,
+            historyDescription,
+            reports
+        } = await req.json()
+        await connectMongoDB()
 
-            const patient = await Patient.create({ email, name, lastname, isActive, reports })
+        await Patient.create({ email, name, lastname, isActive, historyDescription, reports })
 
-            return NextResponse.json(patient, { status: 201 })
-
-        } catch (error) {
-            console.log(error)
-        }
+        const patients = await Patient.find()
+        return NextResponse.json(patients)
 
     } catch (error) {
         console.log(error)
@@ -37,6 +41,7 @@ export async function POST(req: NextRequest) {
     }
 }
 
+// ? get patient list
 export async function GET(req: NextRequest) {
 
     try {

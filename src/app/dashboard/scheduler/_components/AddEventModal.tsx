@@ -4,6 +4,7 @@ import Combobox from "@/components/ui/Combobox"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
+    DialogClose,
     DialogContent,
     DialogFooter,
     DialogHeader,
@@ -24,6 +25,7 @@ export function AddEventModal({ onEventAdded }: any) {
     const [patients, setPatients] = useState([])
     const [selectedUserValue, setSelectedUserValue] = useState('')
     const [selectedPatientValue, setSelectedPatientValue] = useState('')
+    const [eventType, setEventType] = useState('')
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
@@ -33,11 +35,12 @@ export function AddEventModal({ onEventAdded }: any) {
             start,
             end,
             selectedUserValue,
-            selectedPatientValue
+            selectedPatientValue,
+            eventType
         })
     }
 
-    
+
     useEffect(() => {
         const getUsers = async () => {
             let respUsers = await fetch('http://localhost:3000/api/admin')
@@ -46,14 +49,14 @@ export function AddEventModal({ onEventAdded }: any) {
             let respPatients = await fetch('http://localhost:3000/api/admin/patient')
             let patientsResp = await respPatients.json()
 
-            let users = await usersResp.map((user: any) => ({value: user._id, label: user.name}))
-            let patients = await patientsResp.map((patient: any) => ({value: patient._id, label: patient.name}))
+            let users = await usersResp.map((user: any) => ({ value: user._id, label: user.name }))
+            let patients = await patientsResp.map((patient: any) => ({ value: patient._id, label: patient.name }))
 
             setUsers(users)
             setPatients(patients)
         }
         getUsers()
-    },[])
+    }, [])
 
     return (
         <Dialog>
@@ -92,22 +95,53 @@ export function AddEventModal({ onEventAdded }: any) {
                         <Label className="text-right">
                             Especialista
                         </Label>
-                        <Combobox arrayValues={users} selectedValue={selectedUserValue} setSelectedValue={setSelectedUserValue}/>
+                        <Combobox arrayValues={users} selectedValue={selectedUserValue} setSelectedValue={setSelectedUserValue} />
                     </div>
 
                     <div className="flex justify-between items-center gap-2">
                         <Label className="text-right">
                             Paciente
                         </Label>
-                        <Combobox arrayValues={patients} selectedValue={selectedPatientValue} setSelectedValue={setSelectedPatientValue}/>
+                        <Combobox arrayValues={patients} selectedValue={selectedPatientValue} setSelectedValue={setSelectedPatientValue} />
+                    </div>
+
+                    <div className="flex justify-between items-center gap-2">
+                        <Label className="text-right">
+                            Tipo de cita:
+                        </Label>
+                        <Combobox
+                            arrayValues={[
+                                {
+                                    value: "ENTREVISTA",
+                                    label: "ENTREVISTA"
+                                },
+                                {
+                                    value: "SESSION",
+                                    label: "SESSION"
+                                },
+                                {
+                                    value: "EVALUACION",
+                                    label: "EVALUACION"
+                                },
+                                {
+                                    value: "ENTERVISTA_EVALUACION",
+                                    label: "ENTERVISTA_EVALUACION"
+                                }
+                            ]}
+                            selectedValue={eventType}
+                            setSelectedValue={setEventType}
+                        />
                     </div>
                 </div>
 
                 <DialogFooter>
-                    <Button onClick={handleSubmit} type="button">Guardar</Button>
+                    <DialogClose>
+                        <Button onClick={handleSubmit} type="button">Guardar</Button>
+                    </DialogClose>
                 </DialogFooter>
 
             </DialogContent>
+
         </Dialog>
     )
 }

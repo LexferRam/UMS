@@ -8,6 +8,16 @@ import moment from 'moment'
 import { useUserInfo } from '@/hooks';
 import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule'
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
+import { formatDate } from '@/util/dates';
+
+export const EVENTS_TYPE_COLORS: any = {
+  "entrevista"           : "red",
+  "session"              : "orange",
+  "evaluacion"           : "green",
+  "entervista_evaluacion": "blue"
+}
 
 const Scheduler = () => {
 
@@ -16,7 +26,8 @@ const Scheduler = () => {
   const [userInfo] = useUserInfo()
 
   const onEventAdded = async (e: any) => {
-    let calendarApi = calendarRef?.current?.getApi() 
+    let calendarApi = calendarRef?.current?.getApi()
+    console.log(e.eventType)
 
     let newEvent = {
       title: e.title,
@@ -24,14 +35,18 @@ const Scheduler = () => {
       end: moment(e.end).toDate(),
       _asignTo: e.selectedUserValue,
       patient: e.selectedPatientValue,
+      color: EVENTS_TYPE_COLORS[e.eventType],
+      eventType: e.eventType
       // rrule: {
       //   freq: 'weekly', // monthly  yearly  DAILY  weekly
       //   interval: 3,
       //   byweekday: [],
-      //   dtstart: moment(e.start).toDate(), // will also accept '20120201T103000'
-      //   until: moment(e.end).toDate()// will also accept '20120201'
+      //   dtstart: moment(e.start).toDate(), 
+      //   until: moment(e.end).toDate()
       // }
     }
+
+    let  {color, ...restEvent} = newEvent;
 
     await calendarApi.addEvent(newEvent)
 
@@ -40,7 +55,7 @@ const Scheduler = () => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(newEvent)
+      body: JSON.stringify(restEvent)
     })
 
     if (res.ok) {
@@ -53,7 +68,13 @@ const Scheduler = () => {
     const getEvents = async () => {
       let respEvents = await fetch('http://localhost:3000/api/admin/events')
       let eventsDB = await respEvents.json()
-      setEvents(eventsDB)
+
+      const formattedEvents = eventsDB.map((event: any) => ({
+        ...event,
+        color: EVENTS_TYPE_COLORS[event.eventType],
+      }))
+      console.log(formattedEvents)
+      setEvents(formattedEvents)
       // await calendarApi.addEvent(newEvent)
     }
 
@@ -96,11 +117,53 @@ const Scheduler = () => {
           center: 'title',
           right: 'dayGridDay dayGridWeek dayGridMonth'
         }}
-      // eventClick={
-      //   function(arg){
-      //     console.log(arg.event)
-      //   }
-      // }
+        // eventClick={
+        //   function(arg){
+        //     console.log(arg.event)
+        //   }
+        // }
+        eventDidMount={(info) => {
+          // console.log(info.event.extendedProps)
+          tippy(info.el, {
+            animation: 'fade',
+            trigger: 'click',
+            touch: 'hold',
+            allowHTML: true,
+            content:
+              `<div>
+                  <div style="display: flex;">
+                    <b>Nombre:</b><h3>${info.event.extendedProps.patient.name}</h3>
+                  </div>
+
+                  <div style="display: flex;">
+                    <b>Fecha de Nacimiento:</b><h3>${info.event.extendedProps.patient.name}</h3>
+                  </div>
+
+                  <div style="display: flex;">
+                    <b>Edad:</b><h3>${info.event.extendedProps.patient.name}</h3>
+                  </div>
+
+                  <div style="display: flex;">
+                    <b>Diagnóstico:</b><h3>${info.event.extendedProps.patient.name}</h3>
+                  </div>
+
+                  <div style="display: flex;">
+                    <b>MC:</b><h3>${info.event.extendedProps.patient.name}</h3>
+                  </div>
+
+                  <div style="display: flex; flex-direction: colunm">
+                    <b>Especialistas tratantes:</b>
+                    <h3>${info.event.extendedProps.patient.name}</h3>
+                  </div>
+
+                  <div style="display: flex; flex-direction: colunm">
+                  <b>Especialistas cita:</b>
+                    <h3>${info.event.extendedProps._asignTo.name}</h3>
+                  </div>
+
+                </div>`,
+          });
+        }}
       />
     </div>
   )

@@ -15,17 +15,17 @@ export async function POST(req: NextRequest) {
         const session: any = await getServerSession(authOptions)
 
         const userFound: any = await User.find({ email: session?.user.email }).lean()
-        
-        let createdBy = userFound[0]._id.toString() ;
+
+        let createdBy = userFound[0]._id.toString();
 
         const { description, associatedEvent, patient } = await req.json()
 
         await connectMongoDB()
 
-        const newReport = await Report.create({ description,  createdBy: new mongoose.Types.ObjectId(createdBy) , associatedEvent })
+        const newReport = await Report.create({ description, createdBy: new mongoose.Types.ObjectId(createdBy), associatedEvent })
 
         // ? buscar en Patients usando asignTo
-        const patientFound = await Patient.find({ _id: patient }).populate({path:'reports', model: Report})
+        const patientFound = await Patient.find({ _id: patient }).populate({ path: 'reports', model: Report })
 
         // ? actualizar paciente encontrado en su prop reports con el nuevo reporte
         await patientFound[0]?.reports.push(newReport)
@@ -33,6 +33,30 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json(patientFound, { status: 201 })
 
+    } catch (error) {
+        console.log(error)
+        if (error instanceof Error) {
+            return NextResponse.json({
+                message: error.message
+            }, {
+                status: 400
+            })
+        }
+    }
+}
+
+// ? Get reports by userId
+export async function GET(req: NextRequest) {
+    try {
+        const session: any = await getServerSession(authOptions)
+
+        const userFound: any = await User.find({ email: session?.user.email }).lean()
+
+        let userId = userFound[0]._id.toString();
+
+        const userReports: any = await Report.find({ createdBy: userId })
+
+        return NextResponse.json(userReports, { status: 201 })
     } catch (error) {
         console.log(error)
         if (error instanceof Error) {

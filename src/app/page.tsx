@@ -5,9 +5,9 @@ import Image from 'next/image'
 
 export default function Home() {
   return (
-    <div className=''>
-      {/* <div className='hidden md:block w-full h-ful bg-cover bg-[url("/login1.png")] bg-bottom brightness-[80%]'>
-      </div> */}
+    <div className='grid grid-col-2'>
+      <div className='hidden md:block w-full h-ful bg-cover bg-[url("/login1.png")] bg-bottom brightness-[80%]'>
+      </div>
 
       <div className="min-h-screen bg-[#eef2f6] flex flex-col justify-center py-12 px-6 lg:px-8">
 

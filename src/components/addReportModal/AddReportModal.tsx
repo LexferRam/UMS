@@ -1,7 +1,6 @@
 'use client'
 
-import { FC, useEffect, useState } from "react"
-import Combobox from "@/components/ui/Combobox"
+import { FC, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { Textarea } from "../ui/textarea"
 import { useRouter } from "next/navigation"
+import { PlusIcon } from "@heroicons/react/24/outline"
 
 export const AddReportModal: FC<{ eventId: string, patient: any }> = ({ eventId, patient }) => {
 
@@ -39,11 +39,12 @@ export const AddReportModal: FC<{ eventId: string, patient: any }> = ({ eventId,
         }
     }
 
-
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline" className="bg-blue-100">Agregar Reporte</Button>
+                <div className="flex gap-2 items-center cursor-pointer">
+                    <PlusIcon className="h-6 w-6 text-green-500 cursor-pointer font-extrabold" /> Agregar Reporte
+                </div>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[450px]">

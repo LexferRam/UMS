@@ -2,6 +2,7 @@
 import { connectMongoDB } from "@/db/mongodb"
 import Event from "@/models/event"
 import User from "@/models/user"
+import mongoose from "mongoose"
 import { NextApiRequest } from "next"
 import { getToken } from "next-auth/jwt"
 import { NextRequest, NextResponse } from "next/server"
@@ -32,6 +33,7 @@ export async function GET(req: NextApiRequest) {
     }
 }
 
+// ? create new Event
 export async function POST(req: NextRequest) {
 
     try {
@@ -40,10 +42,10 @@ export async function POST(req: NextRequest) {
         if(token?.email !== 'lexferramirez@gmail.com') return NextResponse.json([])
 
         try {
-            const { _creator, _asignTo, title, start, end, patient } = await req.json()
+            const { _creator, _asignTo, title, start, end, patient, eventType } = await req.json()
             await connectMongoDB()
              
-            const event = await Event.create({_creator, _asignTo, title, start, end, patient, eventStatus: true})
+            const event = await Event.create({_creator, _asignTo: new mongoose.Types.ObjectId(_asignTo), title, start, end, patient, eventStatus: true, eventType})
 
                         // ? Buscar user por campo _asignTo
                         let userFound = await User.findById({_id: _asignTo})
