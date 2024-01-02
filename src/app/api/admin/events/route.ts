@@ -15,12 +15,24 @@ export async function GET(req: NextRequest) {
         const token = await getToken({ req, secret })
 
         // TODO: Validar con el role del usuario
-        if(token?.email !== 'lexferramirez@gmail.com') {
+        if (token?.email !== 'lexferramirez@gmail.com') {
             await connectMongoDB()
             let updatedUser = await User
                 .find({ email: token?.email })
-                .populate({path:"events", model: Event})
-                .populate({path:"patient", model: Patient})
+                .populate({
+                    path: "events",
+                    model: Event,
+                    populate: [
+                        {
+                            path: 'patient',
+                            model: Patient
+                        },
+                        {
+                            path: '_asignTo',
+                            model: User
+                        }
+                    ]
+                })
 
             return NextResponse.json(updatedUser[0].events)
         }
@@ -28,8 +40,8 @@ export async function GET(req: NextRequest) {
         await connectMongoDB()
         const events = await Event
             .find()
-            .populate({path:"patient", model: Patient})
-            .populate({path:"_asignTo", model: User})
+            .populate({ path: "patient", model: Patient })
+            .populate({ path: "_asignTo", model: User })
 
         return NextResponse.json(events)
 

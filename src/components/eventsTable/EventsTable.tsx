@@ -3,8 +3,11 @@
 import { FC } from "react";
 import { AddReportModal } from "../addReportModal/AddReportModal";
 import moment from "moment";
+import { useUserInfo } from "@/hooks";
 
 const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders, events }) => {
+
+    const [ userInfo ] = useUserInfo()
 
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>
@@ -91,9 +94,17 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                                             )}
                                         </p>
                                     </td>
-                                    <td className={classes}>
-                                        <AddReportModal eventId={_id} patient={patient} />
-                                    </td>
+
+                                    {userInfo[0]?.role === 'admin' ? (
+                                        <td className={classes}>
+                                            {userInfo[0].name}
+                                        </td>
+                                    ) : (
+                                        <td className={classes}>
+                                            <AddReportModal eventId={_id} patient={patient} />
+                                        </td>
+                                    )}
+                                   
                                 </tr>
                             );
                         })}

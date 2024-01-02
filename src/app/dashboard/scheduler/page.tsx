@@ -10,7 +10,6 @@ import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule'
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
-import { formatDate } from '@/util/dates';
 
 export const EVENTS_TYPE_COLORS: any = {
   "entrevista"           : "red",
@@ -69,11 +68,10 @@ const Scheduler = () => {
       let respEvents = await fetch('http://localhost:3000/api/admin/events')
       let eventsDB = await respEvents.json()
 
-      const formattedEvents = eventsDB.map((event: any) => ({
+      const formattedEvents = eventsDB?.map((event: any) => ({
         ...event,
         color: EVENTS_TYPE_COLORS[event.eventType],
       }))
-      console.log(formattedEvents)
       setEvents(formattedEvents)
       // await calendarApi.addEvent(newEvent)
     }

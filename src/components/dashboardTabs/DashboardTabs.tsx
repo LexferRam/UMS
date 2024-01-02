@@ -6,17 +6,18 @@ import EventsTable from '../eventsTable/EventsTable';
 import { CalendarDaysIcon, ExclamationTriangleIcon, FolderIcon, UserIcon } from '@heroicons/react/24/outline';
 import ReportsTable from '../ReportsTable';
 
-const DashboardTabs: FC<{ userInfo: any, userReports: any }> = ({ userInfo, userReports }) => {
+const DashboardTabs: FC<{ userInfo: any, userReports: any, userEvent: any }> = ({ userInfo, userReports, userEvent }) => {
 
     const TABLE_HEAD_PATIENT = ["Nombre paciente", "Correo", "Estatus", "Acciones"];
     const TABLE_HEAD_EVENTS = ["Cita", "Estatus de la cita", "Hora", "Nombre paciente", "Estatus paciente", "Acciones"];
+    const TABLE_HEAD_EVENTS_ADMIN = ["Cita", "Estatus de la cita", "Hora", "Nombre paciente", "Estatus paciente", "Especialista"];
     const TABLE_HEAD_REPORTS = ["Descripción", "Creado", "Cita asociada", ""];
 
     const [selectedCard, setSelectedCard] = useState<'patients' | 'events' | 'reports'>('patients')
 
     const ActiveCard = {
         'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={userInfo[0]?.asignedPatients} />,
-        'events': <EventsTable tableHeaders={TABLE_HEAD_EVENTS} events={eventForToday(userInfo[0]?.events)} />,
+        'events': <EventsTable tableHeaders={userInfo[0]?.role !== 'admin'? TABLE_HEAD_EVENTS : TABLE_HEAD_EVENTS_ADMIN} events={eventForToday(userEvent)} />,
         'reports': <ReportsTable tableHeaders={TABLE_HEAD_REPORTS} events={userReports} />
     }
 
@@ -26,6 +27,7 @@ const DashboardTabs: FC<{ userInfo: any, userReports: any }> = ({ userInfo, user
                 <div className="container max-w-6xl px-5 mx-auto my-4">
                     <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
 
+                        {/* MIS PACIENTES */}
                         <div onClick={() => setSelectedCard('patients')} className="relative overflow-hidden p-5 bg-amber-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer">
                             <div className="flex items-center space-x-2 space-y-3">
 
@@ -48,6 +50,7 @@ const DashboardTabs: FC<{ userInfo: any, userReports: any }> = ({ userInfo, user
                             </div>
                         </div>
 
+                        {/* CITAS PARA HOY */}
                         <div onClick={() => setSelectedCard('events')} className="relative overflow-hidden p-5 bg-fuchsia-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer">
                             <div className="flex items-center space-x-2 space-y-3">
 
@@ -57,7 +60,7 @@ const DashboardTabs: FC<{ userInfo: any, userReports: any }> = ({ userInfo, user
 
                                 <div className='flex flex-col items-center'>
                                     <div className="text-fuchsia-800 text-center font-semibold">Citas para hoy</div>
-                                    <div className="text-2xl font-bold text-fuchsia-900">{eventForToday(userInfo[0]?.events)?.length}</div>
+                                    <div className="text-2xl font-bold text-fuchsia-900">{eventForToday(userEvent)?.length}</div>
                                 </div>
 
                                 <div>
@@ -70,6 +73,7 @@ const DashboardTabs: FC<{ userInfo: any, userReports: any }> = ({ userInfo, user
                             </div>
                         </div>
 
+                        {/* MIS REPORTES */}
                         <div onClick={() => setSelectedCard('reports')} className="relative overflow-hidden p-5 bg-emerald-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer">
                             <div className="flex items-center space-x-2 space-y-3">
 
@@ -92,6 +96,7 @@ const DashboardTabs: FC<{ userInfo: any, userReports: any }> = ({ userInfo, user
                             </div>
                         </div>
 
+                        {/* REPORTES FALTANTES */}
                         <div
                             onClick={() => setSelectedCard('events')}
                             className="relative overflow-hidden p-5 bg-orange-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer"
