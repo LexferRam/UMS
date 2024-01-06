@@ -6,18 +6,19 @@ import { useRouter } from 'next/navigation'
 import { AddPatientModal } from './AddPatientModal'
 import { useUserInfo } from '@/hooks'
 
-const PatientTable: FC<{ tableHeaders: string[], patients: any, refetch: any }> = ({ tableHeaders, patients, refetch }) => {
+const PatientTable: FC<{ 
+  tableHeaders: string[], 
+  patients:     any 
+}> = ({ tableHeaders, patients }) => {
 
   const router = useRouter()
   const [userInfo] = useUserInfo()
-
-  console.log(userInfo)
 
   return (
     <div className='p-5 max-h-[700px] overflow-scroll'>
       <div className="flex gap-4 items-center mt-4">
         <h3 className='font-semibold text-gray-600 text-xl'>Mis pacientes:</h3>
-        {userInfo[0]?.role === 'admin' && <AddPatientModal refetch={refetch} />}
+        {userInfo[0]?.role === 'admin' && <AddPatientModal />}
       </div>
       <div className="h-full w-full overflow-scroll shadow-md rounded p-8">
         <table className="w-full min-w-max table-auto text-left">
@@ -65,10 +66,6 @@ const PatientTable: FC<{ tableHeaders: string[], patients: any, refetch: any }> 
                       color="blue-gray"
                       className="font-normal"
                     >
-                      <p
-                        color="blue-gray"
-                        className="font-normal"
-                      >
                         {isActive ? (
                           <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
                             Activo
@@ -78,17 +75,9 @@ const PatientTable: FC<{ tableHeaders: string[], patients: any, refetch: any }> 
                             Desactivo
                           </span>
                         )}
-                      </p>
                     </p>
                   </td>
                   <td className={classes}>
-                    {/* <Button
-                      onClick={() => router.push(`/dashboard/patientHistory/${_id}`, { scroll: false })}
-                      variant="outline"
-                      className='bg-blue-100'
-                    >
-                      Ver reportes
-                    </Button> */}
                     <div className="flex gap-4">
                       <div
                         onClick={() => router.push(`/dashboard/patientHistory/${_id}`, { scroll: false })}

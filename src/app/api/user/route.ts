@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
             lastname, 
             isActive: true, 
             role: 'specialist', 
-            speciality: '' 
+            speciality: ''
         })
     return NextResponse.json({ message: "User Register" }, { status: 201 })
 }

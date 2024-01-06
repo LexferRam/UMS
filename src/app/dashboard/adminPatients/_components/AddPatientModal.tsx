@@ -17,7 +17,7 @@ import { Label } from "@radix-ui/react-dropdown-menu"
 import { useState } from "react"
 import Datetime from 'react-datetime';
 
-export function AddPatientModal({refetch}: any) {
+export function AddPatientModal() {
 
     const [name, setName] = useState('')
     const [lastname, setLastname] = useState('')
@@ -41,8 +41,6 @@ export function AddPatientModal({refetch}: any) {
             })
         })
         let patientsResp = await respPatients.json()
-        refetch()
-        console.log(patientsResp)
     }
 
     return (

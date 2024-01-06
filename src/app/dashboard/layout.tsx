@@ -1,10 +1,10 @@
 
+import React from 'react'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.css'
 import AsideMenuOptions from '@/components/sidebar/AsideMenuOptions'
 import { MainNav } from '@/components/sidebar/MainNav'
-import React from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 

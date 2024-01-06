@@ -19,7 +19,7 @@ const patientSchema = new Schema({
     },
     historyDescription: {
         type: String,
-        required: true
+        required: false
     },
     reports : [{ type: Schema.Types.ObjectId, ref: 'Report' }]
 },

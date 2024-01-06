@@ -2,6 +2,7 @@
 import { connectMongoDB } from "@/db/mongodb"
 import Event from "@/models/event"
 import Patient from "@/models/patient"
+import Report from "@/models/report"
 import User from "@/models/user"
 import { getToken } from "next-auth/jwt"
 import { NextRequest, NextResponse } from "next/server"
@@ -30,6 +31,10 @@ export async function GET(req: NextRequest) {
                         {
                             path: '_asignTo',
                             model: User
+                        },
+                        {
+                            path: 'reports',
+                            model: Report
                         }
                     ]
                 })
@@ -42,6 +47,7 @@ export async function GET(req: NextRequest) {
             .find()
             .populate({ path: "patient", model: Patient })
             .populate({ path: "_asignTo", model: User })
+            .populate({ path: "reports", model: Report })
 
         return NextResponse.json(events)
 

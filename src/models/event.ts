@@ -35,7 +35,15 @@ var eventSchema = new Schema({
   eventType:{
     type: String,
     required: true   
-  }
+  },
+  freq: {
+    type: String,
+    required: true
+  },
+  byweekday: {
+    type: Array,
+    required: true
+  },
 });
 
 const Event = models.Event || mongoose.model('Event', eventSchema);

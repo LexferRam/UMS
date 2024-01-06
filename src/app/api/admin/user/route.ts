@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { authOptions } from "../../auth/[...nextauth]/route"
 import Event from "@/models/event"
 import Patient from "@/models/patient"
+import Report from "@/models/report"
 
 const secret = process.env.NEXTAUTH_SECRET
 
@@ -46,7 +47,11 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
                 model: Event,
                 populate: {
                     path: 'patient',
-                    model: Patient
+                    model: Patient,
+                    populate: {
+                        path: 'reports',
+                        model: Report
+                    }
                 }
             })
             .populate({

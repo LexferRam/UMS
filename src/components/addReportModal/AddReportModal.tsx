@@ -21,6 +21,7 @@ export const AddReportModal: FC<{ eventId: string, patient: any }> = ({ eventId,
     const [description, setDescription] = useState('')
 
     const handleClick = async (event: any) => {
+        alert('aqui')
         event.preventDefault();
 
         const respAddReport = await fetch('http://localhost:3000/api/admin/reports', {

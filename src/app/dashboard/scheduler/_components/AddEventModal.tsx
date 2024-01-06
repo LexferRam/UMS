@@ -16,6 +16,44 @@ import { Label } from "@radix-ui/react-dropdown-menu"
 import { useEffect, useState } from "react"
 import Datetime from 'react-datetime';
 
+const daysOfWeek = [
+    {
+        id: 1,
+        name: 'Lunes',
+        value: 'mo'
+    },
+    {
+        id: 2,
+        name: 'Martes',
+        value: 'tu'
+    },
+    {
+        id: 3,
+        name: 'Miercoles',
+        value: 'we'
+    },
+    {
+        id: 4,
+        name: 'Jueves',
+        value: 'th'
+    },
+    {
+        id: 5,
+        name: 'Viernes',
+        value: 'fr'
+    },
+    {
+        id: 6,
+        name: 'Sábado',
+        value: 'sa'
+    },
+    {
+        id: 7,
+        name: 'Domingo',
+        value: 'su'
+    }
+]
+
 export function AddEventModal({ onEventAdded }: any) {
 
     const [title, setTitle] = useState('')
@@ -26,9 +64,30 @@ export function AddEventModal({ onEventAdded }: any) {
     const [selectedUserValue, setSelectedUserValue] = useState('')
     const [selectedPatientValue, setSelectedPatientValue] = useState('')
     const [eventType, setEventType] = useState('')
+    const [selectedDays, setSelectedDays] = useState<boolean[]>(
+        new Array(7).fill(false)
+    )
+
+    const handleOnChange = (position: any) => {
+        const updatedCheckedState = selectedDays.map((item, index) =>
+            index === position ? !item : item
+        );
+
+        setSelectedDays([...updatedCheckedState]);
+    }
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
+
+        const selectedDaysArr = [];
+        let valuesDaysOfWeek = ['mo','tu','we','th','fr','sa','su']
+
+        for (let i = 0; i < selectedDays.length; i++) {
+            if (selectedDays[i]) {
+                selectedDaysArr.push(valuesDaysOfWeek[i]);
+            }
+        }
+
 
         onEventAdded({
             title,
@@ -36,7 +95,8 @@ export function AddEventModal({ onEventAdded }: any) {
             end,
             selectedUserValue,
             selectedPatientValue,
-            eventType
+            eventType,
+            selectedDaysArr
         })
     }
 
@@ -89,6 +149,32 @@ export function AddEventModal({ onEventAdded }: any) {
                             Fecha final
                         </Label>
                         <Datetime value={end} onChange={(date: any) => setEnd(new Date(date))} className="col-span-3" />
+                    </div>
+
+                    <div className="flex flex-col gap-4 flex-wrap justify-center">
+                        <div>
+                            Seleccione dias de recurrencia:
+                        </div>
+                        <div className="flex gap-4 flex-wrap justify-center">
+                            {daysOfWeek.map((day, i) => (
+                                <div className="flex gap-1 items-center" key={day.id}>
+                                    <input
+                                        type="checkbox"
+                                        id={day.name}
+                                        name={day.name}
+                                        value={day.name}
+                                        checked={selectedDays[i]}
+                                        onChange={() => handleOnChange(i)}
+                                    />
+                                    <label
+                                        htmlFor={day.name}
+                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    >
+                                        {day.name}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
                     <div className="flex justify-between items-center gap-2">

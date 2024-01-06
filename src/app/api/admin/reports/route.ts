@@ -6,6 +6,7 @@ import { authOptions } from "../../auth/[...nextauth]/route"
 import User from "@/models/user"
 import Patient from "@/models/patient"
 import mongoose from "mongoose"
+import Event from "@/models/event"
 
 // ? Create new report
 export async function POST(req: NextRequest) {
@@ -22,14 +23,18 @@ export async function POST(req: NextRequest) {
 
         await connectMongoDB()
 
-        const newReport = await Report.create({ description, createdBy: new mongoose.Types.ObjectId(createdBy), associatedEvent })
+        const newReport = await Report.create({ description, createdBy: new mongoose.Types.ObjectId(createdBy), associatedEvent: new mongoose.Types.ObjectId(associatedEvent)})
 
         // ? buscar en Patients usando asignTo
-        const patientFound = await Patient.find({ _id: patient }).populate({ path: 'reports', model: Report })
+        const patientFound = await Patient.find({ _id: patient })
+        const eventFound = await Event.find({ _id: associatedEvent })
 
         // ? actualizar paciente encontrado en su prop reports con el nuevo reporte
         await patientFound[0]?.reports.push(newReport)
         await patientFound[0].save()
+
+        await eventFound[0]?.reports.push(newReport)
+        await eventFound[0].save()
 
         return NextResponse.json(patientFound, { status: 201 })
 

@@ -1,10 +1,10 @@
 'use client'
+import moment from 'moment'
 import React, { useEffect, useRef, useState } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import esLocale from '@fullcalendar/core/locales/es';
 import { AddEventModal } from './_components/AddEventModal';
-import moment from 'moment'
 import { useUserInfo } from '@/hooks';
 import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule'
@@ -12,9 +12,9 @@ import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
 export const EVENTS_TYPE_COLORS: any = {
-  "entrevista"           : "red",
-  "session"              : "orange",
-  "evaluacion"           : "green",
+  "entrevista": "red",
+  "session": "orange",
+  "evaluacion": "green",
   "entervista_evaluacion": "blue"
 }
 
@@ -26,26 +26,33 @@ const Scheduler = () => {
 
   const onEventAdded = async (e: any) => {
     let calendarApi = calendarRef?.current?.getApi()
-    console.log(e.eventType)
 
     let newEvent = {
-      title: e.title,
-      start: moment(e.start).toDate(),
-      end: moment(e.end).toDate(),
+      title: moment(e?.start).format('LT') +'-'+ e?.title,
       _asignTo: e.selectedUserValue,
       patient: e.selectedPatientValue,
       color: EVENTS_TYPE_COLORS[e.eventType],
-      eventType: e.eventType
-      // rrule: {
-      //   freq: 'weekly', // monthly  yearly  DAILY  weekly
-      //   interval: 3,
-      //   byweekday: [],
-      //   dtstart: moment(e.start).toDate(), 
-      //   until: moment(e.end).toDate()
-      // }
+      eventType: e.eventType,
+      rrule: {
+        freq: 'daily', // monthly  yearly  daily  weekly
+        byweekday: e.selectedDaysArr,
+        dtstart: e.start,//moment(e.start).toDate(),
+        until: e.end//moment(e.end).toDate()
+      },
+      allDay: true,
     }
 
-    let  {color, ...restEvent} = newEvent;
+    let { rrule, ...restnewEvent } = newEvent
+
+    let newEventToDB = {
+      ...restnewEvent,
+      title: e?.title,
+      start: newEvent.rrule.dtstart,
+      end: newEvent.rrule.until,
+      freq: newEvent.rrule.freq,
+      byweekday: newEvent.rrule.byweekday,
+      reports: [],
+    };
 
     await calendarApi.addEvent(newEvent)
 
@@ -54,7 +61,7 @@ const Scheduler = () => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(restEvent)
+      body: JSON.stringify(newEventToDB)
     })
 
     if (res.ok) {
@@ -70,10 +77,17 @@ const Scheduler = () => {
 
       const formattedEvents = eventsDB?.map((event: any) => ({
         ...event,
-        color: EVENTS_TYPE_COLORS[event.eventType],
+        color: EVENTS_TYPE_COLORS[event?.eventType],
+        rrule: {
+          freq: event?.freq || 'daily', // monthly  yearly  daily  weekly
+          byweekday: event?.selectedDaysArr,
+          dtstart: event?.start,//moment(event?.start).toDate(),
+          until: event?.end//moment(event?.end).toDate()
+        },
+        allDay: true,
+        title: moment(event?.start).format('LT') +'-'+ event?.title
       }))
       setEvents(formattedEvents)
-      // await calendarApi.addEvent(newEvent)
     }
 
     getEvents()
@@ -92,7 +106,7 @@ const Scheduler = () => {
         ref={calendarRef}
         events={events}
         plugins={[dayGridPlugin, interactionPlugin, rrulePlugin]}
-        // initialView="dayGridWeek"
+        // initialView="dayGridMonth"
         locale={esLocale}
         // droppable
         // editable
@@ -113,7 +127,7 @@ const Scheduler = () => {
         headerToolbar={{
           left: 'prev,next,today',
           center: 'title',
-          right: 'dayGridDay dayGridWeek dayGridMonth'
+          right: 'dayGridDay,dayGridWeek,dayGridMonth'
         }}
         // eventClick={
         //   function(arg){
@@ -121,7 +135,6 @@ const Scheduler = () => {
         //   }
         // }
         eventDidMount={(info) => {
-          // console.log(info.event.extendedProps)
           tippy(info.el, {
             animation: 'fade',
             trigger: 'click',
@@ -161,6 +174,21 @@ const Scheduler = () => {
 
                 </div>`,
           });
+        }}
+        displayEventTime={true}
+        // titleFormat={{
+        //   year: 'numeric',
+        //   month: 'short',
+        //   day: 'numeric',
+        //   hour: 'numeric',
+        //   minute: 'numeric',
+        //   hour12: true
+        // }}
+        eventTimeFormat={{ // like '14:30:00'
+          hour: 'numeric',
+          minute: '2-digit',
+          omitZeroMinute: true,
+          meridiem: 'narrow'
         }}
       />
     </div>

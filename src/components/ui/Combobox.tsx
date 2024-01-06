@@ -43,14 +43,14 @@ const Combobox: React.FC<ComboboxProps> = ({ arrayValues, selectedValue, setSele
                 >
                     {selectedValue
                         ? arrayValues.find((arrayValue) => arrayValue.value === selectedValue)?.label
-                        : "Seleccione especialista..."}
+                        : "Seleccione..."}
                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[100%] p-0">
                 <Command>
-                    <CommandInput placeholder="Buscar especialista..." className="h-9" />
-                    <CommandEmpty>Especialista no encontrado</CommandEmpty>
+                    <CommandInput placeholder="Buscar..." className="h-9" />
+                    <CommandEmpty>No encontrado</CommandEmpty>
                     <CommandGroup>
                         {arrayValues?.map((arrayValue) => (
                             <CommandItem

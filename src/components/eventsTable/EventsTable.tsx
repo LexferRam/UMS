@@ -4,10 +4,11 @@ import { FC } from "react";
 import { AddReportModal } from "../addReportModal/AddReportModal";
 import moment from "moment";
 import { useUserInfo } from "@/hooks";
+import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders, events }) => {
 
-    const [ userInfo ] = useUserInfo()
+    const [userInfo] = useUserInfo()
 
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>
@@ -32,7 +33,7 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                         </tr>
                     </thead>
                     <tbody>
-                        {events?.map(({ title, patient, _id, eventStatus,start }: any, index: any) => {
+                        {events?.map(({ title, patient, _id, eventStatus, start, _asignTo, reports }: any, index: any) => {
                             const isLast = index === events.length - 1;
                             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
@@ -96,15 +97,23 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                                     </td>
 
                                     {userInfo[0]?.role === 'admin' ? (
-                                        <td className={classes}>
-                                            {userInfo[0].name}
-                                        </td>
+                                        <>
+                                            <td className={classes}>
+                                                {_asignTo.name}
+                                            </td>
+                                            <td className={classes}>
+                                                {reports.length > 0 ?
+                                                    <CheckIcon className="h-6 w-6 text-green-500" /> :
+                                                    <XMarkIcon className="h-6 w-6 text-red-500" />
+                                                }
+                                            </td>
+                                        </>
                                     ) : (
                                         <td className={classes}>
                                             <AddReportModal eventId={_id} patient={patient} />
                                         </td>
                                     )}
-                                   
+
                                 </tr>
                             );
                         })}

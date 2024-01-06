@@ -1,8 +1,8 @@
 export function isDateWithinRange(dateToCheck: any, startDate: any, endDate: any) {
   // Ensure all dates are Date objects:
-  // dateToCheck = new Date(dateToCheck);
-  startDate = new Date(startDate);
-  endDate = new Date(endDate);
+  dateToCheck = new Date(dateToCheck).setHours(0,0,0,0);
+  startDate = new Date(startDate).setHours(0,0,0,0);
+  endDate = new Date(endDate).setHours(0,0,0,0);
 
   // Check if the date is greater than or equal to the start date
   // and less than or equal to the end date:

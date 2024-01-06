@@ -5,7 +5,7 @@ import '@/styles/globals.css'
 import Providers from '@/context/Providers'
 import "react-datetime/css/react-datetime.css";
 import ReactQueryProvider from '@/context/ReactQueryProvider'
-import ThemeProviderMui from '@/context/ThemeProviderMUI'
+import ThemeProviderMui from '@/context/ThemeProviderMUI';
 
 const inter = Inter({ subsets: ['latin'] })
 
