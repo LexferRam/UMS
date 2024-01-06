@@ -42,7 +42,7 @@ const Combobox: React.FC<ComboboxProps> = ({ arrayValues, selectedValue, setSele
                     className="w-[100%] justify-between"
                 >
                     {selectedValue
-                        ? arrayValues.find((arrayValue) => arrayValue.value === selectedValue)?.label
+                        ? arrayValues?.find((arrayValue) => arrayValue.value === selectedValue)?.label
                         : "Seleccione..."}
                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -51,21 +51,21 @@ const Combobox: React.FC<ComboboxProps> = ({ arrayValues, selectedValue, setSele
                 <Command>
                     <CommandInput placeholder="Buscar..." className="h-9" />
                     <CommandEmpty>No encontrado</CommandEmpty>
-                    <CommandGroup>
+                    <CommandGroup className="overflow-y-scroll max-h-80">
                         {arrayValues?.map((arrayValue) => (
                             <CommandItem
-                                key={arrayValue.value}
-                                value={arrayValue.value}
+                                key={arrayValue?.value}
+                                value={arrayValue?.value}
                                 onSelect={(currentValue) => {
                                     setSelectedValue(currentValue === selectedValue ? "" : currentValue)
                                     setOpen(false)
                                 }}
                             >
-                                {arrayValue.label}
+                                {arrayValue?.label}
                                 <CheckIcon
                                     className={cn(
                                         "ml-auto h-4 w-4",
-                                        selectedValue === arrayValue.value ? "opacity-100" : "opacity-0"
+                                        selectedValue === arrayValue?.value ? "opacity-100" : "opacity-0"
                                     )}
                                 />
                             </CommandItem>

@@ -3,6 +3,8 @@
 import { FC } from "react";
 import moment from "moment";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import 'moment/locale/es'
+moment.locale('es');
 
 const ReportsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders, events }) => {
 

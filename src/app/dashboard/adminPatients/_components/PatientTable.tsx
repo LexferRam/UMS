@@ -5,11 +5,13 @@ import { DocumentMagnifyingGlassIcon, PencilSquareIcon } from '@heroicons/react/
 import { useRouter } from 'next/navigation'
 import { AddPatientModal } from './AddPatientModal'
 import { useUserInfo } from '@/hooks'
+import { EditPatientModal } from './EditPatientModal'
 
 const PatientTable: FC<{ 
   tableHeaders: string[], 
-  patients:     any 
-}> = ({ tableHeaders, patients }) => {
+  patients:     any,
+  refetch?:  any
+}> = ({ tableHeaders, patients, refetch }) => {
 
   const router = useRouter()
   const [userInfo] = useUserInfo()
@@ -18,7 +20,7 @@ const PatientTable: FC<{
     <div className='p-5 max-h-[700px] overflow-scroll'>
       <div className="flex gap-4 items-center mt-4">
         <h3 className='font-semibold text-gray-600 text-xl'>Mis pacientes:</h3>
-        {userInfo[0]?.role === 'admin' && <AddPatientModal />}
+        {userInfo[0]?.role === 'admin' && <AddPatientModal refetch={refetch}/>}
       </div>
       <div className="h-full w-full overflow-scroll shadow-md rounded p-8">
         <table className="w-full min-w-max table-auto text-left">
@@ -39,9 +41,10 @@ const PatientTable: FC<{
             </tr>
           </thead>
           <tbody>
-            {patients?.map(({ name, email, _id, isActive }: any) => ({ name: name, job: email, _id, isActive })).map(({ name, job, _id, isActive }: any, index: any) => {
+            {patients?.map(({_id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive}: any, index: any) => {
               const isLast = index === patients.length - 1;
               const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
+              // if(!isActive && userInfo[0]?.role !== 'admin' ) return
 
               return (
                 <tr key={_id}>
@@ -58,7 +61,31 @@ const PatientTable: FC<{
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {job}
+                      {lastname}
+                    </p>
+                  </td>
+                  <td className={classes}>
+                    <p
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {dateOfBirth}
+                    </p>
+                  </td>
+                  <td className={classes}>
+                    <p
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {diagnosis}
+                    </p>
+                  </td>
+                  <td className={classes}>
+                    <p
+                      color="blue-gray"
+                      className="font-normal"
+                    >
+                      {historyDescription}
                     </p>
                   </td>
                   <td className={classes}>
@@ -92,23 +119,7 @@ const PatientTable: FC<{
                           Ver reportes
                         </span>
                       </div>
-
-                      {userInfo[0]?.role === 'admin' &&
-                        (
-                          <div
-                            onClick={() => alert('Editar paciente')}
-                            className="flex gap-1 cursor-pointer items-center"
-                          >
-                            <PencilSquareIcon
-                              className="h-6 w-6 text-green-500"
-                            />
-                            <span
-                              className='text-sm font-semibold text-gray-600'
-                            >
-                              Editar
-                            </span>
-                          </div>
-                        )}
+                      {userInfo[0]?.role === 'admin' && <EditPatientModal refetch={refetch} patient={{_id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive}}/>}
                     </div>
 
                   </td>

@@ -1,10 +1,6 @@
 import mongoose, { Schema, models } from 'mongoose'
 
 const patientSchema = new Schema({
-    email: {
-        type: String,
-        required: true
-    },
     name: {
         type: String,
         required: true
@@ -13,15 +9,23 @@ const patientSchema = new Schema({
         type: String,
         required: false
     },
-    isActive: {
-        type: Boolean,
-        default: true
+    dateOfBirth: {
+        type: String,
+        required: true
+    },
+    diagnosis: {
+        type: String,
+        required: false
     },
     historyDescription: {
         type: String,
         required: false
     },
-    reports : [{ type: Schema.Types.ObjectId, ref: 'Report' }]
+    reports : [{ type: Schema.Types.ObjectId, ref: 'Report' }],
+    isActive: {
+        type: Boolean,
+        default: true
+    }
 },
     { timestamps: true }
 );

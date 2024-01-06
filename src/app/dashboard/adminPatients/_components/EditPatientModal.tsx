@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
@@ -10,56 +9,79 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-import { UserPlusIcon } from "@heroicons/react/24/outline"
+import { PencilSquareIcon } from "@heroicons/react/24/outline"
 import { Label } from "@radix-ui/react-dropdown-menu"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from 'react-hook-form'
 
 interface IAddPatientModal {
-    refetch?: any
+    refetch?: any,
+    patient?: any
 }
 
-export function AddPatientModal({ refetch }: IAddPatientModal) {
+export function EditPatientModal({ refetch, patient }: IAddPatientModal) {
 
     const [open, setOpen] = useState(false);
-    const { register, handleSubmit, formState: { errors }, reset } = useForm()
+    const [active, setActive] = useState(patient.isActive);
+    const { register, handleSubmit, formState: { errors }, reset, setValue} = useForm()
 
     const onSubmit = async (data: any) => {
 
+
         let respPatients = await fetch('http://localhost:3000/api/admin/patient', {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                id: patient._id,
                 name: data.name,
                 lastname: data.lastname,
                 dateOfBirth: data.dateOfBirth,
                 diagnosis: data.diagnosis,
                 historyDescription: data.historyDescription,
-                isActive: true,
-                reports: []
+                isActive: data.isActive
             })
         })
         await respPatients.json()
         await refetch()
-        reset();
+        // reset();
         setOpen(false)
     }
+
+    useEffect(()=> {
+
+        setValue('name', patient.name)
+        setValue('lastname', patient.lastname)
+        setValue('dateOfBirth', patient.dateOfBirth)
+        setValue('diagnosis', patient.diagnosis)
+        setValue('historyDescription', patient.historyDescription)
+        setValue('isActive', patient.isActive)
+    },[])
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" onClick={() => setOpen(true)}>
-                    Ingresar paciente
-                    <UserPlusIcon className="ml-2 h-5 w-5 text-green-500 cursor-pointer" />
-                </Button>
+                <div
+                    onClick={() => setOpen(true)}
+                    className="flex gap-1 cursor-pointer items-center"
+                >
+                    <PencilSquareIcon
+                        className="h-6 w-6 text-green-500"
+                    />
+                    <span
+                        className='text-sm font-semibold text-gray-600'
+                    >
+                        Editar
+                    </span>
+                </div>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Nuevo Paciente</DialogTitle>
+                    <DialogTitle>Editar Paciente</DialogTitle>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -143,6 +165,19 @@ export function AddPatientModal({ refetch }: IAddPatientModal) {
                                     })}
                             />
                             {errors.historyDescription && <p className="text-red-700">{JSON.stringify(errors?.historyDescription?.message)}</p>}
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                            <Switch 
+                                className="bg-green-700" 
+                                {...register("isActive")}
+                                checked={active}
+                                onCheckedChange={(e) => {
+                                    setActive(e)
+                                    setValue('isActive', e)
+                                }}
+                            />
+                            <Label>Activar/Dar de baja</Label>
                         </div>
 
                     </div>

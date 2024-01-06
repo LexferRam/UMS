@@ -5,7 +5,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import esLocale from '@fullcalendar/core/locales/es';
 import { AddEventModal } from './_components/AddEventModal';
-import { useUserInfo } from '@/hooks';
+import { useUserInfo, useWindowDimensions } from '@/hooks';
 import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule'
 import tippy from 'tippy.js';
@@ -23,6 +23,7 @@ const Scheduler = () => {
   const calendarRef: any = useRef(null)
   const [events, setEvents] = useState([]) as any
   const [userInfo] = useUserInfo()
+  const { width } = useWindowDimensions();
 
   const onEventAdded = async (e: any) => {
     let calendarApi = calendarRef?.current?.getApi()
@@ -106,7 +107,7 @@ const Scheduler = () => {
         ref={calendarRef}
         events={events}
         plugins={[dayGridPlugin, interactionPlugin, rrulePlugin]}
-        // initialView="dayGridMonth"
+        initialView={width < 500 ? "dayGridDay" : "dayGridMonth" }
         locale={esLocale}
         // droppable
         // editable
@@ -126,7 +127,7 @@ const Scheduler = () => {
         // weekends={false}
         headerToolbar={{
           left: 'prev,next,today',
-          center: 'title',
+          center: width < 500 ? '' : 'title',
           right: 'dayGridDay,dayGridWeek,dayGridMonth'
         }}
         // eventClick={

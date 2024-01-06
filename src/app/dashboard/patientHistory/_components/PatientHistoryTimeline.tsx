@@ -15,6 +15,8 @@ import {
 import moment from 'moment';
 import { useQuery } from 'react-query';
 import TimelineSkeleton from './TimelineSkeleton';
+import 'moment/locale/es'
+moment.locale('es');
 
 const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
     patientId
@@ -99,7 +101,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                                         <Typography variant="h6" color="blue-gray">
                                             {createdBy?.name}
                                         </Typography>
-                                        <Typography color="gary" className="font-extralight text-sm text-gray-600">
+                                        <Typography className="font-extralight text-sm text-gray-600">
                                             <span className='font-light'>{moment(createdAt).format('LL')}</span>
                                         </Typography>
                                         {/* <Typography color="gary" className="font-extralight text-sm text-gray-600">

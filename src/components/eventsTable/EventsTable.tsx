@@ -5,6 +5,8 @@ import { AddReportModal } from "../addReportModal/AddReportModal";
 import moment from "moment";
 import { useUserInfo } from "@/hooks";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import 'moment/locale/es'
+moment.locale('es');
 
 const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders, events }) => {
 

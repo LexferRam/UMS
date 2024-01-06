@@ -12,6 +12,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { Option, Select } from "@material-tailwind/react"
 import { Label } from "@radix-ui/react-dropdown-menu"
 import { useEffect, useState } from "react"
 import Datetime from 'react-datetime';
@@ -80,14 +81,13 @@ export function AddEventModal({ onEventAdded }: any) {
         event.preventDefault();
 
         const selectedDaysArr = [];
-        let valuesDaysOfWeek = ['mo','tu','we','th','fr','sa','su']
+        let valuesDaysOfWeek = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
 
         for (let i = 0; i < selectedDays.length; i++) {
             if (selectedDays[i]) {
                 selectedDaysArr.push(valuesDaysOfWeek[i]);
             }
         }
-
 
         onEventAdded({
             title,
@@ -110,7 +110,10 @@ export function AddEventModal({ onEventAdded }: any) {
             let patientsResp = await respPatients.json()
 
             let users = await usersResp.map((user: any) => ({ value: user._id, label: user.name }))
-            let patients = await patientsResp.map((patient: any) => ({ value: patient._id, label: patient.name }))
+            let patients = await patientsResp.map((patient: any) => {
+                if(!patient.isActive) return
+                return ({ value: patient._id, label: patient.name })
+            })
 
             setUsers(users)
             setPatients(patients)
@@ -188,7 +191,14 @@ export function AddEventModal({ onEventAdded }: any) {
                         <Label className="text-right">
                             Paciente
                         </Label>
-                        <Combobox arrayValues={patients} selectedValue={selectedPatientValue} setSelectedValue={setSelectedPatientValue} />
+                        <select value={selectedPatientValue} onChange={(e) => setSelectedPatientValue(e.target.value)}>
+                            {patients.map((patient: any) => {
+                                if(!patient) return
+                                return(
+                                <option key={patient.value}>{patient.label}</option>
+                            )})}
+                        </select>
+                        {/* <Combobox arrayValues={patients} selectedValue={selectedPatientValue} setSelectedValue={setSelectedPatientValue} /> */}
                     </div>
 
                     <div className="flex justify-between items-center gap-2">

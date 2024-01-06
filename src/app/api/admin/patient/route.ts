@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { connectMongoDB } from "@/db/mongodb"
 import Patient from "@/models/patient"
 import { getToken } from "next-auth/jwt"
+import mongoose from "mongoose"
 
 const secret = process.env.NEXTAUTH_SECRET
 
@@ -15,16 +16,25 @@ export async function POST(req: NextRequest) {
         // if (token?.email !== 'lexferramirez@gmail.com') return NextResponse.json([])
 
         const {
-            email,
             name,
             lastname,
+            dateOfBirth,
+            diagnosis,
+            historyDescription,// motivo de consulta
+            reports,
             isActive,
-            historyDescription,
-            reports
         } = await req.json()
         await connectMongoDB()
 
-        await Patient.create({ email, name, lastname, isActive, historyDescription, reports })
+        await Patient.create({
+            name,
+            lastname,
+            dateOfBirth,
+            diagnosis,
+            historyDescription,// motivo de consulta
+            reports,
+            isActive,
+        })
 
         const patients = await Patient.find()
         return NextResponse.json(patients)
@@ -53,6 +63,50 @@ export async function GET(req: NextRequest) {
         await connectMongoDB()
         const patients = await Patient.find()
         return NextResponse.json(patients)
+
+    } catch (error) {
+        console.log(error)
+        if (error instanceof Error) {
+            return NextResponse.json({
+                message: error.message
+            }, {
+                status: 400
+            })
+        }
+    }
+}
+
+// ? UPDATE patient 
+export async function PATCH(req: NextRequest) {
+
+    try {
+
+        const {
+            id,
+            name,
+            lastname,
+            dateOfBirth,
+            diagnosis,
+            historyDescription,// motivo de consulta
+            isActive,
+        } = await req.json()
+        await connectMongoDB()
+
+        const updatedPatient = await Patient.findOneAndUpdate(
+            { _id: id },
+            {
+                $set: {
+                    name,
+                    lastname,
+                    dateOfBirth,
+                    diagnosis,
+                    historyDescription,
+                    isActive
+                }
+            },
+            { new: true })
+
+        return NextResponse.json(updatedPatient)
 
     } catch (error) {
         console.log(error)
