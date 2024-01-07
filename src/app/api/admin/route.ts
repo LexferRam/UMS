@@ -15,7 +15,7 @@ export async function GET(req: NextApiRequest) {
 
         const token = await getToken({ req, secret })
 
-        if(token?.email !== 'lexferramirez@gmail.com') return NextResponse.json([])
+        if (token?.email !== 'lexferramirez@gmail.com') return NextResponse.json([])
 
         await connectMongoDB()
         const users = await User.find()
@@ -39,39 +39,47 @@ export async function POST(req: NextRequest) {
     try {
 
         const token = await getToken({ req, secret })
-        if(token?.email !== 'lexferramirez@gmail.com') return NextResponse.json([])
+        if (token?.email !== 'lexferramirez@gmail.com') return NextResponse.json([])
 
         try {
-            const { _creator, _asignTo, title, start, end, patient, eventType, freq, byweekday, reports} = await req.json()
+            const { _creator, _asignTo, title, start, end, patient, eventType, freq, byweekday, reports } = await req.json()
             await connectMongoDB()
-             
-            const event = await Event.create({_creator, _asignTo: new mongoose.Types.ObjectId(_asignTo), title, start, end, patient, eventStatus: true, eventType, freq, byweekday, reports})
 
-                        // ? Buscar user por campo _asignTo
-                        let userFound = await User.findById({_id: _asignTo})
-            
-                        // ? hacer push en su propiedad "events"
-                        await userFound.events.push(event)
+            const event = await Event.create({
+                _creator,
+                _asignTo: new mongoose.Types.ObjectId(_asignTo),
+                title,
+                start,
+                end,
+                patient,
+                eventStatus: true,
+                eventType,
+                freq,
+                byweekday,
+                reports
+            })
 
-                        // ? guardar informacion del nueva del user
-                        await userFound.save()
+            // ? Buscar user por campo _asignTo
+            let userFound = await User.findById({ _id: _asignTo })
 
-                        // ? en la prop asignedPatients del userFound filtrar por name de patient
-                        let existPatient = await userFound.asignedPatients.filter((item:any) => item?.toString() === patient)
+            // ? hacer push en su propiedad "events"
+            await userFound.events.push(event)
 
-                        // ? hacer push en su propiedad "patients"
-                        if(!existPatient.length) {
-                            await userFound.asignedPatients.push(patient)
+            // ? guardar informacion del nueva del user
+            await userFound.save()
 
-                            // ? guardar informacion del nueva del user
-                            await userFound.save()
-                        } 
-            
+            // ? en la prop asignedPatients del userFound filtrar por name de patient
+            let existPatient = await userFound.asignedPatients.filter((item: any) => item?.toString() === patient)
 
-                        // // ? Updated user with events
-                        // let updatedUser = await User.findById({_id:_asignTo }).populate("events")
+            // ? hacer push en su propiedad "patients"
+            if (!existPatient.length) {
+                await userFound.asignedPatients.push(patient)
 
-            return NextResponse.json(event, {status: 201})
+                // ? guardar informacion del nueva del user
+                await userFound.save()
+            }
+
+            return NextResponse.json(event, { status: 201 })
 
         } catch (error) {
             console.log(error)

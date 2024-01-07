@@ -111,7 +111,7 @@ export function AddEventModal({ onEventAdded }: any) {
 
             let users = await usersResp.map((user: any) => ({ value: user._id, label: user.name }))
             let patients = await patientsResp.map((patient: any) => {
-                if(!patient.isActive) return
+                if (!patient.isActive) return
                 return ({ value: patient._id, label: patient.name })
             })
 
@@ -191,12 +191,19 @@ export function AddEventModal({ onEventAdded }: any) {
                         <Label className="text-right">
                             Paciente
                         </Label>
-                        <select value={selectedPatientValue} onChange={(e) => setSelectedPatientValue(e.target.value)}>
+                        <select
+                            // value={selectedPatientValue}
+                            onChange={(e) => {
+                                const foundItem: any = patients.filter((item: any) => item?.label === e.target.value)
+                                setSelectedPatientValue(foundItem[0].value)
+                            }}
+                        >
                             {patients.map((patient: any) => {
-                                if(!patient) return
-                                return(
-                                <option key={patient.value}>{patient.label}</option>
-                            )})}
+                                if (!patient) return
+                                return (
+                                    <option key={patient.value}>{patient.label}</option>
+                                )
+                            })}
                         </select>
                         {/* <Combobox arrayValues={patients} selectedValue={selectedPatientValue} setSelectedValue={setSelectedPatientValue} /> */}
                     </div>

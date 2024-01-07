@@ -38,7 +38,7 @@ const AdminUserPage = async () => {
   let userEvent = await userRespEvents.json()
 
   // TODO: recorrer todos los eventos del usuario
-  let missingUserReports = userEvent.map((userEvent: any) => {
+  const missingUserReports = userEvent.map((userEvent: any) => {
 
     let eventStartDate = userEvent.start;
     let eventEndDate = userEvent.end;

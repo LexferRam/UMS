@@ -53,7 +53,10 @@ const Scheduler = () => {
       freq: newEvent.rrule.freq,
       byweekday: newEvent.rrule.byweekday,
       reports: [],
+      _creator: userInfo[0]._id
     };
+
+    console.log(newEventToDB)
 
     await calendarApi.addEvent(newEvent)
 

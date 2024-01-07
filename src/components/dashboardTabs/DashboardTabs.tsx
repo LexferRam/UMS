@@ -7,12 +7,20 @@ import { CalendarDaysIcon, ExclamationTriangleIcon, FolderIcon, UserIcon } from 
 import ReportsTable from '../ReportsTable';
 import MissingReportsTable from '../MissingReportsTable';
 
-const DashboardTabs: FC<{ userInfo: any, userReports: any, userEvent: any, missingReportsWithDate: any }> = ({ userInfo, userReports, userEvent, missingReportsWithDate }) => {
+const DashboardTabs: FC<{
+    userInfo: any,
+    userReports: any,
+    userEvent: any,
+    missingReportsWithDate: any
+}> = ({ userInfo, userReports, userEvent, missingReportsWithDate }) => {
 
-    const TABLE_HEAD_PATIENT = ["Nombre paciente", "Correo", "Estatus", "Acciones"];
-    const TABLE_HEAD_EVENTS = ["Cita", "Estatus de la cita", "Hora", "Nombre paciente", "Estatus paciente", "Acciones"];
+    const TABLE_HEAD_PATIENT = ["Nombre paciente", "Fecha de nacimiento", "Diagnóstico", "Motivo de Ingreso", "Estatus", "Reportes"];
+
+    const TABLE_HEAD_EVENTS = ["Cita", "Estatus de la cita", "Hora", "Nombre paciente", "Acciones"];
     const TABLE_HEAD_EVENTS_ADMIN = ["Cita", "Estatus de la cita", "Hora", "Nombre paciente", "Estatus paciente", "Especialista", "Reporte"];
+
     const TABLE_HEAD_REPORTS = ["Descripción", "Creado", "Cita asociada", ""];
+    const TABLE_HEAD_REPORTS_ADMIN = ["Usuario", "Fecha de creación", "Descripción reporte", "Cita"];
     const TABLE_HEAD_MISSING_REPORTS = ["Título Evento", "Especialista Asignado", "Paciente", "Fecha del reporte faltante", "Reporte", "Acción"];
 
     const [selectedCard, setSelectedCard] = useState<
@@ -21,7 +29,7 @@ const DashboardTabs: FC<{ userInfo: any, userReports: any, userEvent: any, missi
     const ActiveCard = {
         'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={userInfo[0]?.asignedPatients} />,
         'events': <EventsTable tableHeaders={userInfo[0]?.role !== 'admin' ? TABLE_HEAD_EVENTS : TABLE_HEAD_EVENTS_ADMIN} events={eventForToday(userEvent)} />,
-        'reports': <ReportsTable tableHeaders={TABLE_HEAD_REPORTS} events={userReports} />,
+        'reports': <ReportsTable tableHeaders={TABLE_HEAD_REPORTS_ADMIN} reports={userReports} />,
         'missingReports': <MissingReportsTable tableHeaders={TABLE_HEAD_MISSING_REPORTS} missingReportsWithDate={missingReportsWithDate} />
     }
 
@@ -113,7 +121,9 @@ const DashboardTabs: FC<{ userInfo: any, userReports: any, userEvent: any, missi
                                 </div>
 
                                 <div className='flex flex-col items-center'>
-                                    <div className="text-esmerald-800 text-center font-semibold">Mis reportes</div>
+                                    <div className="text-esmerald-800 text-center font-semibold">
+                                        {userInfo[0]?.role === 'admin' ? 'Reportes creados' : 'Mis reportes'}
+                                    </div>
                                     <div className="text-2xl font-bold text-esmerald-900">{userReports.length}</div>
                                 </div>
 

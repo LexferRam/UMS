@@ -1,11 +1,14 @@
 'use client'
 
 import { FC } from 'react'
-import { DocumentMagnifyingGlassIcon, PencilSquareIcon } from '@heroicons/react/24/outline'
+import { DocumentMagnifyingGlassIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { AddPatientModal } from './AddPatientModal'
 import { useUserInfo } from '@/hooks'
 import { EditPatientModal } from './EditPatientModal'
+import moment from 'moment'
+import 'moment/locale/es'
+moment.locale('es');
 
 const PatientTable: FC<{ 
   tableHeaders: string[], 
@@ -41,19 +44,19 @@ const PatientTable: FC<{
             </tr>
           </thead>
           <tbody>
-            {patients?.map(({_id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive}: any, index: any) => {
+            {patients?.map(({_id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive, reports}: any, index: any) => {
               const isLast = index === patients.length - 1;
               const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
               // if(!isActive && userInfo[0]?.role !== 'admin' ) return
 
               return (
-                <tr key={_id}>
+                <tr key={_id} className="hover:bg-[#f8fafc]">
                   <td className={classes}>
                     <p
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {name}
+                      {name + ' ' + lastname}
                     </p>
                   </td>
                   <td className={classes}>
@@ -61,15 +64,7 @@ const PatientTable: FC<{
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {lastname}
-                    </p>
-                  </td>
-                  <td className={classes}>
-                    <p
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {dateOfBirth}
+                      {moment(dateOfBirth).format('LL')}
                     </p>
                   </td>
                   <td className={classes}>
@@ -106,6 +101,8 @@ const PatientTable: FC<{
                   </td>
                   <td className={classes}>
                     <div className="flex gap-4">
+
+                    {reports?.length > 0 ? (
                       <div
                         onClick={() => router.push(`/dashboard/patientHistory/${_id}`, { scroll: false })}
                         className="flex gap-1 cursor-pointer items-center"
@@ -119,6 +116,20 @@ const PatientTable: FC<{
                           Ver reportes
                         </span>
                       </div>
+                    ): (
+                      <div
+                      className="flex gap-1 cursor-pointer items-center"
+                    >
+                      <XMarkIcon className="h-6 w-6 text-red-500" />
+                      <span
+                        className='text-sm font-semibold text-gray-600'
+                      >
+                        Sin reportes
+                      </span>
+                    </div>
+                    )}
+                      
+                      
                       {userInfo[0]?.role === 'admin' && <EditPatientModal refetch={refetch} patient={{_id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive}}/>}
                     </div>
 

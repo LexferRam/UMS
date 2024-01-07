@@ -23,9 +23,13 @@ export async function POST(req: NextRequest) {
 
         await connectMongoDB()
 
-        const newReport = await Report.create({ description, createdBy: new mongoose.Types.ObjectId(createdBy), associatedEvent: new mongoose.Types.ObjectId(associatedEvent)})
+        const newReport = await Report.create({
+            description,
+            createdBy: new mongoose.Types.ObjectId(createdBy),
+            associatedEvent: new mongoose.Types.ObjectId(associatedEvent)
+        })
 
-        // ? buscar en Patients usando asignTo
+        // ? buscar en Patient usando asignTo
         const patientFound = await Patient.find({ _id: patient })
         const eventFound = await Event.find({ _id: associatedEvent })
 
@@ -59,9 +63,32 @@ export async function GET(req: NextRequest) {
 
         let userId = userFound[0]._id.toString();
 
-        const userReports: any = await Report.find({ createdBy: userId })
+        // ? si es admin se devuelven todos los reportes
+        if (userFound[0].role === 'admin') {
+            const userReports: any = await Report.find()
+                .populate({
+                    path: 'createdBy',
+                    model: User
+                })
+                .populate({
+                    path: 'associatedEvent',
+                    model: Event
 
-        return NextResponse.json(userReports, { status: 201 })
+                })
+            return NextResponse.json(userReports, { status: 201 })
+        } else {
+            const userReports: any = await Report.find({ createdBy: userId })
+                .populate({
+                    path: 'createdBy',
+                    model: User
+                }).
+                populate({
+                    path: 'associatedEvent',
+                    model: Event
+                })
+            return NextResponse.json(userReports, { status: 201 })
+        }
+
     } catch (error) {
         console.log(error)
         if (error instanceof Error) {

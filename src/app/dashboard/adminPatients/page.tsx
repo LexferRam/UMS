@@ -5,7 +5,7 @@ import PatientTable from './_components/PatientTable';
 import { useQuery } from 'react-query';
 
 const AdminPatientsPage =  () => {
-  const TABLE_HEAD = ["Nombre", "Apellido", "Fecha de nacimiento", "Dianóstico", "Motivo de consulta", "Estatus", "Acciones"];
+  const TABLE_HEAD = ["Nombre", "Fecha de nacimiento", "Dianóstico", "Motivo de consulta", "Estatus", "Acciones"];
 
   // TODO: 
   const { isLoading, error, data: patientList = [], refetch } = useQuery(['patientList'], () =>

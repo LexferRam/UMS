@@ -6,11 +6,30 @@ import moment from "moment";
 import { useUserInfo } from "@/hooks";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import 'moment/locale/es'
+import Image from "next/image";
 moment.locale('es');
 
 const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders, events }) => {
 
     const [userInfo] = useUserInfo()
+
+    function hasObjectWithTodaysDate(array: any) {
+        const today = new Date();
+        const todayYear = today.getFullYear();
+        const todayMonth = today.getMonth(); // Months are 0-indexed
+        const todayDay = today.getDate();
+
+        return array.some((obj: any) => {
+            const objDate = new Date(obj.createdAt);
+            return (
+                objDate.getFullYear() === todayYear &&
+                objDate.getMonth() === todayMonth &&
+                objDate.getDate() === todayDay
+            );
+        });
+    }
+
+    console.log(events)
 
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>
@@ -40,7 +59,7 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
                             return (
-                                <tr key={_id}>
+                                <tr key={_id} className="hover:bg-[#f8fafc]">
                                     <td className={classes}>
                                         <p
                                             color="blue-gray"
@@ -81,38 +100,65 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                                             {patient.name}
                                         </p>
                                     </td>
-                                    <td className={classes}>
-                                        <p
-                                            color="blue-gray"
-                                            className="font-normal"
-                                        >
-                                            {patient.isActive ? (
-                                                <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                    Activo
-                                                </span>
-                                            ) : (
-                                                <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                    Desactivo
-                                                </span>
-                                            )}
-                                        </p>
-                                    </td>
-
                                     {userInfo[0]?.role === 'admin' ? (
                                         <>
                                             <td className={classes}>
-                                                {_asignTo.name}
+                                                <p
+                                                    color="blue-gray"
+                                                    className="font-normal"
+                                                >
+                                                    {patient.isActive ? (
+                                                        <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                            Activo
+                                                        </span>
+                                                    ) : (
+                                                        <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                                            Desactivo
+                                                        </span>
+                                                    )}
+                                                </p>
                                             </td>
                                             <td className={classes}>
-                                                {reports.length > 0 ?
-                                                    <CheckIcon className="h-6 w-6 text-green-500" /> :
-                                                    <XMarkIcon className="h-6 w-6 text-red-500" />
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <Image
+                                                        src={_asignTo.lastname}
+                                                        className="rounded-full"
+                                                        alt='logo_login'
+                                                        width={40}
+                                                        height={40}
+                                                        priority
+                                                    />
+                                                    <p
+                                                        color="blue-gray"
+                                                        className="font-normal text-clip text-gray-500"
+                                                    >
+                                                        {_asignTo.name}
+                                                    </p>
+                                                </div>
+                                            </td>
+                                            <td className={classes}>
+                                                {hasObjectWithTodaysDate(reports) ?
+                                                    <div className="flex items-center gap-2">
+                                                        <CheckIcon className="h-6 w-6 text-green-500" />
+                                                        <span>Reporte Cargado</span>
+                                                    </div> :
+                                                    <div className="flex items-center gap-2">
+                                                        <XMarkIcon className="h-6 w-6 text-red-500" />
+                                                        <span>Sin Reporte</span>
+                                                    </div>
                                                 }
                                             </td>
                                         </>
                                     ) : (
                                         <td className={classes}>
-                                            <AddReportModal eventId={_id} patient={patient} />
+                                            {hasObjectWithTodaysDate(reports) ?
+                                                (<div className="flex items-center gap-2">
+                                                    <CheckIcon className="h-6 w-6 text-green-500" />
+                                                    <span>Reporte Cargado</span>
+                                                </div>) :
+                                                <AddReportModal eventId={_id} patient={patient} />
+                                            }
+
                                         </td>
                                     )}
 

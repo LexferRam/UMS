@@ -21,7 +21,6 @@ export const AddReportModal: FC<{ eventId: string, patient: any }> = ({ eventId,
     const [description, setDescription] = useState('')
 
     const handleClick = async (event: any) => {
-        alert('aqui')
         event.preventDefault();
 
         const respAddReport = await fetch('http://localhost:3000/api/admin/reports', {
@@ -44,7 +43,7 @@ export const AddReportModal: FC<{ eventId: string, patient: any }> = ({ eventId,
         <Dialog>
             <DialogTrigger asChild>
                 <div className="flex gap-2 items-center cursor-pointer">
-                    <PlusIcon className="h-6 w-6 text-green-500 cursor-pointer font-extrabold" /> Agregar Reporte
+                    <PlusIcon className="h-6 w-6 text-red-500 cursor-pointer font-extrabold" /> Agregar Reporte
                 </div>
             </DialogTrigger>
 

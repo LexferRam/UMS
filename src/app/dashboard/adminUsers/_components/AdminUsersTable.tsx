@@ -39,7 +39,7 @@ const AdminUsersTable:FC<AdminUsersTableProps> = ({
                             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
                             return (
-                                <tr key={_id}>
+                                <tr key={_id} className="hover:bg-[#f8fafc]">
                                     <td className={classes}>
                                         <div className="flex flex-col items-center gap-2">
                                             <Image
@@ -102,9 +102,8 @@ const AdminUsersTable:FC<AdminUsersTableProps> = ({
                                         )}
 
                                     </td>
-                                    <td className={classes}>
+                                    {/* <td className={classes}>
                                         <div
-                                            // onClick={() => router.push(`/dashboard/patientHistory/${_id}`, { scroll: false })}
                                             className="flex gap-2 cursor-pointer items-center"
                                         >
                                             <PencilSquareIcon
@@ -116,7 +115,7 @@ const AdminUsersTable:FC<AdminUsersTableProps> = ({
                                                 Editar
                                             </span>
                                         </div>
-                                    </td>
+                                    </td> */}
                                 </tr>
                             );
                         })}

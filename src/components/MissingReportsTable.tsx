@@ -17,7 +17,7 @@ const MissingReportsTable: React.FC<{
 }) => {
         return (
             <div className='p-5 max-h-[700px] overflow-scroll'>
-                <h3 className='font-semibold text-gray-600 text-xl'>Mis reportes:</h3>
+                <h3 className='font-semibold text-gray-600 text-xl'>Reportes faltantes:</h3>
                 <div className="h-full w-full overflow-scroll shadow-md rounded p-8">
                     <table className="w-full min-w-max table-auto text-left">
                         <thead>
@@ -43,7 +43,7 @@ const MissingReportsTable: React.FC<{
                                 const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
                                 return (
-                                    <tr key={userEventId}>
+                                    <tr key={userEventId} className="hover:bg-[#f8fafc]">
                                         <td className={classes}>
                                             <p
                                                 color="blue-gray"

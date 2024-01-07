@@ -37,14 +37,14 @@ export function loopThroughDates(startDate: any, endDate: any, reportsArr: any, 
 
   let missingReportByEvents: any = []
 
-  datesArr.forEach((item: any) => {
+  datesArr.forEach((itemDate: any) => {
 
     if(reportsArr.length > 0){
       reportsArr.forEach((report: any) => {
 
-        if (item.date === new Date(report.createdAt).toISOString().slice(0, 10)) {
-          missingReportByEvents.push({
-            ...item,
+        if (itemDate.date === new Date(report.createdAt).toISOString().slice(0, 10)) {
+         return missingReportByEvents.push({
+            ...itemDate,
             hasReport: true,
             userEventTitle: userEvent.title,
             userEventId: userEvent._id,
@@ -52,9 +52,11 @@ export function loopThroughDates(startDate: any, endDate: any, reportsArr: any, 
             patient: userEvent.patient.name,
             report: report
           })
-        } else {
+        } 
+        else {
           return missingReportByEvents.push({
-            ...item,
+            ...itemDate,
+            hasReport: false,
             userEventTitle: userEvent.title,
             userEventId: userEvent._id,
             _asignTo: userEvent._asignTo.name,
@@ -63,9 +65,11 @@ export function loopThroughDates(startDate: any, endDate: any, reportsArr: any, 
         }
   
       })
-    }else{
+    }
+    else{
       return missingReportByEvents.push({
-        ...item,
+        ...itemDate,
+        hasReport: false,
         userEventTitle: userEvent.title,
         userEventId: userEvent._id,
         _asignTo: userEvent._asignTo.name,
