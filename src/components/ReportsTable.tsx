@@ -60,7 +60,8 @@ const ReportsTable: FC<{ tableHeaders: string[], reports: any }> = ({ tableHeade
                                             color="blue-gray"
                                             className="font-normal"
                                         >
-                                            {moment(createdAt).format('LL')}
+                                            {/* {moment(createdAt).format('LL')} */}
+                                            {createdAt}
                                         </p>
                                     </td>
                                     <td className={classes}>
@@ -78,6 +79,15 @@ const ReportsTable: FC<{ tableHeaders: string[], reports: any }> = ({ tableHeade
                                             className="font-normal"
                                         >
                                             {associatedEvent.title}
+                                        </p>
+                                    </td>
+
+                                    <td className={classes}>
+                                        <p
+                                            color="blue-gray"
+                                            className="font-normal"
+                                        >
+                                            {associatedEvent.patient?.name + ' ' + associatedEvent.patient?.lastname}
                                         </p>
                                     </td>
                                 </tr>

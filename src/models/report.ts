@@ -7,12 +7,14 @@ const reportSchema = new Schema({
     },
     createdBy: {
         type: Schema.Types.ObjectId,
-        ref: 'User', required: true
+        ref: 'User', 
+        required: true
     },
     associatedEvent: {
         type: Schema.Types.ObjectId,
         ref: 'Event', required: true
     },
+    createdAt: { type: Date, default: Date.now }
 },
     { timestamps: true }
 );

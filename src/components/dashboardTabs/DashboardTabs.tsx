@@ -20,8 +20,8 @@ const DashboardTabs: FC<{
     const TABLE_HEAD_EVENTS_ADMIN = ["Cita", "Estatus de la cita", "Hora", "Nombre paciente", "Estatus paciente", "Especialista", "Reporte"];
 
     const TABLE_HEAD_REPORTS = ["Descripción", "Creado", "Cita asociada", ""];
-    const TABLE_HEAD_REPORTS_ADMIN = ["Usuario", "Fecha de creación", "Descripción reporte", "Cita"];
-    const TABLE_HEAD_MISSING_REPORTS = ["Título Evento", "Especialista Asignado", "Paciente", "Fecha del reporte faltante", "Reporte", "Acción"];
+    const TABLE_HEAD_REPORTS_ADMIN = ["Usuario", "Fecha de creación", "Descripción reporte", "Cita", "Paciente"];
+    const TABLE_HEAD_MISSING_REPORTS = ["Título Evento", "Especialista Asignado", "Paciente", "Fecha del reporte faltante", "Acción"];
 
     const [selectedCard, setSelectedCard] = useState<
         'patients' | 'events' | 'reports' | 'missingReports'>(userInfo[0]?.role !== 'admin' ? 'patients' : 'events')
@@ -122,7 +122,7 @@ const DashboardTabs: FC<{
 
                                 <div className='flex flex-col items-center'>
                                     <div className="text-esmerald-800 text-center font-semibold">
-                                        {userInfo[0]?.role === 'admin' ? 'Reportes creados' : 'Mis reportes'}
+                                        {userInfo[0]?.role === 'admin' ? 'Reportes' : 'Mis reportes'}
                                     </div>
                                     <div className="text-2xl font-bold text-esmerald-900">{userReports.length}</div>
                                 </div>

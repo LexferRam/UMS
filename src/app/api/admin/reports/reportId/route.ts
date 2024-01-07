@@ -21,10 +21,15 @@ export async function GET(req: NextRequest) {
 
         await connectMongoDB()
 
-        const patientFound = await Patient.find({ _id: patientId }).populate({path:'reports', model: Report, populate:{
-            path: 'createdBy',
-            model: User
-        }})
+        const patientFound = await Patient.find({ _id: patientId })
+            .populate({
+                path: 'reports',
+                model: Report,
+                populate: {
+                    path: 'createdBy',
+                    model: User
+                }
+            })
 
         return NextResponse.json(patientFound, { status: 201 })
 

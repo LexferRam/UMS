@@ -49,15 +49,12 @@ export function MainNav({
                             <div>
                                 <Typography placeholder='' variant="h6">{userInfo[0]?.name || ''}</Typography>
                                 <Typography placeholder='' variant="small" color="gray" className="font-normal text-gray-500">
-                                    {userInfo[0]?.role === 'admin' ? 'Administrador' : 'Especialista'}
+                                    {userInfo[0]?.role === 'admin' ? 'Administrador' : 'Terapeuta'}
                                 </Typography>
                             </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-5">
-                        {/* <div>
-                            <DropdownMenuComp />
-                        </div> */}
 
                         <Image
                             src={userInfo[0]?.lastname || ''} 

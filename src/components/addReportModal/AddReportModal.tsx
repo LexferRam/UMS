@@ -11,28 +11,43 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Textarea } from "../ui/textarea"
-import { useRouter } from "next/navigation"
 import { PlusIcon } from "@heroicons/react/24/outline"
 
-export const AddReportModal: FC<{ eventId: string, patient: any }> = ({ eventId, patient }) => {
-
-    const router = useRouter()
+export const AddReportModal: FC<{ 
+    eventId: string, 
+    patient: any, 
+    dateOfMissingReport?: any 
+}> = ({ eventId, patient, dateOfMissingReport }) => {
 
     const [description, setDescription] = useState('')
 
+    console.log(eventId)
+
     const handleClick = async (event: any) => {
         event.preventDefault();
+
+        let missingReportObject = {
+            description,
+            associatedEvent: eventId,
+            patient: patient._id,
+            createdAt: new Date(dateOfMissingReport)
+        }
+
+        let reportObject = {
+            description,
+            associatedEvent: eventId,
+            patient: patient._id
+        }
+
+        let reportToDB = dateOfMissingReport ? missingReportObject : reportObject
+        console.log(reportToDB)
 
         const respAddReport = await fetch('http://localhost:3000/api/admin/reports', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                description,
-                associatedEvent: eventId,
-                patient: patient._id
-            })
+            body: JSON.stringify(reportToDB)
         })
         if (respAddReport.ok) {
             return
@@ -54,7 +69,13 @@ export const AddReportModal: FC<{ eventId: string, patient: any }> = ({ eventId,
 
                 <div className="grid gap-4 py-4">
                     <div className="flex flex-col justify-start items-center gap-4">
-                        <Textarea placeholder="Agregue la descripción de su reporte" id="title" value={description} onChange={(e) => setDescription(e.target.value)} className="h-[450px]" required />
+                        <Textarea
+                            placeholder="Agregue la descripción de su reporte"
+                            id="title"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            className="h-[450px]" required
+                        />
                     </div>
                 </div>
 

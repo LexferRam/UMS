@@ -28,6 +28,21 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
         )
     )
 
+    function sortByDateField(data : any, dateFieldName : any = 'createdAt') {
+        return data.sort((a: any, b: any) => {
+          const dateA = a[dateFieldName];
+          const dateB = b[dateFieldName];
+      
+          if (dateA > dateB) {
+            return -1; // Descending order (recent to oldest)
+          } else if (dateA < dateB) {
+            return 1; // Ascending order (oldest to recent)
+          } else {
+            return 0; // Equal dates
+          }
+        });
+      }
+
     if (isLoading) return (
         <div className='mt-4'>
             <h3>
@@ -84,7 +99,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
 
                 <Card shadow className='rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll'>
                     <Timeline className="w-full sm:w-[60rem] p-2 flex flex-col-reverse">
-                        {patientInfo[0]?.reports?.map(({ createdBy, description, _id, createdAt, updatedAt }: any, index: number) => (
+                        {sortByDateField(patientInfo[0]?.reports)?.map(({ createdBy, description, _id, createdAt, updatedAt }: any, index: number) => (
                             <TimelineItem key={_id}>
 
                                 {index > 0 && (
@@ -102,7 +117,10 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                                             {createdBy?.name}
                                         </Typography>
                                         <Typography className="font-extralight text-sm text-gray-600">
-                                            <span className='font-light'>{moment(createdAt).format('LL')}</span>
+                                            <span className='font-light'>
+                                                {/* {moment(createdAt).format('LL')} */}
+                                                {createdAt}
+                                            </span>
                                         </Typography>
                                         {/* <Typography color="gary" className="font-extralight text-sm text-gray-600">
                                             Actualizado:{' '}

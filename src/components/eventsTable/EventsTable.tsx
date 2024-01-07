@@ -13,23 +13,26 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
 
     const [userInfo] = useUserInfo()
 
-    function hasObjectWithTodaysDate(array: any) {
+    function hasObjectWithTodaysDate(dateArray: any) {
         const today = new Date();
         const todayYear = today.getFullYear();
-        const todayMonth = today.getMonth(); // Months are 0-indexed
+        const todayMonth = today.getMonth();
         const todayDay = today.getDate();
-
-        return array.some((obj: any) => {
-            const objDate = new Date(obj.createdAt);
-            return (
-                objDate.getFullYear() === todayYear &&
-                objDate.getMonth() === todayMonth &&
-                objDate.getDate() === todayDay
-            );
+      
+        return dateArray.some((dateObj: any) => {
+          const dateStr = dateObj.createdAt;
+          if (!dateStr) return false; // Skip if "date" property is missing
+      
+          const dateParts = dateStr.split("T")[0].split("-");
+          const dateYear = parseInt(dateParts[0]);
+          const dateMonth = parseInt(dateParts[1]) - 1;
+          const dateDay = parseInt(dateParts[2]);
+      
+          return (
+            dateYear === todayYear && dateMonth === todayMonth && dateDay === todayDay
+          );
         });
     }
-
-    console.log(events)
 
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>
@@ -158,7 +161,6 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                                                 </div>) :
                                                 <AddReportModal eventId={_id} patient={patient} />
                                             }
-
                                         </td>
                                     )}
 

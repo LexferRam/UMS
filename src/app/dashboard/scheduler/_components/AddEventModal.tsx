@@ -192,12 +192,12 @@ export function AddEventModal({ onEventAdded }: any) {
                             Paciente
                         </Label>
                         <select
-                            // value={selectedPatientValue}
                             onChange={(e) => {
                                 const foundItem: any = patients.filter((item: any) => item?.label === e.target.value)
                                 setSelectedPatientValue(foundItem[0].value)
                             }}
                         >
+                            <option key={0}></option>
                             {patients.map((patient: any) => {
                                 if (!patient) return
                                 return (
@@ -205,7 +205,6 @@ export function AddEventModal({ onEventAdded }: any) {
                                 )
                             })}
                         </select>
-                        {/* <Combobox arrayValues={patients} selectedValue={selectedPatientValue} setSelectedValue={setSelectedPatientValue} /> */}
                     </div>
 
                     <div className="flex justify-between items-center gap-2">

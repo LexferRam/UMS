@@ -44,15 +44,12 @@ const AdminUserPage = async () => {
     let eventEndDate = userEvent.end;
     let userReports = userEvent.reports;
 
+    console.log(userEvent.patient)
+
     return loopThroughDates(eventStartDate, eventEndDate, userReports, userEvent)
   })
 
-  let missingReportsWithDate: any = []
-
-  missingUserReports.flat(1).forEach((reportMissing: any) => {
-    if (reportMissing?.hasReport) return
-    missingReportsWithDate.push(reportMissing)
-  })
+  let missingReportsWithDate: any = missingUserReports.flat(1)
 
   return (
     <DashboardTabs

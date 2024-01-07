@@ -6,6 +6,7 @@ import {
 } from '@heroicons/react/24/outline';
 import moment from 'moment';
 import 'moment/locale/es'
+import { AddReportModal } from './addReportModal/AddReportModal';
 moment.locale('es');
 
 const MissingReportsTable: React.FC<{
@@ -15,6 +16,7 @@ const MissingReportsTable: React.FC<{
     tableHeaders,
     missingReportsWithDate
 }) => {
+    console.log(missingReportsWithDate)
         return (
             <div className='p-5 max-h-[700px] overflow-scroll'>
                 <h3 className='font-semibold text-gray-600 text-xl'>Reportes faltantes:</h3>
@@ -38,7 +40,14 @@ const MissingReportsTable: React.FC<{
                             </tr>
                         </thead>
                         <tbody>
-                            {missingReportsWithDate?.map(({ userEventId, userEventTitle, date, hasReport, _asignTo,  patient}: any, index: any) => {
+                            {missingReportsWithDate?.map(({ 
+                                userEventId, 
+                                userEventTitle, 
+                                date, 
+                                hasReport, 
+                                _asignTo,  
+                                patient,
+                            }: any, index: any) => {
                                 const isLast = index === missingReportsWithDate.length - 1;
                                 const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
@@ -65,7 +74,7 @@ const MissingReportsTable: React.FC<{
                                                 color="blue-gray"
                                                 className="font-normal max-w-sm"
                                             >
-                                                {patient}
+                                                {patient?.name}
                                             </p>
                                         </td>
                                         <td className={classes}>
@@ -76,7 +85,7 @@ const MissingReportsTable: React.FC<{
                                                 {moment(date).format('LL')}
                                             </p>
                                         </td>
-                                        <td className={classes}>
+                                        {/* <td className={classes}>
                                             <p
                                                 color="blue-gray"
                                                 className="font-normal"
@@ -86,12 +95,13 @@ const MissingReportsTable: React.FC<{
                                                     <XMarkIcon className="h-6 w-6 text-red-500" />
                                                 }
                                             </p>
-                                        </td>
+                                        </td> */}
                                         <td className={classes}>
-                                            <div className="flex gap-2 items-center cursor-pointer">
-                                                <PencilSquareIcon className="h-7 w-7 text-green-500" />
-                                                <p>Agregar Reporte</p>
-                                            </div>
+                                            <AddReportModal
+                                                eventId={userEventId} 
+                                                patient={patient} 
+                                                dateOfMissingReport={date}
+                                            />
                                         </td>
                                     </tr>
                                 );
