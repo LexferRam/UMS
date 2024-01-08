@@ -4,7 +4,7 @@ import AdminUsersTable from './_components/AdminUsersTable';
 const UsersAdmin = async () => {
 
     const TABLE_HEAD = ["Nombre", "Correo", "Role", "Especialidad", "Estatus"];
-    const respUser = await fetch('http://localhost:3000/api/admin', {
+    const respUser = await fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin`, {
         method: "GET",
         headers: headers()
     }

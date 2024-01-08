@@ -7,7 +7,7 @@ export const useUserInfo = () => {
   
     useEffect(() => {
       let getUserInfo = async () => {
-        const respUser = await fetch('http://localhost:3000/api/admin/user')
+        const respUser = await fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin/user`)
         let user = await respUser.json()
         setUserInfo(user)
       }

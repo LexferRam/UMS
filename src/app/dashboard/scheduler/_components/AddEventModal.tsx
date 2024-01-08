@@ -103,10 +103,10 @@ export function AddEventModal({ onEventAdded }: any) {
 
     useEffect(() => {
         const getUsers = async () => {
-            let respUsers = await fetch('http://localhost:3000/api/admin')
+            let respUsers = await fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin`)
             let usersResp = await respUsers.json()
 
-            let respPatients = await fetch('http://localhost:3000/api/admin/patient')
+            let respPatients = await fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin/patient`)
             let patientsResp = await respPatients.json()
 
             let users = await usersResp.map((user: any) => ({ value: user._id, label: user.name }))

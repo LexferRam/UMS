@@ -10,17 +10,17 @@ const AdminUserPage = () => {
 
   // TODO: pasar consultas del lado del cliente (react query)
   const { isLoading: isLoadingUserInfo, error: userInfoError, data: userInfo = [], refetch: refetchUserInfo } = useQuery(['userInfo'], () =>
-    fetch('http://localhost:3000/api/admin/user').then(res =>
+    fetch(`${process.env.NEXTAUTH_BASE_API}/admin/user`).then(res =>
       res.json()
     ))
 
   const { isLoading: isLoadingReports, error: reportsError, data: userReports = [], refetch: refetchReports } = useQuery(['userReports'], () =>
-    fetch('http://localhost:3000/api/admin/reports').then(res =>
+    fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin/reports`).then(res =>
       res.json()
     ))
 
   const { isLoading: isLoadingUserEvent, error: userEventError, data: userEvent = [], refetch: refetchUserEvent } = useQuery(['userEvent'], () =>
-    fetch('http://localhost:3000/api/admin/events').then(res =>
+    fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin/events`).then(res =>
       res.json()
     ))
 

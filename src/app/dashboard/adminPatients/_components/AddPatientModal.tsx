@@ -27,7 +27,7 @@ export function AddPatientModal({ refetch }: IAddPatientModal) {
 
     const onSubmit = async (data: any) => {
 
-        let respPatients = await fetch('http://localhost:3000/api/admin/patient', {
+        let respPatients = await fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin/patient`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

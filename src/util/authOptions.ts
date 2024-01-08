@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
                     const userExists = await User.findOne({ email })
 
                     if (!userExists) {
-                        const res = await fetch('http://localhost:3000/api/user', {
+                        const res = await fetch(`${process.env.NEXTAUTH_BASE_API}/api/user`, {
                             method: 'POST',
                             headers: {
                                 "Content-Type": "application/json"

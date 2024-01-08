@@ -41,7 +41,7 @@ export const AddReportModal: FC<{
 
         let reportToDB = dateOfMissingReport ? missingReportObject : reportObject
 
-        const respAddReport = await fetch('http://localhost:3000/api/admin/reports', {
+        const respAddReport = await fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin/reports`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
