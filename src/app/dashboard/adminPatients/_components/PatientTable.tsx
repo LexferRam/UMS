@@ -21,15 +21,21 @@ const PatientTable: FC<{
   const [userInfo] = useUserInfo()
 
   if (!patients?.length) return (
-    <div className='w-full h-full flex items-center justify-center mt-16'>
+    <div className='p-5 max-h-[700px] overflow-scroll'>
+      <div className="flex gap-4 items-center mt-4">
+        <h3 className='font-semibold text-gray-600 text-xl'>Mis pacientes:</h3>
+        {userInfo[0]?.role === 'admin' && <AddPatientModal refetch={refetch} />}
+      </div>
+      <div className='w-full h-full flex items-center justify-center mt-16'>
         <Image
-            src='/nodata.png'
-            alt='logo_login'
-            width={150}
-            height={150}
-            priority
+          src='/nodata.png'
+          alt='logo_login'
+          width={150}
+          height={150}
+          priority
         />
         <p className='text-sm font-semibold text-gray-600'>Sin datos que mostrar</p>
+      </div>
     </div>
   )
 
