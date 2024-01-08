@@ -34,7 +34,7 @@ const EventsTable: FC<{ tableHeaders: string[], events: any, refecthFns?: any }>
         });
     }
 
-    if (!events.length) return (
+    if (!events?.length) return (
         <div className='w-full h-full flex items-center justify-center mt-16'>
             <Image
                 src='/nodata.png'

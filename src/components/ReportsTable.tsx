@@ -8,7 +8,7 @@ moment.locale('es');
 
 const ReportsTable: FC<{ tableHeaders: string[], reports: any }> = ({ tableHeaders, reports }) => {
 
-    if (!reports.length) return (
+    if (!reports?.length) return (
         <div className='w-full h-full flex items-center justify-center mt-16'>
             <Image
                 src='/nodata.png'

@@ -20,7 +20,7 @@ const MissingReportsTable: React.FC<{
     refecthFns
 }) => {
 
-    if (!missingReportsWithDate.length) return (
+    if (!missingReportsWithDate?.length) return (
         <div className='w-full h-full flex items-center justify-center mt-16'>
             <Image
                 src='/nodata.png'

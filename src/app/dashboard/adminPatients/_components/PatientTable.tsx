@@ -20,7 +20,7 @@ const PatientTable: FC<{
   const router = useRouter()
   const [userInfo] = useUserInfo()
 
-  if (!patients.length) return (
+  if (!patients?.length) return (
     <div className='w-full h-full flex items-center justify-center mt-16'>
         <Image
             src='/nodata.png'
