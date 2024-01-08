@@ -29,7 +29,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
     )
 
     function sortByDateField(data : any, dateFieldName : any = 'createdAt') {
-        return data.sort((a: any, b: any) => {
+        return data?.sort((a: any, b: any) => {
           const dateA = a[dateFieldName];
           const dateB = b[dateFieldName];
       

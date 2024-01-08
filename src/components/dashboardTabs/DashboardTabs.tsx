@@ -1,6 +1,5 @@
 'use client'
 import PatientTable from '@/app/dashboard/adminPatients/_components/PatientTable';
-import { eventForToday } from '@/util/dates';
 import { FC, useState } from 'react'
 import EventsTable from '../eventsTable/EventsTable';
 import { CalendarDaysIcon, ExclamationTriangleIcon, FolderIcon, UserIcon } from '@heroicons/react/24/outline';
@@ -14,6 +13,28 @@ const DashboardTabs: FC<{
     missingReportsWithDate: any,
     refecthFns: any
 }> = ({ userInfo, userReports, userEvent, missingReportsWithDate, refecthFns }) => {
+     function isDateWithinRange(dateToCheck: any, startDate: any, endDate: any) {
+        // Ensure all dates are Date objects:
+        dateToCheck = new Date(dateToCheck).toLocaleString("es-VE").split(',')[0];
+        startDate = new Date(startDate).toLocaleString("es-VE").split(',')[0];
+        endDate = new Date(endDate).toLocaleString("es-VE").split(',')[0];
+      
+        // Check if the date is greater than or equal to the start date
+        // and less than or equal to the end date:
+        return dateToCheck >= startDate && dateToCheck <= endDate;
+      }
+      
+       const eventForToday = (eventsArray: any) => {
+      
+        let eventsForTodayArray: any[] = []
+      
+        eventsArray?.map((event: any) => {
+          const today = new Date();
+          isDateWithinRange(today, event.start, event.end) && eventsForTodayArray.push(event)
+        })
+      
+        return eventsForTodayArray
+      }
 
     const TABLE_HEAD_PATIENT = ["Nombre paciente", "Fecha de nacimiento", "Diagnóstico", "Motivo de Ingreso", "Estatus", "Reportes"];
 

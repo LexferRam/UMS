@@ -55,6 +55,25 @@ const daysOfWeek = [
     }
 ]
 
+const eventTypeArray = [
+    {
+        value: "ENTREVISTA",
+        label: "ENTREVISTA"
+    },
+    {
+        value: "SESSION",
+        label: "SESSION"
+    },
+    {
+        value: "EVALUACION",
+        label: "EVALUACION"
+    },
+    {
+        value: "ENTERVISTA_EVALUACION",
+        label: "ENTERVISTA_EVALUACION"
+    }
+]
+
 export function AddEventModal({ onEventAdded }: any) {
 
     const [title, setTitle] = useState('')
@@ -211,7 +230,7 @@ export function AddEventModal({ onEventAdded }: any) {
                         <Label className="text-right">
                             Tipo de cita:
                         </Label>
-                        <Combobox
+                        {/* <Combobox
                             arrayValues={[
                                 {
                                     value: "ENTREVISTA",
@@ -232,7 +251,20 @@ export function AddEventModal({ onEventAdded }: any) {
                             ]}
                             selectedValue={eventType}
                             setSelectedValue={setEventType}
-                        />
+                        /> */}
+                          <select
+                            onChange={(e) => {
+                                const foundItem: any = eventTypeArray.filter((item: any) => item?.label === e.target.value)
+                                setEventType(foundItem[0].value)
+                            }}
+                        >
+                            <option key={0}></option>
+                            {eventTypeArray.map((eventType: any) => {
+                                return (
+                                    <option key={eventType.value}>{eventType.label}</option>
+                                )
+                            })}
+                        </select>
                     </div>
                 </div>
 

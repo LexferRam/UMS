@@ -2,23 +2,20 @@
 
 const DashboardSkeleton = () => {
     return (
-        <div className="flex animate-pulse flex-wrap items-center gap-8 pt-10">
-            <div className="flex gap-8 flex-wrap">
-                <div className="rounded bg-gray-300 h-[150px] w-[240px]">
+        <div className="flex animate-pulse flex-wrap items-center justify-center sm:justify-start gap-8 sm:pt-10">
+            <div className="flex justify-center gap-8 flex-wrap">
+                <div className="rounded bg-gray-300 w-[280px] h-[100px] sm:h-[150px] sm:w-[240px]">
                 &nbsp;
                 </div>
-                <div className="rounded bg-gray-300 h-[150px] w-[240px]">
+                <div className="rounded bg-gray-300 w-[280px] h-[100px] sm:h-[150px] sm:w-[240px]">
                 &nbsp;
                 </div>
-                <div className="rounded bg-gray-300 h-[150px] w-[240px]">
-                &nbsp;
-                </div>
-                <div className="rounded bg-gray-300 h-[150px] w-[240px]">
+                <div className="rounded bg-gray-300 w-[280px] h-[100px] sm:h-[150px] sm:w-[240px]">
                 &nbsp;
                 </div>
             </div>
 
-            <div className="w-full">
+            <div className="w-full m-4 sm:m-2">
                 <div
                     className="mb-8 h-16 w-full rounded bg-gray-300"
                 >
