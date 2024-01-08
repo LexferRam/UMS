@@ -10,7 +10,7 @@ const AdminUserPage = () => {
 
   // TODO: pasar consultas del lado del cliente (react query)
   const { isLoading: isLoadingUserInfo, error: userInfoError, data: userInfo = [], refetch: refetchUserInfo } = useQuery(['userInfo'], () =>
-    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/admin/user`).then(res =>
+    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/user`).then(res =>
       res.json()
     ))
 
