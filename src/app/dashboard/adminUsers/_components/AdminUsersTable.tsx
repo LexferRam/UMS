@@ -5,15 +5,29 @@ import { FC } from 'react';
 
 interface AdminUsersTableProps {
     headers: string[];
-    users:   any;
+    users: any;
 }
 
-const AdminUsersTable:FC<AdminUsersTableProps> = ({
+const AdminUsersTable: FC<AdminUsersTableProps> = ({
     headers,
     users
 }) => {
-  return (
-    <div className='p-5 max-h-[700px] overflow-scroll'>
+
+    if (!users.length) return (
+        <div className='w-full h-full flex items-center justify-center mt-16'>
+            <Image
+                src='/nodata.png'
+                alt='logo_login'
+                width={150}
+                height={150}
+                priority
+            />
+            <p className='text-sm font-semibold text-gray-600'>Sin datos que mostrar</p>
+        </div>
+    )
+
+    return (
+        <div className='p-5 max-h-[700px] overflow-scroll'>
             <div className="h-full w-full overflow-scroll shadow-md rounded p-2 sm:p-8 ">
                 <table className="w-full min-w-max table-auto text-left">
                     <thead>
@@ -34,7 +48,7 @@ const AdminUsersTable:FC<AdminUsersTableProps> = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map(({ name, email, _id, role, lastname, isActive,speciality }: any, index: number) => {
+                        {users.map(({ name, email, _id, role, lastname, isActive, speciality }: any, index: number) => {
                             const isLast = index === users.length - 1;
                             const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
@@ -123,7 +137,7 @@ const AdminUsersTable:FC<AdminUsersTableProps> = ({
                 </table>
             </div>
         </div>
-  )
+    )
 }
 
 export default AdminUsersTable

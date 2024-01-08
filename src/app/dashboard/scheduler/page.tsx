@@ -11,7 +11,7 @@ import rrulePlugin from '@fullcalendar/rrule'
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
-export const EVENTS_TYPE_COLORS: any = {
+const EVENTS_TYPE_COLORS: any = {
   "entrevista": "red",
   "session": "orange",
   "evaluacion": "green",
@@ -37,8 +37,8 @@ const Scheduler = () => {
       rrule: {
         freq: 'daily', // monthly  yearly  daily  weekly
         byweekday: e.selectedDaysArr,
-        dtstart: e.start,//moment(e.start).toDate(),
-        until: e.end//moment(e.end).toDate()
+        dtstart: moment(e.start).toDate(),
+        until: moment(e.end).toDate()
       },
       allDay: true,
     }
@@ -55,8 +55,6 @@ const Scheduler = () => {
       reports: [],
       _creator: userInfo[0]._id
     };
-
-    console.log(newEventToDB)
 
     await calendarApi.addEvent(newEvent)
 
@@ -79,14 +77,14 @@ const Scheduler = () => {
       let respEvents = await fetch('http://localhost:3000/api/admin/events')
       let eventsDB = await respEvents.json()
 
-      const formattedEvents = eventsDB?.map((event: any) => ({
+      const formattedEvents = await eventsDB?.map((event: any) => ({
         ...event,
         color: EVENTS_TYPE_COLORS[event?.eventType],
         rrule: {
           freq: event?.freq || 'daily', // monthly  yearly  daily  weekly
-          byweekday: event?.selectedDaysArr,
-          dtstart: event?.start,//moment(event?.start).toDate(),
-          until: event?.end//moment(event?.end).toDate()
+          byweekday: event?.byweekday,
+          dtstart: moment(event?.start).toDate(),
+          until: moment(event?.end).toDate()
         },
         allDay: true,
         title: moment(event?.start).format('LT') +'-'+ event?.title
@@ -96,7 +94,7 @@ const Scheduler = () => {
 
     getEvents()
 
-  }, [])
+  }, [calendarRef])
 
 
   return (
@@ -110,7 +108,7 @@ const Scheduler = () => {
         ref={calendarRef}
         events={events}
         plugins={[dayGridPlugin, interactionPlugin, rrulePlugin]}
-        initialView={width < 500 ? "dayGridDay" : "dayGridMonth" }
+        initialView={width as any < 500 ? "dayGridDay" : "dayGridMonth" }
         locale={esLocale}
         // droppable
         // editable
@@ -130,7 +128,7 @@ const Scheduler = () => {
         // weekends={false}
         headerToolbar={{
           left: 'prev,next,today',
-          center: width < 500 ? '' : 'title',
+          center: (width as any < 500)  ? '' : 'title',
           right: 'dayGridDay,dayGridWeek,dayGridMonth'
         }}
         // eventClick={

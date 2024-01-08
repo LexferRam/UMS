@@ -9,7 +9,7 @@ import 'moment/locale/es'
 import Image from "next/image";
 moment.locale('es');
 
-const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders, events }) => {
+const EventsTable: FC<{ tableHeaders: string[], events: any, refecthFns?: any }> = ({ tableHeaders, events, refecthFns }) => {
 
     const [userInfo] = useUserInfo()
 
@@ -33,6 +33,19 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
           );
         });
     }
+
+    if (!events.length) return (
+        <div className='w-full h-full flex items-center justify-center mt-16'>
+            <Image
+                src='/nodata.png'
+                alt='logo_login'
+                width={150}
+                height={150}
+                priority
+            />
+            <p className='text-sm font-semibold text-gray-600'>Sin datos que mostrar</p>
+        </div>
+      )
 
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>
@@ -159,7 +172,7 @@ const EventsTable: FC<{ tableHeaders: string[], events: any }> = ({ tableHeaders
                                                     <CheckIcon className="h-6 w-6 text-green-500" />
                                                     <span>Reporte Cargado</span>
                                                 </div>) :
-                                                <AddReportModal eventId={_id} patient={patient} />
+                                                <AddReportModal eventId={_id} patient={patient} refecthFns={refecthFns} />
                                             }
                                         </td>
                                     )}

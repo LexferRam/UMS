@@ -30,7 +30,7 @@ interface ButtonNavProps extends ButtonHTMLAttributes<HTMLButtonElement>, Varian
     buttonTitle: string
 }
 
-export const ButtonNav: FC<ButtonNavProps> = forwardRef<HTMLButtonElement, ButtonNavProps>(({
+export const ButtonNav: FC<ButtonNavProps> = forwardRef<HTMLButtonElement, ButtonNavProps> (({
     className,
     size,
     variant,
@@ -38,10 +38,11 @@ export const ButtonNav: FC<ButtonNavProps> = forwardRef<HTMLButtonElement, Butto
     iconComponent,
     buttonTitle,
     ...props
-}, ref) => {
+}: any, ref) => {
     return (
         <div className='grid grid-flow-row auto-rows-max text-sm mb-4'>
             <Button
+                placeholder=""
                 ref={ref}
                 className={cn(buttonVariants({ variant, size, className }))} {...props}
             >
@@ -57,5 +58,6 @@ export const ButtonNav: FC<ButtonNavProps> = forwardRef<HTMLButtonElement, Butto
         </div>
     )
 })
+ButtonNav.displayName = "ButtonNav";
 
 export default { buttonVariants };

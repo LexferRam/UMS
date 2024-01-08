@@ -21,6 +21,12 @@ export function verifyReports(startDate: any, endDate: any, reportsArray: any) {
   return missingReports;
 }
 
+function getWeekday(date: any) {
+  const weekdays = [ "mo", "tu", "we", "th", "fr", "sa","su"];
+  let dayIndex: any =new Date(date).getDay(); // 0 for Sunday, 1 for Monday, etc.
+  return weekdays[dayIndex];
+}
+
 export function loopThroughDates(startDate: any, endDate: any, reportsArr: any, userEvent: any) {
   let currentDate = new Date(startDate);
   let endDateFormatted = new Date(endDate)
@@ -39,79 +45,54 @@ export function loopThroughDates(startDate: any, endDate: any, reportsArr: any, 
 
   datesArr.forEach((itemDate: any) => {
     if (reportsArr.length > 0) {
-    reportsArr.forEach((report: any) => {
+      reportsArr.forEach((report: any) => {
 
-      if (
-        itemDate.date === new Date(report.createdAt).toISOString().slice(0, 10) 
-        // &&
-        // itemDate.hasReport
-        ) {
-        // console.log('first')
-        return missingReportByEvents.push({
-          ...itemDate,
-          hasReport: true,
-          userEventTitle: userEvent.title,
-          userEventId: userEvent._id, // _id del evento
-          _asignTo: userEvent._asignTo.name,
-          patient: userEvent.patient, // ! no es el obj paciente
-          report: report
-        })
-      }
-      // else {
-      //   // console.log('first')
-
-      //   // ? verificar si el reporte ya existe en el array missingReportByEvents
-      //   let reportAlreadyExist = missingReportByEvents.filter((missingReport: any) => {
-      //     // console.log(missingReport.report?._id)
-      //     // console.log(report)
-      //     return( missingReport.report?._id === report._id) && missingReport.hasReport
-      //   })
-      //   // console.log(reportAlreadyExist)
-      //   if (reportAlreadyExist.length > 0) return
-
-      //   return missingReportByEvents.push({
-      //     ...itemDate,
-      //     hasReport: false,
-      //     userEventTitle: userEvent.title,
-      //     userEventId: userEvent._id, // _id del evento
-      //     _asignTo: userEvent._asignTo.name,
-      //     patient: userEvent.patient,
-      //     report: {}
-      //   })
-      // }
-    })
+        if (itemDate.date === new Date(report.createdAt).toISOString().slice(0, 10)) {
+          return missingReportByEvents.push({
+            ...itemDate,
+            hasReport: true,
+            userEventTitle: userEvent.title,
+            userEventId: userEvent._id, // _id del evento
+            _asignTo: userEvent._asignTo,
+            patient: userEvent.patient,
+            report: report,
+            byweekday: userEvent.byweekday // ! NEWWWWW 
+          })
+        }
+      })
     }
-    else{
+    else {
+
+      if (userEvent.byweekday.length !== 0 && !userEvent.byweekday.includes(getWeekday(itemDate.date))) return
 
       return missingReportByEvents.push({
         ...itemDate,
         hasReport: false,
         userEventTitle: userEvent.title,
         userEventId: userEvent._id,
-        _asignTo: userEvent._asignTo.name,
+        _asignTo: userEvent._asignTo,
         patient: userEvent.patient,
-        report: {}
+        report: {},
+        byweekday: userEvent.byweekday // ! NEWWWWW 
       })
     }
   }
   )
 
-  console.log(missingReportByEvents)
-
   const filteredArray = datesArr.filter((element: any) => !missingReportByEvents.some((item: any) => item.date === element.date));
 
   let datesWithMissingReports = filteredArray.map((itemDate: any) => {
-    // console.log(dateFound)
     return {
       ...itemDate,
       hasReport: false,
       userEventTitle: userEvent.title,
       userEventId: userEvent._id,
-      _asignTo: userEvent._asignTo.name,
+      _asignTo: userEvent._asignTo,
       patient: userEvent.patient,
-      report: {}
+      report: {},
+      byweekday: userEvent.byweekday
     }
   })
 
-  return !reportsArr.length ? missingReportByEvents : datesWithMissingReports.filter((element: any) => element !== undefined)
+  return !reportsArr?.length ? missingReportByEvents : datesWithMissingReports.filter((element: any) => element !== undefined)
 }

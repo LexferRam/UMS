@@ -1,13 +1,21 @@
-import { Typography } from '@material-tailwind/react'
-import React from 'react'
+'use client'
 
-const AdmiPageSkeleton = () => {
+const DashboardSkeleton = () => {
     return (
         <div className="flex animate-pulse flex-wrap items-center gap-8 pt-10">
-            <div
-                className=" h-10 w-52 rounded bg-gray-300"
-            >
+            <div className="flex gap-8 flex-wrap">
+                <div className="rounded bg-gray-300 h-[150px] w-[240px]">
                 &nbsp;
+                </div>
+                <div className="rounded bg-gray-300 h-[150px] w-[240px]">
+                &nbsp;
+                </div>
+                <div className="rounded bg-gray-300 h-[150px] w-[240px]">
+                &nbsp;
+                </div>
+                <div className="rounded bg-gray-300 h-[150px] w-[240px]">
+                &nbsp;
+                </div>
             </div>
 
             <div className="w-full">
@@ -52,4 +60,4 @@ const AdmiPageSkeleton = () => {
     )
 }
 
-export default AdmiPageSkeleton
+export default DashboardSkeleton

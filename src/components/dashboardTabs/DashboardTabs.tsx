@@ -11,8 +11,9 @@ const DashboardTabs: FC<{
     userInfo: any,
     userReports: any,
     userEvent: any,
-    missingReportsWithDate: any
-}> = ({ userInfo, userReports, userEvent, missingReportsWithDate }) => {
+    missingReportsWithDate: any,
+    refecthFns: any
+}> = ({ userInfo, userReports, userEvent, missingReportsWithDate, refecthFns }) => {
 
     const TABLE_HEAD_PATIENT = ["Nombre paciente", "Fecha de nacimiento", "Diagnóstico", "Motivo de Ingreso", "Estatus", "Reportes"];
 
@@ -28,9 +29,9 @@ const DashboardTabs: FC<{
 
     const ActiveCard = {
         'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={userInfo[0]?.asignedPatients} />,
-        'events': <EventsTable tableHeaders={userInfo[0]?.role !== 'admin' ? TABLE_HEAD_EVENTS : TABLE_HEAD_EVENTS_ADMIN} events={eventForToday(userEvent)} />,
+        'events': <EventsTable tableHeaders={userInfo[0]?.role !== 'admin' ? TABLE_HEAD_EVENTS : TABLE_HEAD_EVENTS_ADMIN} events={eventForToday(userEvent)} refecthFns={refecthFns} />,
         'reports': <ReportsTable tableHeaders={TABLE_HEAD_REPORTS_ADMIN} reports={userReports} />,
-        'missingReports': <MissingReportsTable tableHeaders={TABLE_HEAD_MISSING_REPORTS} missingReportsWithDate={missingReportsWithDate} />
+        'missingReports': <MissingReportsTable tableHeaders={TABLE_HEAD_MISSING_REPORTS} missingReportsWithDate={missingReportsWithDate} refecthFns={refecthFns} />
     }
 
     return (

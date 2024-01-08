@@ -25,7 +25,7 @@ export function EditPatientModal({ refetch, patient }: IAddPatientModal) {
 
     const [open, setOpen] = useState(false);
     const [active, setActive] = useState(patient.isActive);
-    const { register, handleSubmit, formState: { errors }, reset, setValue} = useForm()
+    const { register, handleSubmit, formState: { errors }, setValue} = useForm()
 
     const onSubmit = async (data: any) => {
 

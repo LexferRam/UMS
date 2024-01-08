@@ -1,12 +1,12 @@
 import { connectMongoDB } from "@/db/mongodb"
 import User from "@/models/user"
 import { NextApiRequest, NextApiResponse } from "next"
-import { getServerSession } from "next-auth"
+import nextAuth, { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
-import { authOptions } from "../../auth/[...nextauth]/route"
 import Event from "@/models/event"
 import Patient from "@/models/patient"
 import Report from "@/models/report"
+import { authOptions } from "@/util/authOptions"
 
 const secret = process.env.NEXTAUTH_SECRET
 
@@ -33,11 +33,11 @@ const secret = process.env.NEXTAUTH_SECRET
 // }
 
 // ? API to get user info
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: any, res: NextApiResponse) {
 
     try {
 
-        const session: any = await getServerSession(authOptions)
+        const session: any = await getServerSession(nextAuth(authOptions))
         await connectMongoDB()
 
         const userFound = await User

@@ -46,25 +46,21 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
     if (isLoading) return (
         <div className='mt-4'>
             <h3>
-                <Typography
-                    as="div"
-                    variant="paragraph"
+                <div
                     className="mb-2 h-2 w-72 rounded-full bg-gray-300"
                 >
                     &nbsp;
-                </Typography>
+                </div>
             </h3>
             <h3>
-                <Typography
-                    as="div"
-                    variant="paragraph"
+                <div
                     className="mb-2 h-2 w-48 rounded-full bg-gray-300"
                 >
                     &nbsp;
-                </Typography>
+                </div>
             </h3>
             <div className="w-full flex justify-center mt-6">
-                <Card shadow className='w-full sm:w-[60rem] rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll'>
+                <Card placeholder='' shadow className='w-full sm:w-[60rem] rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll'>
                     <TimelineSkeleton />
                     <TimelineSkeleton />
                     <TimelineSkeleton />
@@ -97,7 +93,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
 
             <div className="w-full flex justify-center mt-4">
 
-                <Card shadow className='rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll'>
+                <Card placeholder='' shadow className='rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll'>
                     <Timeline className="w-full sm:w-[60rem] p-2 flex flex-col-reverse">
                         {sortByDateField(patientInfo[0]?.reports)?.map(({ createdBy, description, _id, createdAt, updatedAt }: any, index: number) => (
                             <TimelineItem key={_id}>
@@ -110,18 +106,18 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
 
                                 <TimelineHeader>
                                     <TimelineIcon className="p-0">
-                                        <Avatar size="md" src={createdBy?.lastname} alt={createdBy?.name} withBorder />
+                                        <Avatar placeholder='' size="md" src={createdBy?.lastname} alt={createdBy?.name} withBorder />
                                     </TimelineIcon>
                                     <div className="flex flex-col">
-                                        <Typography variant="h6" color="blue-gray">
+                                        <div color="blue-gray">
                                             {createdBy?.name}
-                                        </Typography>
-                                        <Typography className="font-extralight text-sm text-gray-600">
+                                        </div>
+                                        <p className="font-extralight text-sm text-gray-600">
                                             <span className='font-light'>
                                                 {/* {moment(createdAt).format('LL')} */}
                                                 {createdAt}
                                             </span>
-                                        </Typography>
+                                        </p>
                                         {/* <Typography color="gary" className="font-extralight text-sm text-gray-600">
                                             Actualizado:{' '}
                                             <span className='font-semibold'>{moment(updatedAt).format('LL')}</span>
@@ -130,9 +126,9 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                                 </TimelineHeader>
 
                                 <TimelineBody className="pb-8">
-                                    <Typography color="gary" className="font-normal text-gray-600 italic ml-4">
-                                        "{description}"
-                                    </Typography>
+                                    <p color="gary" className="font-normal text-gray-600 italic ml-4">
+                                        {description}
+                                    </p>
                                 </TimelineBody>
 
                             </TimelineItem>

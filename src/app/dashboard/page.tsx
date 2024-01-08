@@ -1,54 +1,40 @@
-// import { getServerSession } from "next-auth"
+'use client'
+
 import { headers } from "next/headers"
 import DashboardTabs from "@/components/dashboardTabs/DashboardTabs"
-import { loopThroughDates, verifyReports } from "@/util/reports"
+import { loopThroughDates } from "@/util/reports"
+import { useQuery } from "react-query"
+import DashboardSkeleton from "@/components/DashboardSkeleton"
 
-const AdminUserPage = async () => {
+const AdminUserPage = () => {
 
   // TODO: pasar consultas del lado del cliente (react query)
-  // const session = await getServerSession(authOptions)
-  const respUser = await fetch('http://localhost:3000/api/admin/user', {
-    method: "GET",
-    headers: headers(),
-    next: {
-      revalidate: 1 // revalidate after 10 seconds ==>  ISR
-    }
-  })
+  const { isLoading: isLoadingUserInfo, error: userInfoError, data: userInfo = [], refetch: refetchUserInfo } = useQuery(['userInfo'], () =>
+    fetch('http://localhost:3000/api/admin/user').then(res =>
+      res.json()
+    ))
 
-  const userReportsResp = await fetch('http://localhost:3000/api/admin/reports', {
-    method: "GET",
-    headers: headers(),
-    next: {
-      revalidate: 1 // revalidate after 10 seconds ==>  ISR
-    }
-  })
+  const { isLoading: isLoadingReports, error: reportsError, data: userReports = [], refetch: refetchReports } = useQuery(['userReports'], () =>
+    fetch('http://localhost:3000/api/admin/reports').then(res =>
+      res.json()
+    ))
 
-  // let respEvents = await fetch('http://localhost:3000/api/admin/events')
+  const { isLoading: isLoadingUserEvent, error: userEventError, data: userEvent = [], refetch: refetchUserEvent } = useQuery(['userEvent'], () =>
+    fetch('http://localhost:3000/api/admin/events').then(res =>
+      res.json()
+    ))
 
-  const userRespEvents = await fetch('http://localhost:3000/api/admin/events', {
-    method: "GET",
-    headers: headers(),
-    next: {
-      revalidate: 1 // revalidate after 10 seconds ==>  ISR
-    }
-  })
+  if (isLoadingUserInfo || isLoadingReports || isLoadingUserEvent) return <DashboardSkeleton />
 
-  let userInfo = await respUser.json()
-  let userReports = await userReportsResp.json()
-  let userEvent = await userRespEvents.json()
-
-  // TODO: recorrer todos los eventos del usuario
+  // ? Calculo de reportes faltantes
   const missingUserReports = userEvent.map((userEvent: any) => {
 
     let eventStartDate = userEvent.start;
     let eventEndDate = userEvent.end;
     let userReports = userEvent.reports;
 
-    console.log(userEvent.patient)
-
     return loopThroughDates(eventStartDate, eventEndDate, userReports, userEvent)
   })
-
   let missingReportsWithDate: any = missingUserReports.flat(1)
 
   return (
@@ -57,10 +43,15 @@ const AdminUserPage = async () => {
       userReports={userReports}
       userEvent={userEvent}
       missingReportsWithDate={missingReportsWithDate}
+      refecthFns={{
+        refetchUserInfo,
+        refetchReports,
+        refetchUserEvent
+      }}
     />
   )
 }
 
 export default AdminUserPage
 
-export const revalidate = 1  
+export const revalidate = 1

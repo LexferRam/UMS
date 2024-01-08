@@ -7,16 +7,32 @@ import {
 import moment from 'moment';
 import 'moment/locale/es'
 import { AddReportModal } from './addReportModal/AddReportModal';
+import Image from 'next/image';
 moment.locale('es');
 
 const MissingReportsTable: React.FC<{
     tableHeaders: string[],
-    missingReportsWithDate: any
+    missingReportsWithDate: any,
+    refecthFns?:any
 }> = ({
     tableHeaders,
-    missingReportsWithDate
+    missingReportsWithDate,
+    refecthFns
 }) => {
-    console.log(missingReportsWithDate)
+
+    if (!missingReportsWithDate.length) return (
+        <div className='w-full h-full flex items-center justify-center mt-16'>
+            <Image
+                src='/nodata.png'
+                alt='logo_login'
+                width={150}
+                height={150}
+                priority
+            />
+            <p className='text-sm font-semibold text-gray-600'>Sin datos que mostrar</p>
+        </div>
+      )
+
         return (
             <div className='p-5 max-h-[700px] overflow-scroll'>
                 <h3 className='font-semibold text-gray-600 text-xl'>Reportes faltantes:</h3>
@@ -62,12 +78,28 @@ const MissingReportsTable: React.FC<{
                                             </p>
                                         </td>
                                         <td className={classes}>
-                                            <p
+                                            {/* <p
                                                 color="blue-gray"
                                                 className="font-normal max-w-sm"
                                             >
                                                 {_asignTo}
-                                            </p>
+                                            </p> */}
+                                            <div className="flex flex-col items-center gap-2">
+                                                <Image
+                                                    src={_asignTo.lastname}
+                                                    className="rounded-full"
+                                                    alt='logo_login'
+                                                    width={40}
+                                                    height={40}
+                                                    priority
+                                                />
+                                                <p
+                                                    color="blue-gray"
+                                                    className="font-normal text-clip text-gray-500"
+                                                >
+                                                    {_asignTo.name}
+                                                </p>
+                                            </div>
                                         </td>
                                         <td className={classes}>
                                             <p
@@ -101,6 +133,7 @@ const MissingReportsTable: React.FC<{
                                                 eventId={userEventId} 
                                                 patient={patient} 
                                                 dateOfMissingReport={date}
+                                                refecthFns={refecthFns}
                                             />
                                         </td>
                                     </tr>

@@ -8,6 +8,19 @@ moment.locale('es');
 
 const ReportsTable: FC<{ tableHeaders: string[], reports: any }> = ({ tableHeaders, reports }) => {
 
+    if (!reports.length) return (
+        <div className='w-full h-full flex items-center justify-center mt-16'>
+            <Image
+                src='/nodata.png'
+                alt='logo_login'
+                width={150}
+                height={150}
+                priority
+            />
+            <p className='text-sm font-semibold text-gray-600'>Sin datos que mostrar</p>
+        </div>
+    )
+
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>
             <h3 className='font-semibold text-gray-600 text-xl'>Reportes:</h3>
@@ -31,7 +44,7 @@ const ReportsTable: FC<{ tableHeaders: string[], reports: any }> = ({ tableHeade
                         </tr>
                     </thead>
                     <tbody>
-                        {reports?.map(({ _id, createdBy,createdAt, description,associatedEvent }: any, index: any) => {
+                        {reports?.map(({ _id, createdBy, createdAt, description, associatedEvent }: any, index: any) => {
                             const isLast = index === reports.length - 1;
                             const classes = isLast ? "p-4 " : "p-4 border-b border-blue-gray-50";
 
@@ -72,7 +85,7 @@ const ReportsTable: FC<{ tableHeaders: string[], reports: any }> = ({ tableHeade
                                             {description}
                                         </p>
                                     </td>
-                                   
+
                                     <td className={classes}>
                                         <p
                                             color="blue-gray"

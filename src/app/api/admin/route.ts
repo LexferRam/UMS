@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from "next/server"
 
 const secret = process.env.NEXTAUTH_SECRET
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: any) {
 
     try {
 

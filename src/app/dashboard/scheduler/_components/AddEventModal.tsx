@@ -58,8 +58,8 @@ const daysOfWeek = [
 export function AddEventModal({ onEventAdded }: any) {
 
     const [title, setTitle] = useState('')
-    const [start, setStart] = useState(new Date())
-    const [end, setEnd] = useState(new Date())
+    const [start, setStart] = useState()
+    const [end, setEnd] = useState()
     const [users, setUsers] = useState([])
     const [patients, setPatients] = useState([])
     const [selectedUserValue, setSelectedUserValue] = useState('')
@@ -144,14 +144,14 @@ export function AddEventModal({ onEventAdded }: any) {
                         <Label className="text-right">
                             Fecha inicio
                         </Label>
-                        <Datetime value={start} onChange={(date: any) => setStart(new Date(date))} className="col-span-3" />
+                        <Datetime value={start} onChange={(date: any) => setStart(date)} className="col-span-3" />
                     </div>
 
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label className="text-right">
                             Fecha final
                         </Label>
-                        <Datetime value={end} onChange={(date: any) => setEnd(new Date(date))} className="col-span-3" />
+                        <Datetime value={end} onChange={(date: any) => setEnd(date)} className="col-span-3" />
                     </div>
 
                     <div className="flex flex-col gap-4 flex-wrap justify-center">

@@ -29,7 +29,7 @@ const LoginPage = () => {
   return (
     <div className='justify-center flex items-center h-screen'>
       {/* <Card className="mt-6 w-96 bg-blue-gray-50 "> */}
-        <CardBody>
+        <CardBody placeholder=''>
           <Image
             src='/logo8.png'
             alt='logo_login'
@@ -69,6 +69,7 @@ const LoginPage = () => {
               </div>
 
               <Button
+                placeholder=''
                 type='submit'
                 className='bg-orange-300 px-4 py-2 w-full'
               >

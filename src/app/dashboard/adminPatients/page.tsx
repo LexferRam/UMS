@@ -7,7 +7,6 @@ import { useQuery } from 'react-query';
 const AdminPatientsPage =  () => {
   const TABLE_HEAD = ["Nombre", "Fecha de nacimiento", "Dianóstico", "Motivo de consulta", "Estatus", "Acciones"];
 
-  // TODO: 
   const { isLoading, error, data: patientList = [], refetch } = useQuery(['patientList'], () =>
     fetch('http://localhost:3000/api/admin/patient').then(res =>
       res.json()
