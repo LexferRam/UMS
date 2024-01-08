@@ -23,7 +23,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
 }) => {
 
     const { isLoading, error, data: patientInfo = [] } = useQuery(['patientInfo', [patientId]], () =>
-        fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin/reports/reportId?patientId=${patientId}`).then(res =>
+        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports/reportId?patientId=${patientId}`).then(res =>
             res.json()
         )
     )

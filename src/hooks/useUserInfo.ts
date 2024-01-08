@@ -7,7 +7,7 @@ export const useUserInfo = () => {
   
     useEffect(() => {
       let getUserInfo = async () => {
-        const respUser = await fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin/user`)
+        const respUser = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/user`)
         let user = await respUser.json()
         setUserInfo(user)
       }

@@ -8,7 +8,7 @@ const AdminPatientsPage =  () => {
   const TABLE_HEAD = ["Nombre", "Fecha de nacimiento", "Dianóstico", "Motivo de consulta", "Estatus", "Acciones"];
 
   const { isLoading, error, data: patientList = [], refetch } = useQuery(['patientList'], () =>
-    fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin/patient`).then(res =>
+    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`).then(res =>
       res.json()
     ))
 

@@ -11,7 +11,7 @@ const ReportsByPatientTable: FC<{ patientId: string | string[] }> = ({ patientId
     useEffect(() => {
 
         const getPatientReports = async () => {
-            const respReports = await fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin/reports/reportId?patientId=${patientId}`)
+            const respReports = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports/reportId?patientId=${patientId}`)
             let reports = await respReports.json()
             setReports(reports[0]?.reports)
             setPatient(reports[0])

@@ -58,7 +58,7 @@ const Scheduler = () => {
 
     await calendarApi.addEvent(newEvent)
 
-    const res = await fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -74,7 +74,7 @@ const Scheduler = () => {
 
   useEffect(() => {
     const getEvents = async () => {
-      let respEvents = await fetch(`${process.env.NEXTAUTH_BASE_API}/api/admin/events`)
+      let respEvents = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events`)
       let eventsDB = await respEvents.json()
 
       const formattedEvents = await eventsDB?.map((event: any) => ({
