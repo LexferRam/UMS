@@ -156,8 +156,9 @@ const Scheduler = () => {
                   </div>
 
                   <div style="display: flex;">
-                    <b>Fecha de Nacimiento:</b><h3>${info.event.extendedProps.patient.dateOfBirth}</h3>
+                    <b>Fecha de Nacimiento:</b><h3>${moment(info.event.extendedProps.patient.dateOfBirth).format('LL')}</h3>
                   </div>
+                  
 
                   <div style="display: flex;">
                     <b>Edad:</b><h3>${calculateAge2(info.event.extendedProps.patient.dateOfBirth)}</h3>
