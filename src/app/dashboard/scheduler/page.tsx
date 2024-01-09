@@ -156,7 +156,7 @@ const Scheduler = () => {
                   </div>
 
                   <div style="display: flex;">
-                    <b>Fecha de Nacimiento:</b><h3>${info.event.extendedProps.patient.lastname}</h3>
+                    <b>Fecha de Nacimiento:</b><h3>${info.event.extendedProps.patient.dateOfBirth}</h3>
                   </div>
 
                   <div style="display: flex;">
