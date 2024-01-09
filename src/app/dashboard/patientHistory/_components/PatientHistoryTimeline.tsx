@@ -60,7 +60,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                 </div>
             </h3>
             <div className="w-full flex justify-center mt-6">
-                <Card placeholder='' shadow className='w-full sm:w-[60rem] rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll'>
+                <Card placeholder='' shadow className='w-full sm:w-[60rem] rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll scrollbar-hide'>
                     <TimelineSkeleton />
                     <TimelineSkeleton />
                     <TimelineSkeleton />
@@ -93,7 +93,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
 
             <div className="w-full flex justify-center mt-4">
 
-                <Card placeholder='' shadow className='rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll'>
+                <Card placeholder='' shadow className='rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll scrollbar-hide'>
                     <Timeline className="w-full sm:w-[60rem] p-2 flex flex-col-reverse">
                         {sortByDateField(patientInfo[0]?.reports)?.map(({ createdBy, description, _id, createdAt, updatedAt }: any, index: number) => (
                             <TimelineItem key={_id}>

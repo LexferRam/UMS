@@ -22,6 +22,7 @@ const Scheduler = () => {
 
   const calendarRef: any = useRef(null)
   const [events, setEvents] = useState([]) as any
+  const [open, setOpen] = useState(false)
   const [userInfo] = useUserInfo()
   const { width } = useWindowDimensions();
 
@@ -67,6 +68,7 @@ const Scheduler = () => {
     })
 
     if (res.ok) {
+      e.setOpen(false)
       return res
     }
   }
@@ -94,14 +96,18 @@ const Scheduler = () => {
 
     getEvents()
 
-  }, [calendarRef])
+  }, [open])
 
 
   return (
-    <div className='flex flex-col w-full shadow-xl rounded py-8 sm:px-4'>
+    <div className='flex flex-col w-full shadow-xl rounded py-8 sm:px-4 scrollbar-hide'>
 
       {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
-        <AddEventModal onEventAdded={(e: any) => onEventAdded(e)} />
+        <AddEventModal
+          open={open}
+          setOpen={setOpen}
+          onEventAdded={(e: any) => onEventAdded(e)} 
+        />
       ) : null}
 
       <FullCalendar

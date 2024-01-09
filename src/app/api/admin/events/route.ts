@@ -16,11 +16,11 @@ export async function GET(req: NextRequest) {
     try {
 
         const session: any = await getServerSession(nextAuth(authOptions))
-        const userFound: any = await User.find({ email: session?.user.email })
+        const userFound: any = await User.find({ email: session?.user?.email })
         let userRole = userFound[0].role;
 
         // TODO: Validar con el role del usuario
-        if (userRole?.role !== 'admin') {
+        if (userRole !== 'admin') {
             await connectMongoDB()
             let updatedUser = await User
                 .find({ email: session?.user.email })

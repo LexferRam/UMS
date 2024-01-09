@@ -22,9 +22,9 @@ const ReportsByPatientTable: FC<{ patientId: string | string[] }> = ({ patientId
 
 
     return (
-        <div className='p-5 max-h-[700px] overflow-scroll'>
+        <div className='p-5 max-h-[700px] overflow-scroll scrollbar-hide'>
             <h3>Historia médica: <b className="capitalize">{patient?.name} {patient?.lastname}</b></h3>
-            <div className="h-full w-full overflow-scroll">
+            <div className="h-full w-full overflow-scroll scrollbar-hide">
                 <table className="w-full min-w-max table-auto text-left">
                     <thead>
                         <tr>

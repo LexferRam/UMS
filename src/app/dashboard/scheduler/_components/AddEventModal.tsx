@@ -74,7 +74,7 @@ const eventTypeArray = [
     }
 ]
 
-export function AddEventModal({ onEventAdded }: any) {
+export function AddEventModal({ onEventAdded, open, setOpen }: any) {
 
     const [title, setTitle] = useState('')
     const [start, setStart] = useState()
@@ -84,6 +84,7 @@ export function AddEventModal({ onEventAdded }: any) {
     const [selectedUserValue, setSelectedUserValue] = useState('')
     const [selectedPatientValue, setSelectedPatientValue] = useState('')
     const [eventType, setEventType] = useState('')
+    
     const [selectedDays, setSelectedDays] = useState<boolean[]>(
         new Array(7).fill(false)
     )
@@ -115,10 +116,10 @@ export function AddEventModal({ onEventAdded }: any) {
             selectedUserValue,
             selectedPatientValue,
             eventType,
-            selectedDaysArr
+            selectedDaysArr,
+            setOpen
         })
     }
-
 
     useEffect(() => {
         const getUsers = async () => {
@@ -138,12 +139,17 @@ export function AddEventModal({ onEventAdded }: any) {
             setPatients(patients)
         }
         getUsers()
-    }, [])
+    }, [open])
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="mb-6 bg-blue-100">Agregar Evento</Button>
+                <Button
+                    onClick={() => setOpen(true)} variant="outline" 
+                    className="mb-6 bg-blue-100"
+                >
+                    Agregar Evento
+                </Button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-[425px]">
