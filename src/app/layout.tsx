@@ -20,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className='scrollbar-hide'>
+    <html lang="en" className='scrollbar-hide'>
+      <body className={inter.className}>
         <ReactQueryProvider>
           <ThemeProvider
             attribute="class"

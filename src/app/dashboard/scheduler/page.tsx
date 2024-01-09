@@ -10,6 +10,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule'
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
+import { calculateAge2 } from '@/util/dates'
 
 const EVENTS_TYPE_COLORS: any = {
   "entrevista": "red",
@@ -155,24 +156,19 @@ const Scheduler = () => {
                   </div>
 
                   <div style="display: flex;">
-                    <b>Fecha de Nacimiento:</b><h3>${info.event.extendedProps.patient.name}</h3>
+                    <b>Fecha de Nacimiento:</b><h3>${info.event.extendedProps.patient.lastname}</h3>
                   </div>
 
                   <div style="display: flex;">
-                    <b>Edad:</b><h3>${info.event.extendedProps.patient.name}</h3>
+                    <b>Edad:</b><h3>${calculateAge2(info.event.extendedProps.patient.dateOfBirth)}</h3>
                   </div>
 
                   <div style="display: flex;">
-                    <b>Diagnóstico:</b><h3>${info.event.extendedProps.patient.name}</h3>
+                    <b>Diagnóstico:</b><h3>${info.event.extendedProps.patient.diagnosis}</h3>
                   </div>
 
                   <div style="display: flex;">
-                    <b>MC:</b><h3>${info.event.extendedProps.patient.name}</h3>
-                  </div>
-
-                  <div style="display: flex; flex-direction: colunm">
-                    <b>Especialistas tratantes:</b>
-                    <h3>${info.event.extendedProps.patient.name}</h3>
+                    <b>MC:</b><h3>${info.event.extendedProps.patient.historyDescription}</h3>
                   </div>
 
                   <div style="display: flex; flex-direction: colunm">
@@ -204,3 +200,9 @@ const Scheduler = () => {
 }
 
 export default Scheduler
+
+
+// <div style="display: flex; flex-direction: colunm">
+// <b>Especialistas tratantes:</b>
+// <h3>${info.event.extendedProps.patient.name}</h3>
+// </div>

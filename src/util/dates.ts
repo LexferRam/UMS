@@ -58,3 +58,32 @@ export function formatDate(dateStr: string) {
   const dateObj = new Date(dateStr);
   return dateObj.toISOString().slice(0, 10);
 }
+
+export function calculateAge2(birthdate: any) {
+  // Get current date
+  console.log(birthdate)
+  const today = new Date();
+
+  // Extract year, month, and day from birthdate
+  const birthYear = new Date(birthdate).getFullYear();
+  const birthMonth = new Date(birthdate).getMonth();
+  const birthDay = new Date(birthdate).getDate();
+
+  // Extract year, month, and day from today's date
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth();
+  const currentDay = today.getDate();
+
+  // Calculate age in years
+  let age = currentYear - birthYear;
+
+  // Adjust age if birthday hasn't occurred yet in the current year
+  if (
+    currentMonth < birthMonth ||
+    (currentMonth === birthMonth && currentDay < birthDay)
+  ) {
+    age--;
+  }
+
+  return age;
+}
