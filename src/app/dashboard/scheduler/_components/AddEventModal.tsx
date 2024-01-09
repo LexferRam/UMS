@@ -30,7 +30,7 @@ const daysOfWeek = [
     },
     {
         id: 3,
-        name: 'Miercoles',
+        name: 'Miércoles',
         value: 'we'
     },
     {
@@ -61,16 +61,16 @@ const eventTypeArray = [
         label: "ENTREVISTA"
     },
     {
-        value: "SESSION",
-        label: "SESSION"
+        value: "SESION",
+        label: "SESSIÓN"
     },
     {
         value: "EVALUACION",
-        label: "EVALUACION"
+        label: "EVALUACIÓN"
     },
     {
         value: "ENTERVISTA_EVALUACION",
-        label: "ENTERVISTA_EVALUACION"
+        label: "ENTERVISTA_EVALUACIÓN"
     }
 ]
 

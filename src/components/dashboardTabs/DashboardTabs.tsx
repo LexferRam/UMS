@@ -39,7 +39,7 @@ const DashboardTabs: FC<{
     const TABLE_HEAD_PATIENT = ["Nombre paciente", "Fecha de nacimiento", "Diagnóstico", "Motivo de Ingreso", "Estatus", "Reportes"];
 
     const TABLE_HEAD_EVENTS = ["Cita", "Estatus de la cita", "Hora", "Nombre paciente", "Acciones"];
-    const TABLE_HEAD_EVENTS_ADMIN = ["Cita", "Estatus de la cita", "Hora", "Nombre paciente", "Estatus paciente", "Especialista", "Reporte"];
+    const TABLE_HEAD_EVENTS_ADMIN = ["Cita", "Estatus de la cita", "Hora", "Nombre paciente", "Estatus paciente", "Especialista"];
 
     const TABLE_HEAD_REPORTS = ["Descripción", "Creado", "Cita asociada", ""];
     const TABLE_HEAD_REPORTS_ADMIN = ["Usuario", "Fecha de creación", "Descripción reporte", "Cita", "Paciente"];

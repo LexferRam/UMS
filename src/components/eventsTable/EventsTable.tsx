@@ -165,17 +165,7 @@ const EventsTable: FC<{ tableHeaders: string[], events: any, refecthFns?: any }>
                                                 }
                                             </td>
                                         </>
-                                    ) : (
-                                        <td className={classes}>
-                                            {hasObjectWithTodaysDate(reports) ?
-                                                (<div className="flex items-center gap-2">
-                                                    <CheckIcon className="h-6 w-6 text-green-500" />
-                                                    <span>Reporte Cargado</span>
-                                                </div>) :
-                                                <AddReportModal eventId={_id} patient={patient} refecthFns={refecthFns} />
-                                            }
-                                        </td>
-                                    )}
+                                    ) : (null)}
 
                                 </tr>
                             );

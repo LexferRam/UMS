@@ -13,10 +13,10 @@ import 'tippy.js/dist/tippy.css';
 import { calculateAge2 } from '@/util/dates'
 
 const EVENTS_TYPE_COLORS: any = {
-  "entrevista": "red",
-  "session": "orange",
-  "evaluacion": "green",
-  "entervista_evaluacion": "blue"
+  "ENTREVISTA": "red",
+  "SESION": "orange",
+  "EVALUACION": "green",
+  "ENTERVISTA_EVALUACION": "blue"
 }
 
 const Scheduler = () => {
