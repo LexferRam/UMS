@@ -4,6 +4,8 @@ import Event from "@/models/event"
 import Patient from "@/models/patient"
 import Report from "@/models/report"
 import User from "@/models/user"
+import { authOptions } from "@/util/authOptions"
+import nextAuth, { getServerSession } from "next-auth"
 import { getToken } from "next-auth/jwt"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -13,13 +15,15 @@ export async function GET(req: NextRequest) {
 
     try {
 
-        const token = await getToken({ req, secret })
+        const session: any = await getServerSession(nextAuth(authOptions))
+        const userFound: any = await User.find({ email: session?.user.email })
+        let userRole = userFound[0].role;
 
         // TODO: Validar con el role del usuario
-        if (token?.email !== 'lexferramirez@gmail.com') {
+        if (userRole?.role !== 'admin') {
             await connectMongoDB()
             let updatedUser = await User
-                .find({ email: token?.email })
+                .find({ email: session?.user.email })
                 .populate({
                     path: "events",
                     model: Event,

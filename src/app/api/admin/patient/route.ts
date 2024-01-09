@@ -12,9 +12,6 @@ export async function POST(req: NextRequest) {
 
     try {
 
-        // const token = await getToken({ req, secret })
-        // if (token?.email !== 'lexferramirez@gmail.com') return NextResponse.json([])
-
         const {
             name,
             lastname,
@@ -55,10 +52,6 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
 
     try {
-
-        // const token = await getToken({ req, secret })
-
-        // if(token?.email !== 'lexferramirez@gmail.com') return NextResponse.json([])
 
         await connectMongoDB()
         const patients = await Patient.find()

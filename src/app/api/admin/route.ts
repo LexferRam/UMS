@@ -13,10 +13,6 @@ export async function GET(req: any) {
 
     try {
 
-        const token = await getToken({ req, secret })
-
-        if (token?.email !== 'lexferramirez@gmail.com') return NextResponse.json([])
-
         await connectMongoDB()
         const users = await User.find()
         return NextResponse.json(users)
@@ -37,9 +33,6 @@ export async function GET(req: any) {
 export async function POST(req: NextRequest) {
 
     try {
-
-        const token = await getToken({ req, secret })
-        if (token?.email !== 'lexferramirez@gmail.com') return NextResponse.json([])
 
         try {
             const { _creator, _asignTo, title, start, end, patient, eventType, freq, byweekday, reports } = await req.json()
