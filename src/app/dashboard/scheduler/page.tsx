@@ -152,7 +152,7 @@ const Scheduler = () => {
             content:
               `<div>
                   <div style="display: flex;">
-                    <b>Nombre:</b><h3>${info.event.extendedProps.patient.name}</h3>
+                    <b>Nombre:</b><h3>${info.event.extendedProps.patient.name +' '+ info.event.extendedProps.patient.lastname}</h3>
                   </div>
 
                   <div style="display: flex;">
