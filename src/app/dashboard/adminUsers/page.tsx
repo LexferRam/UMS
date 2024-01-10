@@ -6,12 +6,6 @@ import AdmiPageSkeleton from '../adminPatients/_components/AdmiPageSkeleton';
 const UsersAdmin = () => {
 
     const TABLE_HEAD = ["Nombre", "Correo", "Role", "Especialidad", "Estatus"];
-    // const respUser = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`, {
-    //     method: "GET",
-    //     headers: headers()
-    // }
-    // )
-    // let users = await respUser.json()
 
     const { isLoading, error, data = [], refetch } = useQuery(['usersList'], () =>
     fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`).then(res =>

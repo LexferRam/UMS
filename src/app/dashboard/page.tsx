@@ -27,7 +27,7 @@ const AdminUserPage = () => {
   if (isLoadingUserInfo || isLoadingReports || isLoadingUserEvent) return <DashboardSkeleton />
 
   // ? Calculo de reportes faltantes
-  const missingUserReports = userEvent.map((userEvent: any) => {
+  const missingUserReports = userEvent?.map((userEvent: any) => {
 
     let eventStartDate = userEvent.start;
     let eventEndDate = userEvent.end;

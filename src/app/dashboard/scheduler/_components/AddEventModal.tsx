@@ -4,7 +4,6 @@ import Combobox from "@/components/ui/Combobox"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogFooter,
     DialogHeader,
@@ -12,7 +11,6 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Option, Select } from "@material-tailwind/react"
 import { Label } from "@radix-ui/react-dropdown-menu"
 import { useEffect, useState } from "react"
 import Datetime from 'react-datetime';
@@ -62,7 +60,7 @@ const eventTypeArray = [
     },
     {
         value: "SESION",
-        label: "SESSIÓN"
+        label: "SESIÓN"
     },
     {
         value: "EVALUACION",
@@ -71,7 +69,11 @@ const eventTypeArray = [
     {
         value: "ENTERVISTA_EVALUACION",
         label: "ENTERVISTA_EVALUACIÓN"
-    }
+    },
+    {
+        value: "RECUPERACION",
+        label: "RECUPERACIÓN"
+    },
 ]
 
 export function AddEventModal({ onEventAdded, open, setOpen }: any) {
@@ -84,6 +86,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
     const [selectedUserValue, setSelectedUserValue] = useState('')
     const [selectedPatientValue, setSelectedPatientValue] = useState('')
     const [eventType, setEventType] = useState('')
+    const [disable, setDisable] = useState(false)
     
     const [selectedDays, setSelectedDays] = useState<boolean[]>(
         new Array(7).fill(false)
@@ -117,7 +120,8 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
             selectedPatientValue,
             eventType,
             selectedDaysArr,
-            setOpen
+            setOpen,
+            setDisable
         })
     }
 
@@ -236,28 +240,6 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                         <Label className="text-right">
                             Tipo de cita:
                         </Label>
-                        {/* <Combobox
-                            arrayValues={[
-                                {
-                                    value: "ENTREVISTA",
-                                    label: "ENTREVISTA"
-                                },
-                                {
-                                    value: "SESSION",
-                                    label: "SESSION"
-                                },
-                                {
-                                    value: "EVALUACION",
-                                    label: "EVALUACION"
-                                },
-                                {
-                                    value: "ENTERVISTA_EVALUACION",
-                                    label: "ENTERVISTA_EVALUACION"
-                                }
-                            ]}
-                            selectedValue={eventType}
-                            setSelectedValue={setEventType}
-                        /> */}
                           <select
                             onChange={(e) => {
                                 const foundItem: any = eventTypeArray.filter((item: any) => item?.label === e.target.value)
@@ -275,9 +257,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                 </div>
 
                 <DialogFooter>
-                    <DialogClose>
-                        <Button onClick={handleSubmit} type="button">Guardar</Button>
-                    </DialogClose>
+                        <Button disabled={disable} onClick={handleSubmit} type="button">Guardar</Button>
                 </DialogFooter>
 
             </DialogContent>
