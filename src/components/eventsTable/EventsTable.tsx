@@ -49,7 +49,7 @@ const EventsTable: FC<{ tableHeaders: string[], events: any, refecthFns?: any }>
 
     return (
         <div className='p-5 max-h-[700px] overflow-scroll'>
-            <h3 className='font-semibold text-gray-600 text-xl'>Mis citas para hoy:</h3>
+            <h3 className='font-semibold text-gray-600 text-xl'> Citas para hoy:</h3>
             <div className="h-full w-full overflow-scroll shadow-md rounded p-8">
                 <table className="w-full min-w-max table-auto text-left">
                     <thead>
@@ -113,7 +113,7 @@ const EventsTable: FC<{ tableHeaders: string[], events: any, refecthFns?: any }>
                                             color="blue-gray"
                                             className="font-normal"
                                         >
-                                            {patient.name}
+                                            {patient.name +' '+ patient.lastname}
                                         </p>
                                     </td>
                                     {userInfo[0]?.role === 'admin' ? (

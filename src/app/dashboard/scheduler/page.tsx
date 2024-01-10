@@ -1,6 +1,7 @@
 'use client'
+
 import moment from 'moment'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import esLocale from '@fullcalendar/core/locales/es';
@@ -125,11 +126,11 @@ const Scheduler = () => {
     <div className='flex flex-col w-full shadow-xl rounded py-8 sm:px-4 scrollbar-hide'>
 
       {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
-        <div className='flex gap-3'>
+        <div className='flex flex-col m-1 sm:flex-row gap-3'>
 
           <div>
             <select
-              className='w-[250px]'
+              className='sm:w-[250px]'
               onChange={(e) => {
                 const foundItem: any = dataUser.filter((item: any) => item?.name === e.target.value)
                 foundItem.length ? setSelectedUser(foundItem[0]._id) : setSelectedUser('')

@@ -23,7 +23,7 @@ const PatientTable: FC<{
   if (!patients?.length) return (
     <div className='p-5 max-h-[700px] overflow-scroll scrollbar-hide'>
       <div className="flex gap-4 items-center mt-4">
-        <h3 className='font-semibold text-gray-600 text-xl'>Mis pacientes:</h3>
+        <h3 className='font-semibold text-gray-600 text-xl'>Pacientes:</h3>
         {userInfo[0]?.role === 'admin' && <AddPatientModal refetch={refetch} />}
       </div>
       <div className='w-full h-full flex items-center justify-center mt-16'>
@@ -84,7 +84,7 @@ const PatientTable: FC<{
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {moment(dateOfBirth).format('LL')}
+                      {moment(dateOfBirth).format('L')}
                     </p>
                   </td>
                   <td className={classes}>
