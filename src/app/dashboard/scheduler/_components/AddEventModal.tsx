@@ -223,6 +223,8 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                         <select
                             onChange={(e) => {
                                 const foundItem: any = patients.filter((item: any) => item?.label === e.target.value)
+                                console.log(e.target.value)
+                                console.log(patients)
                                 console.log(foundItem)
                                 setSelectedPatientValue(foundItem[0].value)
                             }}
