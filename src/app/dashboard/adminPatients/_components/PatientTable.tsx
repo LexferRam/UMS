@@ -42,7 +42,7 @@ const PatientTable: FC<{
   return (
     <div className='p-5 max-h-[700px] overflow-scroll scrollbar-hide'>
       <div className="flex gap-4 items-center mt-4">
-        <h3 className='font-semibold text-gray-600 text-xl'>Mis pacientes:</h3>
+        <h3 className='font-semibold text-gray-600 text-xl'>Pacientes:</h3>
         {userInfo[0]?.role === 'admin' && <AddPatientModal refetch={refetch}/>}
       </div>
       <div className="h-full w-full overflow-scroll shadow-md rounded p-8 scrollbar-hide">
