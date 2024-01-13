@@ -17,7 +17,7 @@ export default function RootLayout({
                 <aside className='z-30 -ml-5 hidden w-full md:block'>
                     <AsideMenuOptions />
                 </aside>
-                <main className='py-6 p-1 sm:px-6 sm:relative sm:top-[80px] overflow-y-scroll scrollbar-hide'>
+                <main className='py-6 p-1 sm:px-6 sm:relative sm:top-[80px]'>
                     {children}
                 </main>
             </div>

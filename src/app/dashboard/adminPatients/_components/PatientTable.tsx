@@ -9,6 +9,7 @@ import { EditPatientModal } from './EditPatientModal'
 import moment from 'moment'
 import 'moment/locale/es'
 import Image from 'next/image'
+import { calculateAgeWithMonths } from '@/util/dateOfBirth'
 moment.locale('es');
 
 const PatientTable: FC<{ 
@@ -45,7 +46,7 @@ const PatientTable: FC<{
         <h3 className='font-semibold text-gray-600 text-xl'>Pacientes:</h3>
         {userInfo[0]?.role === 'admin' && <AddPatientModal refetch={refetch}/>}
       </div>
-      <div className="h-full w-full overflow-scroll shadow-md rounded p-8 scrollbar-hide">
+      <div className="h-full w-full overflow-scroll shadow-md rounded mt-8 scrollbar-hide">
         <table className="w-full min-w-max table-auto text-left">
           <thead>
             <tr>
@@ -82,15 +83,16 @@ const PatientTable: FC<{
                   <td className={classes}>
                     <p
                       color="blue-gray"
-                      className="font-normal"
+                      className="font-normal max-w-[100px]"
                     >
-                      {moment(dateOfBirth).format('L')}
-                    </p>
+                      {moment(dateOfBirth).format('L')} <br/>
+                      {`(${calculateAgeWithMonths(dateOfBirth)?.years} años y ${calculateAgeWithMonths(dateOfBirth)?.months} meses) `}
+                      </p>
                   </td>
                   <td className={classes}>
                     <p
                       color="blue-gray"
-                      className="font-normal"
+                      className="font-normal max-w-[100px]"
                     >
                       {diagnosis}
                     </p>
@@ -98,7 +100,7 @@ const PatientTable: FC<{
                   <td className={classes}>
                     <p
                       color="blue-gray"
-                      className="font-normal"
+                      className="font-normal max-w-[200px]"
                     >
                       {historyDescription}
                     </p>
@@ -138,7 +140,7 @@ const PatientTable: FC<{
                       </div>
                     ): (
                       <div
-                      className="flex gap-1 cursor-pointer items-center"
+                      className="flex gap-1 items-center"
                     >
                       <XMarkIcon className="h-6 w-6 text-red-500" />
                       <span
