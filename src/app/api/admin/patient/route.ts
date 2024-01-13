@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-// import { getToken } from "next-auth/jwt"
 import { connectMongoDB } from "@/db/mongodb"
 import Patient from "@/models/patient"
-import { getToken } from "next-auth/jwt"
-import mongoose from "mongoose"
 
 const secret = process.env.NEXTAUTH_SECRET
 
