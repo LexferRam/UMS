@@ -19,7 +19,7 @@ const AdminPatientsPage = () => {
 
   if (userInfoError) return 'Error cargando la información'
 
-  if (isLoadingUserInfo) return <AdmiPageSkeleton />
+  if (isLoadingUserInfo || isLoading) return <AdmiPageSkeleton />
 
   return (
     <PatientTable
