@@ -24,7 +24,7 @@ const ReportsTable: FC<{ tableHeaders: string[], reports: any }> = ({ tableHeade
     return (
         <div className='p-5 max-h-[700px] overflow-scroll scrollbar-hide'>
             <h3 className='font-semibold text-gray-600 text-xl'>Reportes:</h3>
-            <div className="h-full w-full overflow-scroll shadow-md rounded p-8 scrollbar-hide">
+            <div className="h-full w-full overflow-scroll shadow-md rounded mt-8 scrollbar-hide">
                 <table className="w-full min-w-max table-auto text-left">
                     <thead>
                         <tr>
