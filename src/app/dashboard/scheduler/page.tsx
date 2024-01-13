@@ -67,7 +67,7 @@ const Scheduler = () => {
       until: moment(event?.end).toDate()
     },
     allDay: true,
-    title: moment(event?.start).format('LT') + '-' + event?.title
+    title: moment(event?.start).format('h:mm A') + ' - ' + event?.title
   }))
 
   const onEventAdded = async (e: any) => {
