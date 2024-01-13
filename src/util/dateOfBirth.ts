@@ -1,6 +1,5 @@
 export function calculateAgeWithMonths(dateOfBirth: any) {
     try {
-        console.log(dateOfBirth)
       // Parse the date of birth into a Date object
       const dob = new Date(dateOfBirth);
   
@@ -28,3 +27,18 @@ export function calculateAgeWithMonths(dateOfBirth: any) {
       return null;
     }
   }
+
+export function getHourFromFormattedDate(formattedDate: any) {
+  try {
+    // Parse the formatted date into a Date object
+    const date = new Date(formattedDate);
+
+    // Get the hour in 24-hour format (0-23)
+    const hour = date.getUTCHours();
+
+    return hour;
+  } catch (error) {
+    console.error("Invalid date format provided.");
+    return null;
+  }
+}

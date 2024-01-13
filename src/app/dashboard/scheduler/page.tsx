@@ -11,9 +11,10 @@ import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule'
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
-import { calculateAge2 } from '@/util/dates'
 import { useQuery } from 'react-query'
 import SchedulerSkeleton from './_components/SchedulerSkeleton'
+import { calculateAgeWithMonths } from '@/util/dateOfBirth'
+moment.locale('es');
 
 const EVENTS_TYPE_COLORS: any = {
   "RECUPERACION": "orange",
@@ -66,7 +67,8 @@ const Scheduler = () => {
       until: moment(event?.end).toDate()
     },
     allDay: true,
-    title: moment(event?.start).format('LT') + '-' + event?.title
+    // title: moment(event?.start).format('LT') + '-' + event?.title // TODO: correcion hora
+    title: event?.title // TODO: correcion hora
   }))
 
   const onEventAdded = async (e: any) => {
@@ -184,7 +186,7 @@ const Scheduler = () => {
                   
 
                   <div style="display: flex;">
-                    <b>Edad:</b><h3>${calculateAge2(info.event.extendedProps.patient.dateOfBirth)}</h3>
+                    <b>Edad:</b><h3>${calculateAgeWithMonths(info.event.extendedProps.patient.dateOfBirth)?.years} años y ${calculateAgeWithMonths(info.event.extendedProps.patient.dateOfBirth)?.months} meses</h3>
                   </div>
 
                   <div style="display: flex;">
