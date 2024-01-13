@@ -1,7 +1,6 @@
 'use client'
 
 import { FC } from "react";
-import { AddReportModal } from "../addReportModal/AddReportModal";
 import moment from "moment";
 import { useUserInfo } from "@/hooks";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
