@@ -11,9 +11,12 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
+import { addOneDay, addOneYear } from "@/util/dates"
 import { Label } from "@radix-ui/react-dropdown-menu"
 import { useEffect, useState } from "react"
 import Datetime from 'react-datetime';
+import { useForm } from "react-hook-form"
 
 const daysOfWeek = [
     {
@@ -78,16 +81,12 @@ const eventTypeArray = [
 
 export function AddEventModal({ onEventAdded, open, setOpen }: any) {
 
-    const [title, setTitle] = useState('')
-    const [start, setStart] = useState()
-    const [end, setEnd] = useState()
     const [users, setUsers] = useState([])
     const [patients, setPatients] = useState([])
-    const [selectedUserValue, setSelectedUserValue] = useState('')
-    const [selectedPatientValue, setSelectedPatientValue] = useState('')
-    const [eventType, setEventType] = useState('')
-    const [disable, setDisable] = useState(false)
-    
+    const [active, setActive] = useState(false)
+
+    const { register, handleSubmit, formState: { errors }, reset } = useForm()
+
     const [selectedDays, setSelectedDays] = useState<boolean[]>(
         new Array(7).fill(false)
     )
@@ -100,8 +99,14 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
         setSelectedDays([...updatedCheckedState]);
     }
 
-    const handleSubmit = (event: any) => {
-        event.preventDefault();
+    const onSubmit = async (data: any) => {
+        console.log(data)
+
+        const foundPatient: any = patients.filter((item: any) => item?.label.trim() === data.selectedPatient)
+
+        const foundUser: any = users.filter((item: any) => item?.label.trim() === data.selectedUserValue)
+
+        const foundEventType: any = eventTypeArray.filter((item: any) => item?.label === data.eventType)
 
         const selectedDaysArr = [];
         let valuesDaysOfWeek = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
@@ -112,16 +117,19 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
             }
         }
 
+        // onEventAdded
         onEventAdded({
-            title,
-            start,
-            end,
-            selectedUserValue,
-            selectedPatientValue,
-            eventType,
+            title: data.title,
+            start: data.eventDate + 'T' + data.timeStart + ':' + '00',
+            end: !selectedDaysArr.length ? addOneDay(data.eventDate) + 'T' + data.timeEnd + ':' + '00' : addOneYear(data.eventDate) + 'T' + data.timeEnd + ':' + '00',
+            selectedUserValue: foundUser[0].value,
+            selectedPatientValue: foundPatient[0].value,
+            eventType: foundEventType[0].value,
             selectedDaysArr,
             setOpen,
-            setDisable
+            reset,
+            setActive,
+            setSelectedDays
         })
     }
 
@@ -136,7 +144,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
             let users = await usersResp.map((user: any) => ({ value: user._id, label: user.name }))
             let patients = await patientsResp.map((patient: any) => {
                 if (!patient.isActive) return
-                return ({ value: patient._id, label: patient.name })
+                return ({ value: patient._id, label: patient.name + patient.lastname })
             })
 
             setUsers(users)
@@ -149,7 +157,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button
-                    onClick={() => setOpen(true)} variant="outline" 
+                    onClick={() => setOpen(true)} variant="outline"
                     className="mb-6 bg-blue-100"
                 >
                     Agregar Evento
@@ -160,108 +168,192 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                 <DialogHeader>
                     <DialogTitle>Nuevo Evento</DialogTitle>
                 </DialogHeader>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className="grid gap-4 py-4">
 
-                <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label className="text-right">
-                            Título
-                        </Label>
-                        <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} className="col-span-3" />
-                    </div>
+                        <div className="flex gap-4">
+                            <div className="flex flex-col gap-2 flex-wrap justify-center items-start">
+                                <Label className="text-right">
+                                    Título:
+                                </Label>
+                                <Input
+                                    type="text"
+                                    defaultValue=""
+                                    {...register("title",
+                                        {
+                                            required: 'Ingrese el título',
+                                            min: { value: 4, message: "La longitud minima es de 4 caracteres" }
+                                        })}
+                                />
+                                {errors.title && <p className="text-red-700">{JSON.stringify(errors?.title?.message)}</p>}
+                            </div>
 
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label className="text-right">
-                            Fecha inicio
-                        </Label>
-                        <Datetime value={start} onChange={(date: any) => setStart(date)} className="col-span-3" />
-                    </div>
-
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label className="text-right">
-                            Fecha final
-                        </Label>
-                        <Datetime value={end} onChange={(date: any) => setEnd(date)} className="col-span-3" />
-                    </div>
-
-                    <div className="flex flex-col gap-4 flex-wrap justify-center">
-                        <div>
-                            Seleccione dias de recurrencia:
+                            <div className="flex flex-col gap-2 flex-wrap justify-center items-start">
+                                <Label className="text-right">
+                                    Fecha Inicio:
+                                </Label>
+                                <input
+                                    type="date"
+                                    {...register("eventDate",
+                                        {
+                                            required: 'Ingrese la fecha del evento',
+                                            min: { value: 4, message: "The min length is 4 characters" }
+                                        })}
+                                    className="w-full"
+                                />
+                                {errors.eventDate && <p className="text-red-700">{JSON.stringify(errors?.eventDate?.message)}</p>}
+                            </div>
                         </div>
-                        <div className="flex gap-4 flex-wrap justify-center">
-                            {daysOfWeek.map((day, i) => (
-                                <div className="flex gap-1 items-center" key={day.id}>
-                                    <input
-                                        type="checkbox"
-                                        id={day.name}
-                                        name={day.name}
-                                        value={day.name}
-                                        checked={selectedDays[i]}
-                                        onChange={() => handleOnChange(i)}
-                                    />
-                                    <label
-                                        htmlFor={day.name}
-                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                    >
-                                        {day.name}
-                                    </label>
+
+                        <div className="flex gap-4">
+                            <div className="w-full flex flex-col items-start gap-2">
+                                <Label className="text-right">
+                                    Hora inicio:
+                                </Label>
+                                <input
+                                    type="time"
+                                    {...register("timeStart",
+                                        {
+                                            required: 'Ingrese la hora de inicio'
+                                        })}
+                                    className="w-full"
+                                />
+                                {errors.timeStart && <p className="text-red-700">{JSON.stringify(errors?.timeStart?.message)}</p>}
+                            </div>
+
+                            <div className="w-full flex flex-col items-start gap-2">
+                                <Label className="text-right">
+                                    Hora final:
+                                </Label>
+                                <input
+                                    type="time"
+                                    {...register("timeEnd",
+                                        {
+                                            required: 'Ingrese la hora de culminación'
+                                        })}
+                                    className="w-full"
+                                />
+                                {errors.timeEnd && <p className="text-red-700">{JSON.stringify(errors?.timeEnd?.message)}</p>}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-4 flex-wrap justify-center">
+                            <div className="flex gap-4">
+                                <div>
+                                    Seleccione días de recurrencia:
                                 </div>
-                            ))}
+                                <div>
+                                    <Switch
+                                        className="bg-green-700"
+                                        // {...register("isActive")}
+                                        checked={active}
+                                        onCheckedChange={(e) => {
+                                            setActive(e)
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                            {active && (
+                                <div className="flex gap-4 flex-wrap justify-center">
+                                    {daysOfWeek.map((day, i) => (
+                                        <div className="flex gap-1 items-center" key={day.id}>
+                                            <input
+                                                type="checkbox"
+                                                id={day.name}
+                                                name={day.name}
+                                                value={day.name}
+                                                checked={selectedDays[i]}
+                                                onChange={() => handleOnChange(i)}
+                                            />
+                                            <label
+                                                htmlFor={day.name}
+                                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                            >
+                                                {day.name}
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="flex gap-4">
+                            {/* Terapeuta */}
+                            <div className="flex flex-col items-start justify-between gap-2">
+                                <Label className="text-right">
+                                    Especialista:
+                                </Label>
+                                {/* <Combobox arrayValues={users} selectedValue={selectedUserValue} setSelectedValue={setSelectedUserValue} /> */}
+                                <select
+                                    {...register('selectedUserValue',
+                                        {
+                                            required: 'Seleccione un terapeuta'
+                                        })}
+                                >
+                                    <option key={0}></option>
+                                    {users.map((user: any) => {
+                                        if (!user) return
+                                        return (
+                                            <option key={user.value}>{user.label}</option>
+                                        )
+                                    })}
+                                </select>
+                                {errors.selectedUserValue && <p className="text-red-700">{JSON.stringify(errors?.selectedUserValue?.message)}</p>}
+                            </div>
+
+                            {/* Paciente */}
+                            <div className="flex flex-col items-start justify-between gap-2">
+                                <Label className="text-right">
+                                    Paciente:
+                                </Label>
+                                <select
+                                    {...register('selectedPatient',
+                                        {
+                                            required: 'Seleccione un paciente'
+                                        })}
+                                >
+                                    <option key={0}></option>
+                                    {patients.map((patient: any) => {
+                                        if (!patient) return
+                                        return (
+                                            <option key={patient.value}>{patient.label}</option>
+                                        )
+                                    })}
+                                </select>
+                                {errors.selectedPatient && <p className="text-red-700">{JSON.stringify(errors?.selectedPatient?.message)}</p>}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col items-start justify-between gap-2">
+                            <Label className="text-right">
+                                Tipo de cita:
+                            </Label>
+                            <select
+                                {...register('eventType',
+                                    {
+                                        required: 'Seleccione el tipo de evento'
+                                    })}
+                            >
+                                <option key={0}></option>
+                                {eventTypeArray.map((eventType: any) => {
+                                    return (
+                                        <option key={eventType.value}>{eventType.label}</option>
+                                    )
+                                })}
+                            </select>
+                            {errors.eventType && <p className="text-red-700">{JSON.stringify(errors?.eventType?.message)}</p>}
                         </div>
                     </div>
 
-                    <div className="flex justify-between items-center gap-2">
-                        <Label className="text-right">
-                            Especialista
-                        </Label>
-                        <Combobox arrayValues={users} selectedValue={selectedUserValue} setSelectedValue={setSelectedUserValue} />
-                    </div>
-
-                    <div className="flex justify-between items-center gap-2">
-                        <Label className="text-right">
-                            Paciente
-                        </Label>
-                        <select
-                            onChange={(e) => {
-                                const foundItem: any = patients.filter((item: any) => item?.label.trim() === e.target.value)
-                                console.log(e.target.value)
-                                console.log(patients)
-                                console.log(foundItem)
-                                setSelectedPatientValue(foundItem[0].value)
-                            }}
+                    <DialogFooter>
+                        <button
+                            className=" w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffc260] hover:bg-[#f8b84e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8fafc]"
+                            type="submit"
                         >
-                            <option key={0}></option>
-                            {patients.map((patient: any) => {
-                                if (!patient) return
-                                return (
-                                    <option key={patient.value}>{patient.label}</option>
-                                )
-                            })}
-                        </select>
-                    </div>
-
-                    <div className="flex justify-between items-center gap-2">
-                        <Label className="text-right">
-                            Tipo de cita:
-                        </Label>
-                          <select
-                            onChange={(e) => {
-                                const foundItem: any = eventTypeArray.filter((item: any) => item?.label === e.target.value)
-                                setEventType(foundItem[0].value)
-                            }}
-                        >
-                            <option key={0}></option>
-                            {eventTypeArray.map((eventType: any) => {
-                                return (
-                                    <option key={eventType.value}>{eventType.label}</option>
-                                )
-                            })}
-                        </select>
-                    </div>
-                </div>
-
-                <DialogFooter>
-                        <Button disabled={disable} onClick={handleSubmit} type="button">Guardar</Button>
-                </DialogFooter>
+                            Guardar
+                        </button>
+                    </DialogFooter>
+                </form>
 
             </DialogContent>
 

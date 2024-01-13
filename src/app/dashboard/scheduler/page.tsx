@@ -67,16 +67,14 @@ const Scheduler = () => {
       until: moment(event?.end).toDate()
     },
     allDay: true,
-    // title: moment(event?.start).format('LT') + '-' + event?.title // TODO: correcion hora
-    title: event?.title // TODO: correcion hora
+    title: moment(event?.start).format('LT') + '-' + event?.title
   }))
 
   const onEventAdded = async (e: any) => {
     let calendarApi = calendarRef?.current?.getApi()
-    e.setDisable(true)
 
     let newEvent = {
-      title: moment(e?.start).format('LT') + '-' + e?.title,
+      title: e?.title,
       _asignTo: e.selectedUserValue,
       patient: e.selectedPatientValue,
       color: EVENTS_TYPE_COLORS[e.eventType],
@@ -116,7 +114,9 @@ const Scheduler = () => {
     if (res.ok) {
       e.setOpen(false)
       await refetchEvents()
-      e.setDisable(false)
+      e.reset()
+      e.setActive(false)
+      e.setSelectedDays(new Array(7).fill(false))
       return res
     }
   }
@@ -158,7 +158,17 @@ const Scheduler = () => {
 
       <FullCalendar
         ref={calendarRef}
-        events={formattedEventsQuery}
+        events={formattedEventsQuery.sort((event1: any, event2: any) => {
+          const start1 = new Date(event1.start);
+          const start2 = new Date(event2.start);
+          return start1.getHours() - start2.getHours();
+        })}
+        eventOrder={(event1: any, event2: any) => {
+          const start1 = new Date(event1?.start / 1000);
+          const start2 = new Date(event2?.start / 1000);
+
+          return start1?.getHours() - start2?.getHours();
+        }}
         plugins={[dayGridPlugin, interactionPlugin, rrulePlugin]}
         initialView={width as any < 500 ? "dayGridDay" : "dayGridMonth"}
         locale={esLocale}
