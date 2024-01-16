@@ -222,6 +222,9 @@ const Scheduler = () => {
           omitZeroMinute: true,
           meridiem: 'narrow'
         }}
+        eventClick= {function (info) {
+          console.log(info.event._def)
+        }}
       />
     </div>
   )
