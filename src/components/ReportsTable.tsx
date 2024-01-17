@@ -53,7 +53,7 @@ const ReportsTable: FC<{ tableHeaders: string[], reports: any }> = ({ tableHeade
                                     <td className={classes}>
                                         <div className="flex flex-col items-center gap-2">
                                             <Image
-                                                src={createdBy.lastname}
+                                                src={createdBy?.lastname}
                                                 className="rounded-full"
                                                 alt='logo_login'
                                                 width={40}
@@ -64,7 +64,7 @@ const ReportsTable: FC<{ tableHeaders: string[], reports: any }> = ({ tableHeade
                                                 color="blue-gray"
                                                 className="font-normal text-clip text-gray-500"
                                             >
-                                                {createdBy.name}
+                                                {createdBy?.name}
                                             </p>
                                         </div>
                                     </td>
@@ -91,7 +91,7 @@ const ReportsTable: FC<{ tableHeaders: string[], reports: any }> = ({ tableHeade
                                             color="blue-gray"
                                             className="font-normal"
                                         >
-                                            {associatedEvent.title}
+                                            {associatedEvent?.title}
                                         </p>
                                     </td>
 
@@ -100,7 +100,7 @@ const ReportsTable: FC<{ tableHeaders: string[], reports: any }> = ({ tableHeade
                                             color="blue-gray"
                                             className="font-normal"
                                         >
-                                            {associatedEvent.patient?.name + ' ' + associatedEvent.patient?.lastname}
+                                            {associatedEvent?.patient?.name + ' ' + associatedEvent?.patient?.lastname}
                                         </p>
                                     </td>
                                 </tr>

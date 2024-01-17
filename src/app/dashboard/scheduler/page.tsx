@@ -14,6 +14,7 @@ import 'tippy.js/dist/tippy.css';
 import { useQuery } from 'react-query'
 import SchedulerSkeleton from './_components/SchedulerSkeleton'
 import { calculateAgeWithMonths } from '@/util/dateOfBirth'
+import EventDetailsModal from './_components/EventDetailsModal'
 moment.locale('es');
 
 const EVENTS_TYPE_COLORS: any = {
@@ -28,9 +29,11 @@ const Scheduler = () => {
 
   const calendarRef: any = useRef(null)
   const [open, setOpen] = useState(false)
+  const [openDetails, setOpenDetails] = useState(false)
   const [selectedUser, setSelectedUser] = useState('')
   const [userInfo] = useUserInfo()
   const { width } = useWindowDimensions();
+  const [currentEvent, setCurrentEvent] = useState<any>()
 
   const {
     isLoading: isLoadingSchedulerEvents,
@@ -127,6 +130,8 @@ const Scheduler = () => {
   return (
     <div className='flex flex-col w-full shadow-xl rounded py-8 sm:px-4 scrollbar-hide'>
 
+      <EventDetailsModal open={openDetails} setOpen={setOpenDetails} eventDetails={currentEvent}/>
+
       {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
         <div className='flex flex-col m-1 sm:flex-row gap-3'>
 
@@ -178,43 +183,43 @@ const Scheduler = () => {
           center: (width as any < 500) ? '' : 'title',
           right: 'dayGridDay,dayGridWeek,dayGridMonth'
         }}
-        eventDidMount={(info) => {
-          tippy(info.el, {
-            animation: 'fade',
-            trigger: 'click',
-            touch: 'hold',
-            allowHTML: true,
-            content:
-              `<div>
-                  <div style="display: flex;">
-                    <b>Nombre:</b><h3>${info.event.extendedProps.patient.name + ' ' + info.event.extendedProps.patient.lastname}</h3>
-                  </div>
+        // eventDidMount={(info) => {
+        //   tippy(info.el, {
+        //     animation: 'fade',
+        //     trigger: 'click',
+        //     touch: 'hold',
+        //     allowHTML: true,
+        //     content:
+        //       `<div>
+        //           <div style="display: flex;">
+        //             <b>Nombre:</b><h3>${info.event.extendedProps.patient.name + ' ' + info.event.extendedProps.patient.lastname}</h3>
+        //           </div>
 
-                  <div style="display: flex;">
-                    <b>Fecha de Nacimiento:</b><h3>${moment(info.event.extendedProps.patient.dateOfBirth).format('LL')}</h3>
-                  </div>
+        //           <div style="display: flex;">
+        //             <b>Fecha de Nacimiento:</b><h3>${moment(info.event.extendedProps.patient.dateOfBirth).format('LL')}</h3>
+        //           </div>
                   
 
-                  <div style="display: flex;">
-                    <b>Edad:</b><h3>${calculateAgeWithMonths(info.event.extendedProps.patient.dateOfBirth)?.years} años y ${calculateAgeWithMonths(info.event.extendedProps.patient.dateOfBirth)?.months} meses</h3>
-                  </div>
+        //           <div style="display: flex;">
+        //             <b>Edad:</b><h3>${calculateAgeWithMonths(info.event.extendedProps.patient.dateOfBirth)?.years} años y ${calculateAgeWithMonths(info.event.extendedProps.patient.dateOfBirth)?.months} meses</h3>
+        //           </div>
 
-                  <div style="display: flex;">
-                    <b>Diagnóstico:</b><h3>${info.event.extendedProps.patient.diagnosis}</h3>
-                  </div>
+        //           <div style="display: flex;">
+        //             <b>Diagnóstico:</b><h3>${info.event.extendedProps.patient.diagnosis}</h3>
+        //           </div>
 
-                  <div style="display: flex;">
-                    <b>MC:</b><h3>${info.event.extendedProps.patient.historyDescription}</h3>
-                  </div>
+        //           <div style="display: flex;">
+        //             <b>MC:</b><h3>${info.event.extendedProps.patient.historyDescription}</h3>
+        //           </div>
 
-                  <div style="display: flex; flex-direction: colunm">
-                  <b>Especialistas cita:</b>
-                    <h3>${info.event.extendedProps._asignTo.name}</h3>
-                  </div>
+        //           <div style="display: flex; flex-direction: colunm">
+        //           <b>Especialistas cita:</b>
+        //             <h3>${info.event.extendedProps._asignTo.name}</h3>
+        //           </div>
 
-                </div>`,
-          });
-        }}
+        //         </div>`,
+        //   });
+        // }}
         displayEventTime={true}
         eventTimeFormat={{
           hour: 'numeric',
@@ -223,7 +228,8 @@ const Scheduler = () => {
           meridiem: 'narrow'
         }}
         eventClick= {function (info) {
-          console.log(info.event._def)
+          setCurrentEvent(info.event._def)
+          setOpenDetails(true)
         }}
       />
     </div>
@@ -231,9 +237,3 @@ const Scheduler = () => {
 }
 
 export default Scheduler
-
-
-// <div style="display: flex; flex-direction: colunm">
-// <b>Especialistas tratantes:</b>
-// <h3>${info.event.extendedProps.patient.name}</h3>
-// </div>
