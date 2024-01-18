@@ -228,6 +228,7 @@ const Scheduler = () => {
           meridiem: 'narrow'
         }}
         eventClick= {function (info) {
+          console.log(info)
           setCurrentEvent(info.event._def)
           setOpenDetails(true)
         }}

@@ -243,7 +243,6 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                                 <div>
                                     <Switch
                                         className="bg-green-700"
-                                        // {...register("isActive")}
                                         checked={active}
                                         onCheckedChange={(e) => {
                                             setActive(e)
@@ -281,7 +280,6 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                                 <Label className="text-right">
                                     Especialista:
                                 </Label>
-                                {/* <Combobox arrayValues={users} selectedValue={selectedUserValue} setSelectedValue={setSelectedUserValue} /> */}
                                 <select
                                     {...register('selectedUserValue',
                                         {
