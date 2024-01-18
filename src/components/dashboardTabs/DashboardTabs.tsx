@@ -5,6 +5,7 @@ import EventsTable from '../eventsTable/EventsTable';
 import { CalendarDaysIcon, ExclamationTriangleIcon, FolderIcon, UserIcon } from '@heroicons/react/24/outline';
 import ReportsTable from '../ReportsTable';
 import MissingReportsTable from '../MissingReportsTable';
+import { formatDateToDDMMYYYY } from '@/util/dates';
 
 const DashboardTabs: FC<{
     userInfo: any,
@@ -13,15 +14,16 @@ const DashboardTabs: FC<{
     missingReportsWithDate: any,
     refecthFns: any
 }> = ({ userInfo, userReports, userEvent, missingReportsWithDate, refecthFns }) => {
+      
      function isDateWithinRange(dateToCheck: any, startDate: any, endDate: any) {
         // Ensure all dates are Date objects:
-        dateToCheck = new Date(dateToCheck).toLocaleString("es-VE").split(',')[0];
-        startDate = new Date(startDate).toLocaleString("es-VE").split(',')[0];
-        endDate = new Date(endDate).toLocaleString("es-VE").split(',')[0];
+        dateToCheck = new Date(dateToCheck)//.toLocaleString("es-VE").split(',')[0];
+        startDate = new Date(startDate)//.toLocaleString("es-VE").split(',')[0];
+        endDate = new Date(endDate)//.toLocaleString("es-VE").split(',')[0];
       
         // Check if the date is greater than or equal to the start date
         // and less than or equal to the end date:
-        return dateToCheck >= startDate && dateToCheck <= endDate;
+        return formatDateToDDMMYYYY(dateToCheck) >= formatDateToDDMMYYYY(startDate) && formatDateToDDMMYYYY(dateToCheck) <= formatDateToDDMMYYYY(endDate);
       }
       
        const eventForToday = (eventsArray: any) => {
