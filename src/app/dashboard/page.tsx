@@ -1,6 +1,5 @@
 'use client'
 
-import { headers } from "next/headers"
 import DashboardTabs from "@/components/dashboardTabs/DashboardTabs"
 import { loopThroughDates } from "@/util/reports"
 import { useQuery } from "react-query"

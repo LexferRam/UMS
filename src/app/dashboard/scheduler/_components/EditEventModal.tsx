@@ -134,7 +134,6 @@ const EditEventModal = ({eventDetails}: any) => {
 
         setValue('eventType',eventDetails?.extendedProps?.eventType)
         setEventTp(eventDetails?.extendedProps?.eventType)
-        console.log(eventDetails?.extendedProps?.eventType)
 
     }, [])
     

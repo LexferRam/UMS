@@ -11,6 +11,7 @@ import { calculateAgeWithMonths } from '@/util/dateOfBirth';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { ArrowLeftIcon } from "@heroicons/react/24/outline"
 import EditEventModal from './EditEventModal';
+import { useUserInfo } from '@/hooks';
 
 interface IEventDetailsModal {
     open: boolean
@@ -27,27 +28,36 @@ const EventDetailsModal = ({
     console.log(eventDetails)
 
     const [editEvent, setEditEvent] = useState(false)
+    const [userInfo] = useUserInfo()
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog
+            open={open}
+            onOpenChange={() => {
+                setOpen(!open)
+                setEditEvent(false)
+            }}
+        >
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader className='flex flex-row gap-4 items-center justify-around'>
                     <div><DialogTitle>{eventDetails?.title}</DialogTitle></div>
                     {!editEvent ? (
-                        <div className='flex gap-1 items-center cursor-pointer' onClick={() => setEditEvent(true)}>
-                            <PencilSquareIcon
-                                className="h-6 w-6 text-green-500"
-                            />
-                            <span
-                                className='text-sm font-semibold text-gray-600'
-                            >
-                                Editar cita
-                            </span>
-                        </div>
+                        userInfo[0]?.role === 'admin' ? (
+                            <div className='flex gap-1 items-center cursor-pointer' onClick={() => setEditEvent(true)}>
+                                <PencilSquareIcon
+                                    className="h-6 w-6 text-green-500"
+                                />
+                                <span
+                                    className='text-sm font-semibold text-gray-600'
+                                >
+                                    Editar
+                                </span>
+                            </div>
+                        ) : null
                     ) : (
                         <div className='flex gap-2 items-center cursor-pointer' onClick={() => setEditEvent(false)} >
                             <ArrowLeftIcon
-                                className="h-6 w-6 text-green-500" 
+                                className="h-6 w-6 text-green-500"
                             />
                             <span
                                 className='text-sm font-semibold text-gray-600'
@@ -89,7 +99,7 @@ const EventDetailsModal = ({
                 </>}
 
                 {editEvent && (
-                    <EditEventModal eventDetails={eventDetails}/>
+                    <EditEventModal eventDetails={eventDetails} />
                 )}
             </DialogContent>
 
