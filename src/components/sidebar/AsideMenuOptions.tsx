@@ -4,6 +4,7 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import { ButtonNav } from "../ButtonNav";
 import { useUserInfo } from "@/hooks";
 import { adminNavLinks, specialistNavLinks } from "./constants/linksByUser";
+import SidebarSkeleton from "./SidebarSkeleton";
 
 const AsideMenuOptions = () => (
     <div className="fixed overflow-y-scroll scrollbar-hide top-[100px] py-4 pr-4 mr-2 border-r-[0.1px] h-full">
@@ -13,10 +14,14 @@ const AsideMenuOptions = () => (
 
 export const NavItems = () => {
     const activeSegment = useSelectedLayoutSegment()
-    const [ userInfo ] = useUserInfo()
+    const [ userInfo, isLoadingUserInfo ] = useUserInfo()
+
+    if (isLoadingUserInfo) return <SidebarSkeleton />
+
     const arrayLinks = userInfo[0]?.role === 'admin' 
         ? adminNavLinks 
         : specialistNavLinks;
+
 
     return (
         <>

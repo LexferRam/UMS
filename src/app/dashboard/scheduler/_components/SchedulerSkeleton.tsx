@@ -1,4 +1,3 @@
-import { Typography } from '@material-tailwind/react'
 import React from 'react'
 
 const SchedulerSkeleton = () => {

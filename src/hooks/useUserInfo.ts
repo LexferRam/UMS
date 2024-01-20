@@ -16,6 +16,7 @@ export const useUserInfo = () => {
 
   return [
     userInfo,
+    isLoadingUserInfo,
     session
   ]
 }
