@@ -13,7 +13,6 @@ import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 import { useQuery } from 'react-query'
 import SchedulerSkeleton from './_components/SchedulerSkeleton'
-import { calculateAgeWithMonths } from '@/util/dateOfBirth'
 import EventDetailsModal from './_components/EventDetailsModal'
 moment.locale('es');
 
@@ -175,7 +174,7 @@ const Scheduler = () => {
           return start1?.getHours() - start2?.getHours();
         }}
         plugins={[dayGridPlugin, interactionPlugin, rrulePlugin]}
-        initialView={width as any < 500 ? "dayGridDay" : "dayGridMonth"}
+        initialView={width as any < 500 ? "dayGridWeek" : "dayGridWeek"}
         locale={esLocale}
         selectable
         headerToolbar={{
