@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
  
+:root {
+  /* --fc-border-color: gray; */
+  --fc-daygrid-event-dot-width: 15px;
+}
 
 @layer base {
   [type="text"],
@@ -75,4 +79,8 @@
     display: inline-block;
     text-align: center;
     width: 180px;
+}
+
+.fc-license-message{
+  display: none !important;
 }

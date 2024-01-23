@@ -25,8 +25,6 @@ const EventDetailsModal = ({
     eventDetails
 }: IEventDetailsModal) => {
 
-    console.log(eventDetails)
-
     const [editEvent, setEditEvent] = useState(false)
     const [userInfo] = useUserInfo()
 

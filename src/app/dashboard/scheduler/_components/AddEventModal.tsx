@@ -98,7 +98,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
     }
 
     const onSubmit = async (data: any) => {
-        console.log(data)
+        // console.log(data)
 
         const foundPatient: any = patients.filter((item: any) => item?.label.trim() === data.selectedPatient)
 
@@ -114,6 +114,25 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                 selectedDaysArr.push(valuesDaysOfWeek[i]);
             }
         }
+
+        console.log(data)
+
+        // formato que funciona : "2024-01-20T12:30:00+00:00"
+        //                        '2024-01-18T19:00:00.000Z'
+
+        console.log({
+            title: data.title,
+            start: data.eventDate + 'T' + data.timeStart + ':' + '00',
+            end: !selectedDaysArr.length ? data.eventDate + 'T' + data.timeEnd + ':' + '00' : addOneYear(data.eventDate) + 'T' + data.timeEnd + ':' + '00',
+            selectedUserValue: foundUser[0].value,
+            selectedPatientValue: foundPatient[0].value,
+            eventType: foundEventType[0].value,
+            selectedDaysArr,
+            setOpen,
+            reset,
+            setActive,
+            setSelectedDays
+        })
 
         // onEventAdded
         onEventAdded({
