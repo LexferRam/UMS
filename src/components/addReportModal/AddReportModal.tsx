@@ -60,14 +60,12 @@ export const AddReportModal: FC<{
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
                 <div
-                    onClick={() => setOpen(true)}
-                    className="flex gap-2 items-center cursor-pointer"
+                    // onClick={() => setOpen(true)}
+                    className="flex gap-2 items-center cursor-not-allowed"
                 >
                     <PlusIcon className="h-6 w-6 text-red-500 cursor-pointer font-extrabold" /> Agregar Reporte
                 </div>
-            </DialogTrigger>
 
             <DialogContent className="sm:max-w-[450px]">
                 <DialogHeader>
