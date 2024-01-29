@@ -22,32 +22,77 @@ export function verifyReports(startDate: any, endDate: any, reportsArray: any) {
 }
 
 function getWeekday(date: any) {
-  const weekdays = [ "mo", "tu", "we", "th", "fr", "sa","su"];
-  let dayIndex: any =new Date(date).getDay(); // 0 for Sunday, 1 for Monday, etc.
+  const weekdays = ["mo", "tu", "we", "th", "fr", "sa", "su"];
+  let dayIndex: any = new Date(date).getDay(); // 0 for Sunday, 1 for Monday, etc.
   return weekdays[dayIndex];
 }
 
-export function loopThroughDates(startDate: any, endDate: any, reportsArr: any, userEvent: any) {
+function calculateMondays(startDate: any, endDate: any, dayWeek: number) {
+  const mondays = [];
   let currentDate = new Date(startDate);
-  let endDateFormatted = new Date(endDate)
+
+  while (currentDate <= endDate) {
+    if (currentDate.getDay() === dayWeek) { // Monday has a weekday value of 1
+      mondays.push(new Date(currentDate)); // Store a copy to avoid modification
+    }
+    currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+  }
+
+  return mondays;
+}
+
+export function loopThroughDates(userEvent: any) {
+
+  const weekdays = ["mo", "tu", "we", "th", "fr", "sa", "su"];
+  
+  let eventStartDate = new Date(userEvent.start);
+  let eventEndDate = new Date(userEvent.end)
   let today = new Date()
   let datesArr: any = []
 
-  while (currentDate <= (endDateFormatted <= today ? endDateFormatted : today)) {
-    datesArr.push({
-      date: currentDate.toISOString().slice(0, 10),
-      hasReport: false
-    })
-    currentDate.setDate(currentDate.getDate() + 1);
+  // ? Calcular la fecha de inicio del evento hasta hoy ó la fecha final del evento
+  while (eventStartDate <= (eventEndDate <= today ? eventEndDate : today)) {
+    if (userEvent.byweekday.length === 0) {
+      datesArr.push({
+        date: eventStartDate.toISOString().slice(0, 10),
+        hasReport: false
+      })
+    } else {
+      // if (userEvent.title !== 'Santiago Sanchez') return
+      let arrDatesOfRecurrenceDays = (calculateMondays(userEvent.start, today, (weekdays.indexOf(userEvent.byweekday[0]) + 1)))
+
+      let datesWithOutReportInRecurrentDays = userEvent.reports.map((item: any) => {
+        let itemToPush = arrDatesOfRecurrenceDays.map(itemWithRecu => {
+          console.log(itemWithRecu.toISOString().split('T')[0])
+          console.log(item.createdAt.split('T')[0])
+          return (itemWithRecu.toISOString().split('T')[0] === item.createdAt.split('T')[0]) && itemWithRecu.toISOString().split('T')[0]
+        })
+        if (!itemToPush[0]) return
+        console.log(itemToPush)
+        return itemToPush[0]
+      })
+
+      console.log(datesWithOutReportInRecurrentDays)
+      datesArr.push({
+        date: datesWithOutReportInRecurrentDays[0],
+        hasReport: false
+      })
+
+    }
+    eventStartDate.setDate(eventStartDate.getDate() + 1);
   }
 
   let missingReportByEvents: any = []
 
+  console.log(datesArr)
+
   datesArr.forEach((itemDate: any) => {
-    if (reportsArr.length > 0) {
-      reportsArr.forEach((report: any) => {
+    // ! 1.- Verify if the event has reports
+    if (userEvent.reports.length > 0) {
+      userEvent.reports.forEach((report: any) => {
 
         if (itemDate.date === new Date(report.createdAt).toISOString().slice(0, 10)) {
+
           return missingReportByEvents.push({
             ...itemDate,
             hasReport: true,
@@ -63,7 +108,7 @@ export function loopThroughDates(startDate: any, endDate: any, reportsArr: any, 
     }
     else {
 
-      if (userEvent.byweekday.length !== 0 && !userEvent.byweekday.includes(getWeekday(itemDate.date))) return
+      // if (userEvent.byweekday.length !== 0 && !userEvent.byweekday.includes(getWeekday(itemDate.date))) return
 
       return missingReportByEvents.push({
         ...itemDate,
@@ -94,5 +139,5 @@ export function loopThroughDates(startDate: any, endDate: any, reportsArr: any, 
     }
   })
 
-  return !reportsArr?.length ? missingReportByEvents : datesWithMissingReports.filter((element: any) => element !== undefined)
+  return !userEvent.reports?.length ? missingReportByEvents : datesWithMissingReports.filter((element: any) => element !== undefined)
 }

@@ -26,12 +26,7 @@ const AdminUserPage = () => {
 
   // ? Calculo de reportes faltantes
   const missingUserReports = userEvent?.map((userEvent: any) => {
-
-    let eventStartDate = userEvent.start;
-    let eventEndDate = userEvent.end;
-    let userReports = userEvent.reports;
-
-    return loopThroughDates(eventStartDate, eventEndDate, userReports, userEvent)
+    return loopThroughDates(userEvent)
   })
   let missingReportsWithDate: any = missingUserReports.flat(1)
 
