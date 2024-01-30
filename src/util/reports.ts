@@ -107,7 +107,11 @@ export function loopThroughDates(userEvent: any) {
       })
     }
     else {
-
+      if (userEvent.title === 'Rodrigo Sabal') {
+        console.log(eventStartDate)
+        console.log(today)
+        console.log(userEvent)
+      }
       // if (userEvent.byweekday.length !== 0 && !userEvent.byweekday.includes(getWeekday(itemDate.date))) return
 
       return missingReportByEvents.push({

@@ -30,12 +30,16 @@ const AdminUserPage = () => {
   })
   let missingReportsWithDate: any = missingUserReports.flat(1)
 
+  let arrUserEventIds = Array.from(new Set(missingReportsWithDate.map((item: any) => item.userEventId)))
+
+  let uniqueUserEvents = arrUserEventIds.map((item: any) => missingReportsWithDate.filter((item2: any) => item === item2.userEventId) )
+
   return (
     <DashboardTabs
       userInfo={userInfo}
       userReports={userReports}
       userEvent={userEvent}
-      missingReportsWithDate={missingReportsWithDate}
+      missingReportsWithDate={uniqueUserEvents}
       refecthFns={{
         refetchUserInfo,
         refetchReports,
