@@ -232,7 +232,7 @@ const Scheduler = () => {
           right: (width as any < 500) ? 'resourceTimeGridDay,resourceTimeGridWeek' : 'resourceTimeGridDay,resourceTimeGridWeek,dayGridMonth'
           // right: 'dayGridDay,dayGridWeek,dayGridMonth,resourceTimeGridDay,resourceTimeGridFourDay'
         }}
-        displayEventTime={true}
+        displayEventTime={false}
         eventTimeFormat={
           {
             hour12: true, // Use 12-hour format
