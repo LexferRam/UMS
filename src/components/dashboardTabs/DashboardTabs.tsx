@@ -15,24 +15,38 @@ const DashboardTabs: FC<{
     refecthFns: any
 }> = ({ userInfo, userReports, userEvent, missingReportsWithDate, refecthFns }) => {
       
-     function isDateWithinRange(dateToCheck: any, startDate: any, endDate: any) {
+     function isDateWithinRange(today: any, startDate: any, endDate: any, event:any) {
         // Ensure all dates are Date objects:
-        dateToCheck = new Date(dateToCheck)//.toLocaleString("es-VE").split(',')[0];
-        startDate = new Date(startDate)//.toLocaleString("es-VE").split(',')[0];
-        endDate = new Date(endDate)//.toLocaleString("es-VE").split(',')[0];
-      
-        // Check if the date is greater than or equal to the start date
-        // and less than or equal to the end date:
-        return formatDateToDDMMYYYY(dateToCheck) >= formatDateToDDMMYYYY(startDate) && formatDateToDDMMYYYY(dateToCheck) <= formatDateToDDMMYYYY(endDate);
-      }
+        today = today.setHours(0,0,0,0)//.split(',')[0];
+        startDate = new Date(startDate).setHours(0,0,0,0)//.split(',')[0];
+        endDate = new Date(endDate).setHours(0,0,0,0)//.split(',')[0];
+
+         return today >= startDate && today <= endDate;
+     }
       
        const eventForToday = (eventsArray: any) => {
+        let daysWeek: any = {
+            mo: 1,
+            tu: 2,
+            we: 3,
+            th: 4,
+            fr: 5,
+            sa: 6,
+            su: 7
+        }
       
         let eventsForTodayArray: any[] = []
       
         eventsArray?.map((event: any) => {
           const today = new Date();
-          isDateWithinRange(today, event.start, event.end) && eventsForTodayArray.push(event)
+          if (event.byweekday.length > 0) {
+              if (daysWeek[event.byweekday[0]] === today.getDay()) {
+                  isDateWithinRange(today, event.start, event.end, event) && eventsForTodayArray.push(event)
+              }
+          }
+          if (event.byweekday.length === 0) {
+            isDateWithinRange(today, event.start, event.end, event) && eventsForTodayArray.push(event)
+          }
         })
       
         return eventsForTodayArray
