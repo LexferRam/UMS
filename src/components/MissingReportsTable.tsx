@@ -20,6 +20,8 @@ const MissingReportsTable: React.FC<{
     refecthFns
 }) => {
 
+    console.log(missingReportsWithDate)
+
     if (!missingReportsWithDate?.length) return (
         <div className='w-full h-full flex items-center justify-center mt-16'>
             <Image
@@ -56,16 +58,17 @@ const MissingReportsTable: React.FC<{
                             </tr>
                         </thead>
                         <tbody>
-                            {missingReportsWithDate?.map(({ 
-                                userEventId, 
-                                userEventTitle, 
-                                date, 
-                                hasReport, 
-                                _asignTo,  
-                                patient,
-                            }: any, index: any) => {
+                            {missingReportsWithDate?.map((report: any, index: any) => {
                                 const isLast = index === missingReportsWithDate.length - 1;
                                 const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
+                                const { 
+                                    userEventId, 
+                                    userEventTitle, 
+                                    date, 
+                                    hasReport, 
+                                    _asignTo,  
+                                    patient,
+                                } = report[0]
 
                                 return (
                                     <tr key={userEventId} className="hover:bg-[#f8fafc]">

@@ -34,6 +34,8 @@ const AdminUserPage = () => {
 
   let uniqueUserEvents = arrUserEventIds.map((item: any) => missingReportsWithDate.filter((item2: any) => item === item2.userEventId) )
 
+  console.log(uniqueUserEvents)
+
   return (
     <DashboardTabs
       userInfo={userInfo}
