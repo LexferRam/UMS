@@ -12,25 +12,15 @@ const EventsTable: FC<{ tableHeaders: string[], events: any, refecthFns?: any }>
 
     const [userInfo] = useUserInfo()
 
-    function hasObjectWithTodaysDate(dateArray: any) {
-        const today = new Date();
-        const todayYear = today.getFullYear();
-        const todayMonth = today.getMonth();
-        const todayDay = today.getDate();
-      
-        return dateArray.some((dateObj: any) => {
-          const dateStr = dateObj.createdAt;
-          if (!dateStr) return false; // Skip if "date" property is missing
-      
-          const dateParts = dateStr.split("T")[0].split("-");
-          const dateYear = parseInt(dateParts[0]);
-          const dateMonth = parseInt(dateParts[1]) - 1;
-          const dateDay = parseInt(dateParts[2]);
-      
-          return (
-            dateYear === todayYear && dateMonth === todayMonth && dateDay === todayDay
-          );
+    function hasObjectWithTodaysDate(reports: any) {
+        const today = new Date().toLocaleString("es-VE").split(',')[0];
+
+        return reports.some((dateObj: any) => {
+            let dateStr = new Date(dateObj.createdAt).toLocaleString("es-VE").split(',')[0];
+            if (!dateStr) return false; // Skip if "date" property is missing
+            return (today === dateStr);
         });
+
     }
 
     if (!events?.length) return (

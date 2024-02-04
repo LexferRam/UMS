@@ -100,6 +100,7 @@ export function addOneYear(dateString: any) {
 
   // Add 1 year to the date
   date.setFullYear(date.getFullYear() + 1);
+  date.setDate(date.getDate() + 1);
 
   // Format the resulting date as YYYY-MM-DD
   const year = date.getFullYear();

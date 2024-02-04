@@ -71,34 +71,34 @@ const Scheduler = () => {
     ))
 
   const formattedEventsQuery = schedulerEvents?.map((event: any) => {
-    console.log(event)
 
-    let { start, end, color,...restEvent} =  event
+    let { start, end, color, ...restEvent } = event
     if (event?.byweekday.length > 0) {
-
 
       // ? JSON para un evento con recurrencia
       // TODO: No se estan mostrando los rangos de horas del evento recurrente
-      return ({
-        ...restEvent,
-        color: event?.eventType === 'SESION' ? event?._asignTo.asignColor : EVENTS_TYPE_COLORS[event?.eventType],
-        rrule: {
-          freq: event?.freq || 'daily', // monthly  yearly  daily  weekly
-          byweekday: event?.byweekday,
-          dtstart: new Date(event?.start).toISOString(),//moment(event?.start).toDate(),// event?.start,
-          until: new Date(event?.end).toISOString()//moment(event?.end).toDate() //event?.end
-        },
-        allDay: calendarRef?.current?.props?.initialView === 'resourceTimeGridWeek' || calendarRef?.current?.props?.initialView === 'resourceTimeGridDay' ? false : true,
-        // title: event?.title,
-        // TODO: add this dinamically
-        resourceId: "a",
-      })
+      return (
+        {
+          ...restEvent,
+          color: event?.eventType === 'SESION' ? event?._asignTo.asignColor : EVENTS_TYPE_COLORS[event?.eventType],
+          rrule: {
+            freq: event?.freq || 'daily', // monthly  yearly  daily  weekly
+            byweekday: event?.byweekday,
+            dtstart: new Date(event?.start).toISOString(),//moment(event?.start).toDate(),// event?.start,
+            until: new Date(event?.end).toISOString()//moment(event?.end).toDate() //event?.end
+          },
+          allDay: calendarRef?.current?.props?.initialView === 'resourceTimeGridWeek' || calendarRef?.current?.props?.initialView === 'resourceTimeGridDay' ? false : true,
+          // title: event?.title,
+          // TODO: add this dinamically
+          resourceId: "a",
+        }
+      )
     } else {
 
       // ? JSON para un evento sin recurrencia
       return ({
         ...event,
-        color:  event?.eventType === 'SESION' ? event?._asignTo.asignColor : EVENTS_TYPE_COLORS[event?.eventType],
+        color: event?.eventType === 'SESION' ? event?._asignTo.asignColor : EVENTS_TYPE_COLORS[event?.eventType],
         allDay: calendarRef?.current?.props?.initialView === 'resourceTimeGridWeek' || calendarRef?.current?.props?.initialView === 'resourceTimeGridDay' ? false : true,
         // title: event?.title,
         // TODO: add this dinamically
@@ -109,7 +109,6 @@ const Scheduler = () => {
     }
   })
 
-  console.log(formattedEventsQuery)
 
   const onEventAdded = async (e: any) => {
     let calendarApi = calendarRef?.current?.getApi()
@@ -123,8 +122,8 @@ const Scheduler = () => {
       rrule: {
         freq: 'daily', // monthly  yearly  daily  weekly
         byweekday: e.selectedDaysArr,
-        dtstart:  new Date(e?.start).toISOString(),//moment(e.start).toDate(),
-        until:  new Date(e?.end).toISOString(), //moment(e.end).toDate()
+        dtstart: new Date(e?.start).toISOString(),//moment(e.start).toDate(),
+        until: new Date(e?.end).toISOString(), //moment(e.end).toDate()
       },
       allDay: false,
     }
@@ -204,12 +203,6 @@ const Scheduler = () => {
       <FullCalendar
         ref={calendarRef}
         viewClassNames='h-[100vh]'
-        // eventStyle={{
-        //   backgroundColor: 'lightblue',
-        //   borderColor: 'blue',
-        //   borderWidth: '2px',
-        //   borderRadius: '5px',
-        // }}
         events={formattedEventsQuery}
         //   events={formattedEventsQuery.sort((event1: any, event2: any) => {
         //     const start1 = new Date(event1.start);
@@ -230,7 +223,6 @@ const Scheduler = () => {
           left: 'prev,next,today',
           center: (width as any < 500) ? '' : 'title',
           right: (width as any < 500) ? 'resourceTimeGridDay,resourceTimeGridWeek' : 'resourceTimeGridDay,resourceTimeGridWeek,dayGridMonth'
-          // right: 'dayGridDay,dayGridWeek,dayGridMonth,resourceTimeGridDay,resourceTimeGridFourDay'
         }}
         displayEventTime={false}
         eventTimeFormat={
@@ -241,19 +233,11 @@ const Scheduler = () => {
           }
         }
         eventClick={function (info) {
-          console.log(info.event?.extendedProps?.byweekday)
-          console.log(info?.event?._instance?.range)
           setCurrentEvent(info.event._def)
           setOpenDetails(true)
         }}
         resources={[
-          { id: 'a', title: 'Citas hoy' },
-          // { id: 'b', title: 'Citas hoy2' },
-          // { id: 'c', title: 'Citas hoy2' },
-          // { id: 'd', title: 'Citas hoy2' },
-          // { id: 'e', title: 'Citas hoy2' },
-          // { id: 'f', title: 'Citas hoy2' },
-          // { id: 'g', title: 'Citas hoy2' },
+          { id: 'a', title: 'Citas hoy' }
         ]}
         timeZone='local'
         slotLabelFormat={{ hour: 'numeric', hour12: true }}
@@ -273,7 +257,6 @@ const Scheduler = () => {
         hiddenDays={[0]}
         // eventClassNames= {[ 'bg-red-500' ]}
         eventContent={(eventInfo) => {
-          console.log(eventInfo)
           const { event } = eventInfo;
 
           let eventType = event._def.extendedProps.eventType;
@@ -286,7 +269,7 @@ const Scheduler = () => {
               style={{
                 borderLeft: `${userInfo[0]?.role === 'admin' ? '10px' : '0px'} ${asingColor} solid`,
                 overflow: 'hidden',
-                backgroundColor: `${eventType === 'SESION' ? asingColor : bgColor }`,
+                backgroundColor: `${eventType === 'SESION' ? asingColor : bgColor}`,
                 borderRadius: '5px'
               }}
             >

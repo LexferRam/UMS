@@ -8,7 +8,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import { Textarea } from "../ui/textarea"
 import { PlusIcon } from "@heroicons/react/24/outline"
@@ -24,13 +23,16 @@ export const AddReportModal: FC<{
     const [open, setOpen] = useState(false);
     const { register, handleSubmit, formState: { errors }, reset} = useForm()
 
+    let datePortion = dateOfMissingReport.split(',')[0].split('/')
+    let formatDate = new Date(datePortion[2], datePortion[1]-1, datePortion[0])
+    
     const handleClick = async (data: any) => {
 
         let missingReportObject = {
             description: data.description,
             associatedEvent: eventId,
             patient: patient._id,
-            createdAt: new Date(dateOfMissingReport)
+            createdAt: formatDate
         }
 
         let reportObject = {
@@ -41,6 +43,8 @@ export const AddReportModal: FC<{
 
         let reportToDB = dateOfMissingReport ? missingReportObject : reportObject
 
+        console.log(reportToDB)
+        
         const respAddReport = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`, {
             method: 'POST',
             headers: {
@@ -61,8 +65,8 @@ export const AddReportModal: FC<{
     return (
         <Dialog open={open} onOpenChange={setOpen}>
                 <div
-                    // onClick={() => setOpen(true)}
-                    className="flex gap-2 items-center cursor-not-allowed"
+                    onClick={() => setOpen(true)}
+                    className="flex gap-2 items-center cursor-pointer"
                 >
                     <PlusIcon className="h-6 w-6 text-red-500 cursor-pointer font-extrabold" /> Agregar Reporte
                 </div>

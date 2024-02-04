@@ -1,9 +1,4 @@
 import React from 'react'
-import { 
-    CheckIcon, 
-    PencilSquareIcon, 
-    XMarkIcon 
-} from '@heroicons/react/24/outline';
 import moment from 'moment';
 import 'moment/locale/es'
 import { AddReportModal } from './addReportModal/AddReportModal';
@@ -19,8 +14,6 @@ const MissingReportsTable: React.FC<{
     missingReportsWithDate,
     refecthFns
 }) => {
-
-    console.log(missingReportsWithDate)
 
     if (!missingReportsWithDate?.length) return (
         <div className='w-full h-full flex items-center justify-center mt-16'>
@@ -58,17 +51,16 @@ const MissingReportsTable: React.FC<{
                             </tr>
                         </thead>
                         <tbody>
-                            {missingReportsWithDate?.map((report: any, index: any) => {
-                                const isLast = index === missingReportsWithDate.length - 1;
-                                const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-                                const { 
+                            {missingReportsWithDate?.map(({ 
                                     userEventId, 
                                     userEventTitle, 
                                     date, 
                                     hasReport, 
                                     _asignTo,  
                                     patient,
-                                } = report[0]
+                                }: any, index: any) => {
+                                const isLast = index === missingReportsWithDate.length - 1;
+                                const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
                                 return (
                                     <tr key={userEventId} className="hover:bg-[#f8fafc]">
@@ -117,20 +109,9 @@ const MissingReportsTable: React.FC<{
                                                 color="blue-gray"
                                                 className="font-normal"
                                             >
-                                                {moment(date).format('LL')}
+                                                {date.toLocaleString("es-VE")}
                                             </p>
                                         </td>
-                                        {/* <td className={classes}>
-                                            <p
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {hasReport ?
-                                                    <CheckIcon className="h-6 w-6 text-green-500" /> :
-                                                    <XMarkIcon className="h-6 w-6 text-red-500" />
-                                                }
-                                            </p>
-                                        </td> */}
                                         <td className={classes}>
                                             <AddReportModal
                                                 eventId={userEventId} 

@@ -50,6 +50,7 @@ export function loopThroughDates(userEvent: any) {
   let today = new Date()
   let datesArr: any = []
 
+
   // ? Calcular la fecha de inicio del evento hasta hoy ó la fecha final del evento
   while (eventStartDate <= (eventEndDate <= today ? eventEndDate : today)) {
     if (userEvent.byweekday.length === 0) {
@@ -58,21 +59,20 @@ export function loopThroughDates(userEvent: any) {
         hasReport: false
       })
     } else {
-      // if (userEvent.title !== 'Santiago Sanchez') return
       let arrDatesOfRecurrenceDays = (calculateMondays(userEvent.start, today, (weekdays.indexOf(userEvent.byweekday[0]) + 1)))
+      console.log(arrDatesOfRecurrenceDays)
+
+    
 
       let datesWithOutReportInRecurrentDays = userEvent.reports.map((item: any) => {
         let itemToPush = arrDatesOfRecurrenceDays.map(itemWithRecu => {
-          console.log(itemWithRecu.toISOString().split('T')[0])
-          console.log(item.createdAt.split('T')[0])
+          // console.log(itemWithRecu.toISOString().split('T')[0])
+          // console.log(item.createdAt.split('T')[0])
           return (itemWithRecu.toISOString().split('T')[0] === item.createdAt.split('T')[0]) && itemWithRecu.toISOString().split('T')[0]
         })
-        if (!itemToPush[0]) return
-        console.log(itemToPush)
         return itemToPush[0]
       })
 
-      console.log(datesWithOutReportInRecurrentDays)
       datesArr.push({
         date: datesWithOutReportInRecurrentDays[0],
         hasReport: false
@@ -82,6 +82,8 @@ export function loopThroughDates(userEvent: any) {
     eventStartDate.setDate(eventStartDate.getDate() + 1);
   }
 
+
+
   let missingReportByEvents: any = []
 
   console.log(datesArr)
@@ -90,6 +92,8 @@ export function loopThroughDates(userEvent: any) {
     // ! 1.- Verify if the event has reports
     if (userEvent.reports.length > 0) {
       userEvent.reports.forEach((report: any) => {
+
+        if(!itemDate.date) return
 
         if (itemDate.date === new Date(report.createdAt).toISOString().slice(0, 10)) {
 
@@ -113,7 +117,7 @@ export function loopThroughDates(userEvent: any) {
         console.log(userEvent)
       }
       // if (userEvent.byweekday.length !== 0 && !userEvent.byweekday.includes(getWeekday(itemDate.date))) return
-
+      
       return missingReportByEvents.push({
         ...itemDate,
         hasReport: false,

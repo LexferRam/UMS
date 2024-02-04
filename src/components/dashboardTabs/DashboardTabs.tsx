@@ -5,7 +5,6 @@ import EventsTable from '../eventsTable/EventsTable';
 import { CalendarDaysIcon, ExclamationTriangleIcon, FolderIcon, UserIcon } from '@heroicons/react/24/outline';
 import ReportsTable from '../ReportsTable';
 import MissingReportsTable from '../MissingReportsTable';
-import { formatDateToDDMMYYYY } from '@/util/dates';
 
 const DashboardTabs: FC<{
     userInfo: any,
@@ -16,15 +15,13 @@ const DashboardTabs: FC<{
 }> = ({ userInfo, userReports, userEvent, missingReportsWithDate, refecthFns }) => {
       
      function isDateWithinRange(today: any, startDate: any, endDate: any, event:any) {
-        // Ensure all dates are Date objects:
-        today = today.setHours(0,0,0,0)//.split(',')[0];
-        startDate = new Date(startDate).setHours(0,0,0,0)//.split(',')[0];
-        endDate = new Date(endDate).setHours(0,0,0,0)//.split(',')[0];
-
+        today = today.setHours(0,0,0,0).toLocaleString("es-VE")
+        startDate = new Date(startDate).setHours(0,0,0,0).toLocaleString("es-VE")
+        endDate = new Date(endDate).setHours(0,0,0,0).toLocaleString("es-VE")
          return today >= startDate && today <= endDate;
      }
       
-       const eventForToday = (eventsArray: any) => {
+    const eventForToday = (eventsArray: any) => {
         let daysWeek: any = {
             mo: 1,
             tu: 2,
@@ -34,23 +31,25 @@ const DashboardTabs: FC<{
             sa: 6,
             su: 7
         }
-      
+
         let eventsForTodayArray: any[] = []
-      
+
         eventsArray?.map((event: any) => {
-          const today = new Date();
-          if (event.byweekday.length > 0) {
-              if (daysWeek[event.byweekday[0]] === today.getDay()) {
-                  isDateWithinRange(today, event.start, event.end, event) && eventsForTodayArray.push(event)
-              }
-          }
-          if (event.byweekday.length === 0) {
-            isDateWithinRange(today, event.start, event.end, event) && eventsForTodayArray.push(event)
-          }
+            const today = new Date();
+            if (event.byweekday.length > 0) {
+                event.byweekday.forEach((dayWeek: any) => {
+                    if (daysWeek[dayWeek] === today.getDay()) {
+                        isDateWithinRange(today, event.start, event.end, event) && eventsForTodayArray.push(event)
+                    }
+                })
+            }
+            if (event.byweekday.length === 0) {
+                isDateWithinRange(today, event.start, event.end, event) && eventsForTodayArray.push(event)
+            }
         })
-      
+
         return eventsForTodayArray
-      }
+    }
 
     const TABLE_HEAD_PATIENT = ["Nombre paciente", "Fecha de nacimiento", "Diagnóstico", "Motivo de Ingreso", "Estatus", "Reportes"];
 
