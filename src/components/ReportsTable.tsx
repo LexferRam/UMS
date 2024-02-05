@@ -73,8 +73,7 @@ const ReportsTable: FC<{ tableHeaders: string[], reports: any }> = ({ tableHeade
                                             color="blue-gray"
                                             className="font-normal"
                                         >
-                                            {/* {moment(createdAt).format('LL')} */}
-                                            {createdAt}
+                                            {moment(createdAt).format('LL')}
                                         </p>
                                     </td>
                                     <td className={classes}>

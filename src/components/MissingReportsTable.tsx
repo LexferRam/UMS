@@ -73,12 +73,6 @@ const MissingReportsTable: React.FC<{
                                             </p>
                                         </td>
                                         <td className={classes}>
-                                            {/* <p
-                                                color="blue-gray"
-                                                className="font-normal max-w-sm"
-                                            >
-                                                {_asignTo}
-                                            </p> */}
                                             <div className="flex flex-col items-center gap-2">
                                                 <Image
                                                     src={_asignTo.lastname}
@@ -109,7 +103,7 @@ const MissingReportsTable: React.FC<{
                                                 color="blue-gray"
                                                 className="font-normal"
                                             >
-                                                {date.toLocaleString("es-VE")}
+                                                {date}
                                             </p>
                                         </td>
                                         <td className={classes}>

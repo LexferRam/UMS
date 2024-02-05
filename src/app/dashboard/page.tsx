@@ -42,20 +42,7 @@ const AdminUserPage = () => {
     let mondays: any = [];
     let startDateRef = startDate
 
-    if(dayWeek == 4){
-      console.log(startDateRef.toLocaleString("es-VE"))
-    }
-
-    if(dayWeek == 1){
-      console.log(startDateRef.toLocaleString("es-VE"))
-    }
-
-    console.log(startDateRef.toLocaleString("es-VE"))
-
     while (startDateRef.setHours(0, 0, 0, 0).toLocaleString("es-VE") <= today.setHours(0, 0, 0, 0).toLocaleString("es-VE")) {
-
-       console.log(startDateRef.toLocaleString("es-VE"))
-
       if (startDate.getDay() === dayWeek || dayWeek === 0) { // Monday has a weekday value of 1
         mondays.push(new Date(startDateRef)); // Store a copy to avoid modification
       }
@@ -68,8 +55,9 @@ const AdminUserPage = () => {
   const weekdays = ["mo", "tu", "we", "th", "fr", "sa", "su"];
   let arrDaysWithOutReports: any = []
   let missingUserReportsV2 = userEvent?.map((userEvent: any) => {
-    if (userEvent.title === 'LX') {
+    // if (userEvent.title === 'Santiago Sanchez' && userEvent.byweekday.length > 0) {
 
+      // console.log(userEvent.title)
       let today: any = new Date()
       let startDate: any = new Date(userEvent.start)
       let endDate: any = new Date(userEvent.end)
@@ -91,7 +79,7 @@ const AdminUserPage = () => {
         return arrayDays
       })
 
-      console.log(arrDatesOfRecurrenceDays)
+      // console.log(arrDatesOfRecurrenceDays)
 
       let arrDatesOfWithoutRecurrenceDays = []
       // ? cuando byweekday es == a 0 (eventos NO recurrentes) ==> calculo de dias que deben tener reportes
@@ -113,8 +101,8 @@ const AdminUserPage = () => {
         return date.toLocaleString("es-VE").split(',')[0]
       })
 
-      // TODO: hasta aqui BIEN!: se calculan las fechas que deberian tener reportes en los eventos RECURRENTES
-      console.log(arrDates2)
+      // TODO: Se calculan las fechas que deberian tener reportes en los eventos recurrentes
+      // console.log(arrDates)
 
       //? Evento SIN reporte y ser recurrente (byweekday > 0) y NO ser recurrente (byweekday = 0)
       if (!userEvent.reports.length) {
@@ -153,16 +141,19 @@ const AdminUserPage = () => {
       }
       // ? Eventos CON Reportes y ser recurrente (byweekday > 0) y NO ser recurrente (byweekday = 0)
       else {
+        console.log(userEvent)
         let eventsReportsArr = userEvent.reports.map((report:any) => new Date(report.createdAt).toLocaleString("es-VE").split(',')[0])
+
+        console.log(eventsReportsArr)
+        console.log(arrDates)
         // userEvent?.reports?.forEach((report: any) => {
+          // ?  recurrente (byweekday > 0)
           if (userEvent.byweekday.length > 0) {
 
             arrDates.forEach((dateWithoutReport: any) => {
-
               if(eventsReportsArr.includes(dateWithoutReport)){
                 return 
               }
-
               arrDaysWithOutReports.push({
                 date: dateWithoutReport,
                 hasReport: true,
@@ -192,7 +183,7 @@ const AdminUserPage = () => {
           // }
         // })
       }
-    }
+    // }
   })
 
   return (
