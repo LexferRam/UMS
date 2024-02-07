@@ -98,7 +98,6 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
     }
 
     const onSubmit = async (data: any) => {
-        // console.log(data)
 
         const foundPatient: any = patients.filter((item: any) => item?.label.trim() === data.selectedPatient)
 
@@ -126,6 +125,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
             start: data.eventDate + 'T' + data.timeStart + ':' + '00',
             end: !selectedDaysArr.length ? 
                     addOneDay(data.eventDate) + 'T' + data.timeEnd + ':' + '00' : 
+                    // TODO: la funcion addOneYear debe agregar un dia mas
                     addOneYear(data.eventDate) + 'T' + data.timeEnd + ':' + '00',
             selectedUserValue: foundUser[0].value,
             selectedPatientValue: foundPatient[0].value,

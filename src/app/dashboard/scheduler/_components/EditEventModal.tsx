@@ -77,11 +77,13 @@ const eventTypeArray = [
     },
 ]
 
-const EditEventModal = ({eventDetails}: any) => {
+const EditEventModal = ({eventDetails, refetchEvents, setOpen}: any) => {
+    let valuesDaysOfWeek = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+    let initialSelectedDays = valuesDaysOfWeek.map((item: any) => {
+        return eventDetails.extendedProps.byweekday.includes(item) ? true : false
+    })
     const [active, setActive] = useState(false)
-    const [selectedDays, setSelectedDays] = useState<boolean[]>(
-        new Array(7).fill(false)
-    )
+    const [selectedDays, setSelectedDays] = useState<boolean[]>(initialSelectedDays)
     const [users, setUsers] = useState([])
     const [patients, setPatients] = useState([])
     const [selectedUser, setSelectedUser] = useState('')
@@ -91,14 +93,60 @@ const EditEventModal = ({eventDetails}: any) => {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm()
 
     const onSubmit = async (data: any) => {
-        console.log(data)
+
+        const foundPatient: any = patients.filter((item: any) => item?.label.trim() === data.selectedPatient)
+        const foundUser: any = users.filter((item: any) => item?.label.trim() === data.selectedUserValue)
+        const foundEventType: any = eventTypeArray.filter((item: any) => item?.label === data.eventType)
+
+        const selectedDaysArr: any = [];
+
+        for (let i = 0; i < selectedDays.length; i++) {
+            if (selectedDays[i]) {
+                selectedDaysArr.push(valuesDaysOfWeek[i]);
+            }
+        }
+
+        let updatedEvent = {
+            title: data.title,                // actualiza!
+
+
+            start: data.eventDate + 'T' + data.timeStart + ':' + '00', //"2025-02-06T00:08:00.000Z"
+            end: !selectedDaysArr ?
+            addOneDay(data.eventDate) + 'T' + data.timeEnd + ':' + '00' :
+            // TODO: la funcion addOneYear debe agregar un dia mas
+            addOneYear(data.eventDate) + 'T' + data.timeEnd + ':' + '00',  //"2025-02-06T00:08:00.000Z"
+
+
+            _asignTo: foundUser[0].value,      // actualiza!
+            patient: foundPatient[0].value,    // actualiza!
+            selectedDaysArr: selectedDaysArr,  // actualiza!
+            eventType: foundEventType[0].value // actualiza!
+        };
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events/${eventDetails.extendedProps._id}`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                ...updatedEvent,
+                start: updatedEvent.start,
+                end: updatedEvent.end
+            })
+        })
+
+        if(res.ok){
+            setOpen(false)
+            await refetchEvents()
+        }
+
+
     }
 
     const handleOnChange = (position: any) => {
         const updatedCheckedState = selectedDays.map((item, index) =>
-            index === position ? !item : item
+        index === position ? !item : item
         );
-
         setSelectedDays([...updatedCheckedState]);
     }
 
@@ -124,6 +172,8 @@ const EditEventModal = ({eventDetails}: any) => {
 
     useEffect(() => {
 
+        if(eventDetails.extendedProps.byweekday.length > 0) setActive(true)
+
         setValue('title', eventDetails?.title)
 
         setValue('selectedUserValue', eventDetails?.extendedProps?._asignTo.name)
@@ -135,6 +185,17 @@ const EditEventModal = ({eventDetails}: any) => {
         setValue('eventType',eventDetails?.extendedProps?.eventType)
         setEventTp(eventDetails?.extendedProps?.eventType)
 
+        setValue('eventDate', eventDetails?.start.toISOString().split('T')[0])
+
+        setValue(
+            'timeStart',
+            eventDetails?.start.toUTCString().split(' ')[4]
+        )
+        setValue(
+            'timeEnd',
+            eventDetails?.end.toUTCString().split(' ')[4]
+        )
+
     }, [])
     
 
@@ -143,6 +204,7 @@ const EditEventModal = ({eventDetails}: any) => {
             <div className="grid gap-4 py-4">
 
                 <div className="flex gap-4">
+                    {/* titulo */}
                     <div className="flex flex-col gap-2 flex-wrap justify-center items-start">
                         <Label className="text-right">
                             Título:
@@ -155,10 +217,14 @@ const EditEventModal = ({eventDetails}: any) => {
                                     required: 'Ingrese el título',
                                     min: { value: 4, message: "La longitud minima es de 4 caracteres" }
                                 })}
+                            onChange={((e) => {
+                                setValue('title', e.target.value)
+                            })}
                         />
                         {errors.title && <p className="text-red-700">{JSON.stringify(errors?.title?.message)}</p>}
                     </div>
 
+                    {/* fecha de inicio */}
                     <div className="flex flex-col gap-2 flex-wrap justify-center items-start">
                         <Label className="text-right">
                             Fecha Inicio:
@@ -177,6 +243,7 @@ const EditEventModal = ({eventDetails}: any) => {
                 </div>
 
                 <div className="flex gap-4">
+                    {/* hora inicio */}
                     <div className="w-full flex flex-col items-start gap-2">
                         <Label className="text-right">
                             Hora inicio:
@@ -192,6 +259,7 @@ const EditEventModal = ({eventDetails}: any) => {
                         {errors.timeStart && <p className="text-red-700">{JSON.stringify(errors?.timeStart?.message)}</p>}
                     </div>
 
+                    {/* hora final */}
                     <div className="w-full flex flex-col items-start gap-2">
                         <Label className="text-right">
                             Hora final:
@@ -208,6 +276,7 @@ const EditEventModal = ({eventDetails}: any) => {
                     </div>
                 </div>
 
+                {/* Dias de recurrecia */}
                 <div className="flex flex-col gap-4 flex-wrap justify-center">
                     <div className="flex gap-4">
                         <div>
@@ -297,6 +366,7 @@ const EditEventModal = ({eventDetails}: any) => {
                     </div>
                 </div>
 
+                {/* tipo de cita */}
                 <div className="flex flex-col items-start justify-between gap-2">
                     <Label className="text-right">
                         Tipo de cita:
@@ -307,7 +377,7 @@ const EditEventModal = ({eventDetails}: any) => {
                                 required: 'Seleccione el tipo de evento'
                             })}
                         value={eventTp}
-                        onChange={(e) => console.log(e.target.value)}
+                        onChange={(e) => setEventTp(e.target.value)}
                     >
                         <option key={0}></option>
                         {eventTypeArray.map((eventType: any) => {

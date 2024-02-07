@@ -142,6 +142,7 @@ const Scheduler = () => {
     };
 
     console.log(newEventToDB)
+    return
 
     await calendarApi.addEvent(newEvent)
 
@@ -169,7 +170,7 @@ const Scheduler = () => {
   return (
     <div className='flex flex-col w-full lg:shadow-xl rounded py-8 sm:px-4 scrollbar-hide'>
 
-      <EventDetailsModal open={openDetails} setOpen={setOpenDetails} eventDetails={currentEvent} />
+      <EventDetailsModal open={openDetails} setOpen={setOpenDetails} eventDetails={currentEvent} refetchEvents={refetchEvents}/>
 
       {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
         <div className='flex flex-col m-1 sm:flex-row gap-3'>
@@ -232,8 +233,8 @@ const Scheduler = () => {
             minute: '2-digit', // Display minutes with 2 digits
           }
         }
-        eventClick={function (info) {
-          setCurrentEvent(info.event._def)
+        eventClick={function (info: any) {
+          setCurrentEvent({...info.event._def, start: info.el.fcSeg.start, end: info.el.fcSeg.end})
           setOpenDetails(true)
         }}
         resources={[

@@ -16,13 +16,15 @@ import { useUserInfo } from '@/hooks';
 interface IEventDetailsModal {
     open: boolean
     setOpen: (open: boolean) => void
-    eventDetails: any
+    eventDetails: any,
+    refetchEvents: any
 }
 
 const EventDetailsModal = ({
     open,
     setOpen,
-    eventDetails
+    eventDetails,
+    refetchEvents
 }: IEventDetailsModal) => {
 
     const [editEvent, setEditEvent] = useState(false)
@@ -38,7 +40,7 @@ const EventDetailsModal = ({
         >
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader className='flex flex-row gap-4 items-center justify-around'>
-                    <div><DialogTitle>{eventDetails?.title}</DialogTitle></div>
+                    <div><DialogTitle>{!editEvent ? eventDetails?.title : null}</DialogTitle></div>
                     {!editEvent ? (
                         userInfo[0]?.role === 'admin' ? (
                             <div className='flex gap-1 items-center cursor-pointer' onClick={() => setEditEvent(true)}>
@@ -97,7 +99,7 @@ const EventDetailsModal = ({
                 </>}
 
                 {editEvent && (
-                    <EditEventModal eventDetails={eventDetails} />
+                    <EditEventModal eventDetails={eventDetails} refetchEvents={refetchEvents} setOpen={setOpen}/>
                 )}
             </DialogContent>
 
