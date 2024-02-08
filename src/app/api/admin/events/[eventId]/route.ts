@@ -43,11 +43,11 @@ export async function POST(req: NextRequest) {
             {
                 $set: {
                     title,
-                    // start,
-                    // end,
+                    start,
+                    end,
                     _asignTo,
                     patient,
-                    selectedDaysArr,
+                    byweekday:selectedDaysArr,
                     eventType
                 }
             },

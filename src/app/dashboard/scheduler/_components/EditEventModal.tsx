@@ -1,17 +1,9 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
+import { DialogFooter } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
-import { addOneDay, addOneYear } from "@/util/dates"
+import { addOneYear } from "@/util/dates"
 import { Label } from "@radix-ui/react-dropdown-menu"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -77,7 +69,7 @@ const eventTypeArray = [
     },
 ]
 
-const EditEventModal = ({eventDetails, refetchEvents, setOpen}: any) => {
+const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: any) => {
     let valuesDaysOfWeek = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
     let initialSelectedDays = valuesDaysOfWeek.map((item: any) => {
         return eventDetails.extendedProps.byweekday.includes(item) ? true : false
@@ -89,6 +81,10 @@ const EditEventModal = ({eventDetails, refetchEvents, setOpen}: any) => {
     const [selectedUser, setSelectedUser] = useState('')
     const [patient, setPatient] = useState('')
     const [eventTp, setEventTp] = useState('')
+
+    let formatDateToDB = (date: any) => {
+        return new Date(date).toISOString()
+    }
 
     const { register, handleSubmit, formState: { errors }, setValue } = useForm()
 
@@ -107,20 +103,16 @@ const EditEventModal = ({eventDetails, refetchEvents, setOpen}: any) => {
         }
 
         let updatedEvent = {
-            title: data.title,                // actualiza!
-
-
-            start: data.eventDate + 'T' + data.timeStart + ':' + '00', //"2025-02-06T00:08:00.000Z"
-            end: !selectedDaysArr ?
-            addOneDay(data.eventDate) + 'T' + data.timeEnd + ':' + '00' :
-            // TODO: la funcion addOneYear debe agregar un dia mas
-            addOneYear(data.eventDate) + 'T' + data.timeEnd + ':' + '00',  //"2025-02-06T00:08:00.000Z"
-
-
-            _asignTo: foundUser[0].value,      // actualiza!
-            patient: foundPatient[0].value,    // actualiza!
-            selectedDaysArr: selectedDaysArr,  // actualiza!
-            eventType: foundEventType[0].value // actualiza!
+            title: data.title,
+            start: formatDateToDB(data.eventDate + 'T' + data.timeStart),
+            end: selectedDaysArr.length > 0 ?
+                formatDateToDB(addOneYear(data.eventDate) + 'T' + data.timeEnd) :
+                // TODO: la funcion addOneYear debe agregar un dia mas
+                formatDateToDB(data.eventDate + 'T' + data.timeEnd),
+            _asignTo: foundUser[0].value,
+            patient: foundPatient[0].value,
+            selectedDaysArr: selectedDaysArr,
+            eventType: foundEventType[0].value
         };
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events/${eventDetails.extendedProps._id}`, {
@@ -135,9 +127,10 @@ const EditEventModal = ({eventDetails, refetchEvents, setOpen}: any) => {
             })
         })
 
-        if(res.ok){
+        if (res.ok) {
             setOpen(false)
             await refetchEvents()
+            setEditEvent(false)
         }
 
 
@@ -145,7 +138,7 @@ const EditEventModal = ({eventDetails, refetchEvents, setOpen}: any) => {
 
     const handleOnChange = (position: any) => {
         const updatedCheckedState = selectedDays.map((item, index) =>
-        index === position ? !item : item
+            index === position ? !item : item
         );
         setSelectedDays([...updatedCheckedState]);
     }
@@ -172,32 +165,33 @@ const EditEventModal = ({eventDetails, refetchEvents, setOpen}: any) => {
 
     useEffect(() => {
 
-        if(eventDetails.extendedProps.byweekday.length > 0) setActive(true)
+        if (eventDetails.extendedProps.byweekday.length > 0) setActive(true)
 
         setValue('title', eventDetails?.title)
 
         setValue('selectedUserValue', eventDetails?.extendedProps?._asignTo.name)
         setSelectedUser(eventDetails?.extendedProps?._asignTo.name)
 
-        setValue('selectedPatient',eventDetails?.extendedProps?.patient?.name+eventDetails?.extendedProps?.patient?.lastname)
-        setPatient(eventDetails?.extendedProps?.patient?.name+eventDetails?.extendedProps?.patient?.lastname)
+        setValue('selectedPatient', eventDetails?.extendedProps?.patient?.name + eventDetails?.extendedProps?.patient?.lastname)
+        setPatient(eventDetails?.extendedProps?.patient?.name + eventDetails?.extendedProps?.patient?.lastname)
 
-        setValue('eventType',eventDetails?.extendedProps?.eventType)
+        setValue('eventType', eventDetails?.extendedProps?.eventType)
         setEventTp(eventDetails?.extendedProps?.eventType)
 
-        setValue('eventDate', eventDetails?.start.toISOString().split('T')[0])
+        setValue('eventDate', eventDetails?.start?.toISOString()?.split('T')[0])
+        console.log(eventDetails?.start?.toISOString()?.split('T')[0])
 
         setValue(
             'timeStart',
-            eventDetails?.start.toUTCString().split(' ')[4]
+            eventDetails?.start?.toUTCString()?.split(' ')[4]
         )
         setValue(
             'timeEnd',
-            eventDetails?.end.toUTCString().split(' ')[4]
+            eventDetails?.end?.toUTCString()?.split(' ')[4]
         )
 
     }, [])
-    
+
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -329,6 +323,8 @@ const EditEventModal = ({eventDetails, refetchEvents, setOpen}: any) => {
                                 })}
                             value={selectedUser}
                             onChange={(e) => setSelectedUser(e.target.value)}
+                            disabled
+                            className="cursor-not-allowed"
                         >
                             <option key={0}></option>
                             {users.map((user: any) => {
@@ -353,6 +349,8 @@ const EditEventModal = ({eventDetails, refetchEvents, setOpen}: any) => {
                                 })}
                             value={patient}
                             onChange={(e) => setPatient(e.target.value)}
+                            disabled
+                            className="cursor-not-allowed"
                         >
                             <option key={0}></option>
                             {patients.map((patient: any) => {

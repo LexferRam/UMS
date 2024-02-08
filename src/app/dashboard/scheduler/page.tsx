@@ -16,17 +16,6 @@ import EventDetailsModal from './_components/EventDetailsModal'
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 moment.locale('es');
 
-const filterEventsForView = (events: any, viewName: any) => {
-  return events.filter((event: any) => {
-    if (viewName === 'dayGridDay' || viewName === 'timeGridWeek') {
-      console.log(event)
-      return event.allDay === false; // Show non-all-day events
-    } else {
-      return true; // Show all events in other views
-    }
-  });
-};
-
 const EVENTS_TYPE_COLORS: any = {
   "RECUPERACION": "#f9b94f",
   "ENTREVISTA": "#008001",
@@ -63,6 +52,8 @@ const Scheduler = () => {
     ),
     {
       keepPreviousData: true,
+      refetchInterval: false, 
+      // refetchOnWindowFocus: true
     })
 
   const { data: dataUser = [] } = useQuery(['usersList'], () =>
@@ -142,7 +133,6 @@ const Scheduler = () => {
     };
 
     console.log(newEventToDB)
-    return
 
     await calendarApi.addEvent(newEvent)
 
@@ -164,13 +154,18 @@ const Scheduler = () => {
     }
   }
 
-  if (isLoadingSchedulerEvents || status !== "success") return <SchedulerSkeleton />
+  if (isLoadingSchedulerEvents) return <SchedulerSkeleton />
   if (error) return 'Error cargando'
 
   return (
     <div className='flex flex-col w-full lg:shadow-xl rounded py-8 sm:px-4 scrollbar-hide'>
 
-      <EventDetailsModal open={openDetails} setOpen={setOpenDetails} eventDetails={currentEvent} refetchEvents={refetchEvents}/>
+      <EventDetailsModal
+        open={openDetails} 
+        setOpen={setOpenDetails} 
+        eventDetails={currentEvent} 
+        refetchEvents={refetchEvents} 
+      />
 
       {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
         <div className='flex flex-col m-1 sm:flex-row gap-3'>
@@ -234,7 +229,8 @@ const Scheduler = () => {
           }
         }
         eventClick={function (info: any) {
-          setCurrentEvent({...info.event._def, start: info.el.fcSeg.start, end: info.el.fcSeg.end})
+          console.log(info)
+          setCurrentEvent({ ...info.event._def, start: info.el.fcSeg.start, end: info.el.fcSeg.end })
           setOpenDetails(true)
         }}
         resources={[
@@ -243,6 +239,8 @@ const Scheduler = () => {
         timeZone='local'
         slotLabelFormat={{ hour: 'numeric', hour12: true }}
         slotMinTime='07:00:00'
+        slotMaxTime='20:00:00'
+        allDaySlot={false} 
         views={{
           resourceTimeGridDay: {
             type: 'resourceTimeGrid',
@@ -279,7 +277,6 @@ const Scheduler = () => {
             </div>
           );
         }}
-
       />
     </div>
   )

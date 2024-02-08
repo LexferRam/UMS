@@ -50,7 +50,7 @@ const EventDetailsModal = ({
                                 <span
                                     className='text-sm font-semibold text-gray-600'
                                 >
-                                    Editar
+                                    Editar todo el evento
                                 </span>
                             </div>
                         ) : null
@@ -99,7 +99,12 @@ const EventDetailsModal = ({
                 </>}
 
                 {editEvent && (
-                    <EditEventModal eventDetails={eventDetails} refetchEvents={refetchEvents} setOpen={setOpen}/>
+                    <EditEventModal
+                        eventDetails={eventDetails} 
+                        refetchEvents={refetchEvents} 
+                        setOpen={setOpen}
+                        setEditEvent={setEditEvent}
+                    />
                 )}
             </DialogContent>
 
