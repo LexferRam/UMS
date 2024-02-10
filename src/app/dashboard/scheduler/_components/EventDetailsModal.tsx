@@ -39,21 +39,10 @@ const EventDetailsModal = ({
             }}
         >
             <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader className='flex flex-row gap-4 items-center justify-around'>
+                <DialogHeader className='flex flex-row gap-4 items-center justify-start'>
                     <div><DialogTitle>{!editEvent ? eventDetails?.title : null}</DialogTitle></div>
                     {!editEvent ? (
-                        userInfo[0]?.role === 'admin' ? (
-                            <div className='flex gap-1 items-center cursor-pointer' onClick={() => setEditEvent(true)}>
-                                <PencilSquareIcon
-                                    className="h-6 w-6 text-green-500"
-                                />
-                                <span
-                                    className='text-sm font-semibold text-gray-600'
-                                >
-                                    Editar todo el evento
-                                </span>
-                            </div>
-                        ) : null
+                        null
                     ) : (
                         <div className='flex gap-2 items-center cursor-pointer' onClick={() => setEditEvent(false)} >
                             <ArrowLeftIcon
@@ -96,6 +85,21 @@ const EventDetailsModal = ({
                     <div className='flex flex-col sm:flex-row'>
                         <b className='mr-2'>Especialista asignado: </b> <p>{eventDetails?.extendedProps?._asignTo.name}</p>
                     </div>
+
+                    <div className='flex flex-col sm:flex-row'>
+                        {userInfo[0]?.role === 'admin' ? (
+                            <div className='flex gap-1 items-center cursor-pointer' onClick={() => setEditEvent(true)}>
+                                <PencilSquareIcon
+                                    className="h-6 w-6 text-green-500"
+                                />
+                                <span
+                                    className='text-sm font-semibold text-green-600'
+                                >
+                                    Editar todo el evento
+                                </span>
+                            </div>
+                        ) : null}
+                    </div>
                 </>}
 
                 {editEvent && (
@@ -104,6 +108,7 @@ const EventDetailsModal = ({
                         refetchEvents={refetchEvents} 
                         setOpen={setOpen}
                         setEditEvent={setEditEvent}
+                        userInfo={userInfo}
                     />
                 )}
             </DialogContent>
