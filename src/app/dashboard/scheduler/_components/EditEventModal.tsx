@@ -391,8 +391,9 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
 
             <DialogFooter>
                 <button
-                    className=" w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffc260] hover:bg-[#f8b84e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8fafc]"
+                    className=" w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffc260] hover:bg-[#f8b84e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8fafc] cursor-not-allowed"
                     type="submit"
+                    disabled
                 >
                     Guardar
                 </button>
