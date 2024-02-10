@@ -3,14 +3,14 @@
 const DashboardSkeleton = () => {
     return (
         <div className="flex animate-pulse flex-wrap items-center justify-center sm:justify-start gap-8 sm:pt-10">
-            <div className="flex justify-center gap-8 flex-wrap">
-                <div className="rounded bg-gray-300 w-[280px] h-[100px] sm:h-[150px] sm:w-[240px]">
+            <div className="flex justify-center gap-7 flex-wrap mb-3">
+                <div className="rounded-2xl bg-gray-300 w-[320px] sm:w-[280px] h-[120px]">
                 &nbsp;
                 </div>
-                <div className="rounded bg-gray-300 w-[280px] h-[100px] sm:h-[150px] sm:w-[240px]">
+                <div className="rounded-2xl bg-gray-300 w-[320px] sm:w-[280px] h-[120px]">
                 &nbsp;
                 </div>
-                <div className="rounded bg-gray-300 w-[280px] h-[100px] sm:h-[150px] sm:w-[240px]">
+                <div className="rounded-2xl bg-gray-300 w-[320px] sm:w-[280px] h-[120px]">
                 &nbsp;
                 </div>
             </div>
