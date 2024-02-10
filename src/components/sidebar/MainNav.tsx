@@ -31,7 +31,7 @@ export function MainNav({
                 <div className="flex items-center justify-between text-blue-gray-900">
 
                     <div className="flex items-center mr-2 sm:mr-10">
-                        <Bars3Icon className=" sm:hidden h-6 w-6 mr-4 cursor-pointer" onClick={openDrawer} strokeWidth={2} />
+                        <Bars3Icon className=" h-6 w-6 mr-4 cursor-pointer" onClick={openDrawer} strokeWidth={2} />
 
                         <Link
                             href="/dashboard"

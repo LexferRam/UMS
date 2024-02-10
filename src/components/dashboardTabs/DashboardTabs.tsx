@@ -72,8 +72,8 @@ const DashboardTabs: FC<{
 
     return (
         <>
-            <div className="flex items-start">
-                <div className="container max-w-6xl px-5 mx-auto my-4">
+            <div className="flex items-start mb-4">
+                <div className="container max-w-6xl px-5 my-4">
                     <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
 
                         {/* MIS PACIENTES */}
@@ -150,7 +150,7 @@ const DashboardTabs: FC<{
                         </div>
 
                         {/* MIS REPORTES */}
-                        <div onClick={() => setSelectedCard('reports')} className="relative overflow-hidden p-5 bg-emerald-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer">
+                        {/* <div onClick={() => setSelectedCard('reports')} className="relative overflow-hidden p-5 bg-emerald-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer">
                             <div className="flex items-center space-x-2 space-y-3">
 
                                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-50 ">
@@ -172,7 +172,7 @@ const DashboardTabs: FC<{
                                 </div>
 
                             </div>
-                        </div>
+                        </div> */}
 
                     </div>
                 </div>
