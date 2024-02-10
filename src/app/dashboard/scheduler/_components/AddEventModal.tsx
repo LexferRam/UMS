@@ -75,6 +75,14 @@ const eventTypeArray = [
         value: "RECUPERACION",
         label: "RECUPERACIÓN"
     },
+    {
+        value: "NEUROPEDIATRIA",
+        label: "NEUROPEDIATRÍA"
+    },
+    {
+        value: "PEDIATRIA",
+        label: "PEDIATRÍA"
+    }
 ]
 
 export function AddEventModal({ onEventAdded, open, setOpen }: any) {
@@ -360,6 +368,18 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                                 })}
                             </select>
                             {errors.eventType && <p className="text-red-700">{JSON.stringify(errors?.eventType?.message)}</p>}
+                        </div>
+
+                        <div className="flex flex-col gap-2 flex-wrap justify-center items-start">
+                            <Label className="text-right">
+                                Nota:
+                            </Label>
+                            <Input
+                                disabled
+                                type="text"
+                                defaultValue=""
+                                {...register("note")}
+                            />
                         </div>
                     </div>
 

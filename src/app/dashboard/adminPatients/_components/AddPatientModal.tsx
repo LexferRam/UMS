@@ -33,8 +33,8 @@ export function AddPatientModal({ refetch }: IAddPatientModal) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                name: data.name,
-                lastname: data.lastname,
+                name: data.name.trim(),
+                lastname: data.lastname.trim(),
                 dateOfBirth: data.dateOfBirth,
                 diagnosis: data.diagnosis,
                 historyDescription: data.historyDescription,

@@ -7,6 +7,7 @@ import { addOneYear } from "@/util/dates"
 import { Label } from "@radix-ui/react-dropdown-menu"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
+import { useQuery } from "react-query"
 
 const daysOfWeek = [
     {
@@ -67,20 +68,37 @@ const eventTypeArray = [
         value: "RECUPERACION",
         label: "RECUPERACION"
     },
+    {
+        value: "NEUROPEDIATRIA",
+        label: "NEUROPEDIATRIA"
+    },
+    {
+        value: "PEDIATRIA",
+        label: "PEDIATRIA"
+    }
 ]
 
 const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: any) => {
     let valuesDaysOfWeek = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
     let initialSelectedDays = valuesDaysOfWeek.map((item: any) => {
-        return eventDetails.extendedProps.byweekday.includes(item) ? true : false
+        return eventDetails.byweekday.includes(item) ? true : false
     })
     const [active, setActive] = useState(false)
     const [selectedDays, setSelectedDays] = useState<boolean[]>(initialSelectedDays)
-    const [users, setUsers] = useState([])
-    const [patients, setPatients] = useState([])
+
     const [selectedUser, setSelectedUser] = useState('')
     const [patient, setPatient] = useState('')
     const [eventTp, setEventTp] = useState('')
+
+    const { data: dataUser = [] } = useQuery(['usersList'], () =>
+        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`).then(res =>
+            res.json()
+        ))
+
+    const { data: patients = [] } = useQuery(['patientsList'], () =>
+        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`).then(res =>
+            res.json()
+        ))
 
     let formatDateToDB = (date: any) => {
         return new Date(date).toISOString()
@@ -90,8 +108,11 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
 
     const onSubmit = async (data: any) => {
 
-        const foundPatient: any = patients.filter((item: any) => item?.label.trim() === data.selectedPatient)
-        const foundUser: any = users.filter((item: any) => item?.label.trim() === data.selectedUserValue)
+        const foundPatient: any = patients.map((patient: any) => {
+            if (!patient.isActive) return
+            return ({ value: patient._id, label: patient.name + patient.lastname })
+        }).filter((item: any) => item?.label.trim() === data.selectedPatient)
+        const foundUser: any = dataUser.map((user: any) => ({ value: user._id, label: user.name })).filter((item: any) => item?.label.trim() === data.selectedUserValue)
         const foundEventType: any = eventTypeArray.filter((item: any) => item?.label === data.eventType)
 
         const selectedDaysArr: any = [];
@@ -103,7 +124,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
         }
 
         let updatedEvent = {
-            title: data.title,
+            title: data.title.trim(),
             start: formatDateToDB(data.eventDate + 'T' + data.timeStart),
             end: selectedDaysArr.length > 0 ?
                 formatDateToDB(addOneYear(data.eventDate) + 'T' + data.timeEnd) :
@@ -115,7 +136,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
             eventType: foundEventType[0].value
         };
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events/${eventDetails.extendedProps._id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events/${eventDetails._id}`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -144,51 +165,62 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
     }
 
     useEffect(() => {
-        const getUsers = async () => {
-            let respUsers = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`)
-            let usersResp = await respUsers.json()
 
-            let respPatients = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`)
-            let patientsResp = await respPatients.json()
-
-            let users = await usersResp.map((user: any) => ({ value: user._id, label: user.name }))
-            let patients = await patientsResp.map((patient: any) => {
-                if (!patient.isActive) return
-                return ({ value: patient._id, label: patient.name + patient.lastname })
-            })
-
-            setUsers(users)
-            setPatients(patients)
-        }
-        getUsers()
-    }, [open])
-
-    useEffect(() => {
-
-        if (eventDetails.extendedProps.byweekday.length > 0) setActive(true)
+        if (eventDetails.byweekday.length > 0) setActive(true)
 
         setValue('title', eventDetails?.title)
 
-        setValue('selectedUserValue', eventDetails?.extendedProps?._asignTo.name)
-        setSelectedUser(eventDetails?.extendedProps?._asignTo.name)
+        setValue('selectedUserValue', eventDetails?._asignTo.name)
+        setSelectedUser(eventDetails?._asignTo.name)
 
-        setValue('selectedPatient', eventDetails?.extendedProps?.patient?.name + eventDetails?.extendedProps?.patient?.lastname)
-        setPatient(eventDetails?.extendedProps?.patient?.name + eventDetails?.extendedProps?.patient?.lastname)
+        setValue('selectedPatient', eventDetails?.patient?.name + eventDetails?.patient?.lastname)
+        setPatient(eventDetails?.patient?.name + eventDetails?.patient?.lastname)
 
-        setValue('eventType', eventDetails?.extendedProps?.eventType)
-        setEventTp(eventDetails?.extendedProps?.eventType)
+        setValue('eventType', eventDetails?.eventType)
+        setEventTp(eventDetails?.eventType)
 
-        setValue('eventDate', eventDetails?.start?.toISOString()?.split('T')[0])
-        console.log(eventDetails?.start?.toISOString()?.split('T')[0])
-
-        setValue(
-            'timeStart',
-            eventDetails?.start?.toUTCString()?.split(' ')[4]
-        )
-        setValue(
-            'timeEnd',
-            eventDetails?.end?.toUTCString()?.split(' ')[4]
-        )
+        // ? if the event is recurrent
+        if (eventDetails.byweekday.length > 0) {
+            setValue('eventDate', eventDetails?.rrule?.dtstart?.split('T')[0])
+            setValue(
+                'timeStart',
+                new Intl.DateTimeFormat('es-VE', {
+                    hour: 'numeric',
+                    minute: "numeric",
+                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Use your local time zone
+                    hour12: false // Use 24-hour format by default
+                }).format(new Date(eventDetails?.rrule?.dtstart))
+            )
+            setValue(
+                'timeEnd',
+                new Intl.DateTimeFormat('es-VE', {
+                    hour: 'numeric',
+                    minute: "numeric",
+                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Use your local time zone
+                    hour12: false // Use 24-hour format by default
+                }).format(new Date(eventDetails?.rrule?.until))
+            )
+        } else {
+            setValue('eventDate', eventDetails?.start?.split('T')[0])
+            setValue(
+                'timeStart',
+                new Intl.DateTimeFormat('es-VE', {
+                    hour: 'numeric',
+                    minute: "numeric",
+                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Use your local time zone
+                    hour12: false // Use 24-hour format by default
+                }).format(new Date(eventDetails?.start))
+            )
+            setValue(
+                'timeEnd',
+                new Intl.DateTimeFormat('es-VE', {
+                    hour: 'numeric',
+                    minute: "numeric",
+                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Use your local time zone
+                    hour12: false // Use 24-hour format by default
+                }).format(new Date(eventDetails?.end))
+            )
+        }
 
     }, [])
 
@@ -327,7 +359,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
                             className="cursor-not-allowed"
                         >
                             <option key={0}></option>
-                            {users.map((user: any) => {
+                            {dataUser.map((user: any) => ({ value: user._id, label: user.name })).map((user: any) => {
                                 if (!user) return
                                 return (
                                     <option key={user.value}>{user.label}</option>
@@ -354,6 +386,9 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
                         >
                             <option key={0}></option>
                             {patients.map((patient: any) => {
+                                if (!patient.isActive) return
+                                return ({ value: patient._id, label: patient.name + patient.lastname })
+                            }).map((patient: any) => {
                                 if (!patient) return
                                 return (
                                     <option key={patient.value}>{patient.label}</option>
@@ -391,9 +426,9 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
 
             <DialogFooter>
                 <button
-                    className=" w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffc260] hover:bg-[#f8b84e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8fafc] cursor-not-allowed"
+                    className=" w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffc260] hover:bg-[#f8b84e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8fafc] cursor-pointer"
                     type="submit"
-                    disabled
+                    // disabled
                 >
                     Guardar
                 </button>

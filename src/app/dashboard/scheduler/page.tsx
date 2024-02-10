@@ -22,6 +22,8 @@ const EVENTS_TYPE_COLORS: any = {
   "SESION": "#3688d8", // TODO: color asignado al especialista
   "EVALUACION": "#008001",
   "ENTERVISTA_EVALUACION": "#008001",
+  "PEDIATRIA":"#008001",
+  "NEUROPEDIATRIA":"#008001"
 }
 
 const Scheduler = () => {
@@ -229,8 +231,11 @@ const Scheduler = () => {
           }
         }
         eventClick={function (info: any) {
-          console.log(info)
-          setCurrentEvent({ ...info.event._def, start: info.el.fcSeg.start, end: info.el.fcSeg.end })
+          let eventId = info.event._def.extendedProps._id
+          let selectedEvent = formattedEventsQuery.filter((event: any) => event._id === eventId)
+          console.log(selectedEvent[0])
+          console.log(info.event._def.extendedProps._id)
+          setCurrentEvent(selectedEvent[0])
           setOpenDetails(true)
         }}
         resources={[
