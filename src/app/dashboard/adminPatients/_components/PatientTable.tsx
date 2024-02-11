@@ -60,8 +60,10 @@ const PatientTable: FC<{
   }
 
   const columns: Array<Column<IPerson>> = [
-    { title: "Nombre", field: "firstName" },
-    { title: "Edad", field: "dateOfBirth", type: "numeric" },
+    { title: "Nombre", field: "name", render: rowData => (<>{rowData.name + ' ' + rowData.lastname}</>) },
+    { title: "Edad", field: "dateOfBirth", render: rowData => {return(<>
+      {moment(rowData.dateOfBirth).format('L')}  <br />
+                      {`(${calculateAgeWithMonths(rowData.dateOfBirth)?.years} años y ${calculateAgeWithMonths(rowData.dateOfBirth)?.months} meses) `}</>)}},
     { title: "Diagnóstico", field: "diagnosis" },
     { title: "Motivo de consulta", field: "historyDescription" },
     {
@@ -128,8 +130,9 @@ const PatientTable: FC<{
 
   const data: Array<IPerson> = patients?.map(({ _id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive, reports }: any, index: any) => ({
     _id: _id,
-    firstName: name + ' ' + lastname,
-    dateOfBirth: moment(dateOfBirth).format('L'),
+    name: name,
+    lastname: lastname,
+    dateOfBirth: dateOfBirth,// moment(dateOfBirth).format('L'),
     diagnosis: diagnosis,
     historyDescription: historyDescription,
     isActive: isActive,
