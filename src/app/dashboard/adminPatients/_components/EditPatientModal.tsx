@@ -37,8 +37,8 @@ export function EditPatientModal({ refetch, patient }: IAddPatientModal) {
             },
             body: JSON.stringify({
                 id: patient._id,
-                name: data.name,
-                lastname: data.lastname,
+                name: data.name.trim(),
+                lastname: data.lastname.trim(),
                 dateOfBirth: data.dateOfBirth,
                 diagnosis: data.diagnosis,
                 historyDescription: data.historyDescription,
