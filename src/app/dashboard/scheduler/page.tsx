@@ -14,6 +14,7 @@ import { useQuery } from 'react-query'
 import SchedulerSkeleton from './_components/SchedulerSkeleton'
 import EventDetailsModal from './_components/EventDetailsModal'
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
+import { getHoursBetweenToTimes } from '@/util/hours'
 moment.locale('es');
 
 const EVENTS_TYPE_COLORS: any = {
@@ -22,8 +23,8 @@ const EVENTS_TYPE_COLORS: any = {
   "SESION": "#3688d8", // TODO: color asignado al especialista
   "EVALUACION": "#008001",
   "ENTERVISTA_EVALUACION": "#008001",
-  "PEDIATRIA":"#008001",
-  "NEUROPEDIATRIA":"#008001"
+  "PEDIATRIA": "#008001",
+  "NEUROPEDIATRIA": "#008001"
 }
 
 const Scheduler = () => {
@@ -54,7 +55,7 @@ const Scheduler = () => {
     ),
     {
       keepPreviousData: true,
-      refetchInterval: false, 
+      refetchInterval: false,
       // refetchOnWindowFocus: true
     })
 
@@ -68,12 +69,27 @@ const Scheduler = () => {
     let { start, end, color, ...restEvent } = event
     if (event?.byweekday.length > 0) {
 
+      let startTime = new Intl.DateTimeFormat('es-VE', {
+        hour: 'numeric',
+        minute: "numeric",
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Use your local time zone
+        hour12: false // Use 24-hour format by default
+      }).format(new Date(event?.start))
+
+      let endTime = new Intl.DateTimeFormat('es-VE', {
+        hour: 'numeric',
+        minute: "numeric",
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Use your local time zone
+        hour12: false // Use 24-hour format by default
+      }).format(new Date(event?.end))
+
       // ? JSON para un evento con recurrencia
       // TODO: No se estan mostrando los rangos de horas del evento recurrente
       return (
         {
           ...restEvent,
           color: event?.eventType === 'SESION' ? event?._asignTo.asignColor : EVENTS_TYPE_COLORS[event?.eventType],
+          duration: { minutes: getHoursBetweenToTimes(startTime, endTime) },
           rrule: {
             freq: event?.freq || 'daily', // monthly  yearly  daily  weekly
             byweekday: event?.byweekday,
@@ -106,12 +122,27 @@ const Scheduler = () => {
   const onEventAdded = async (e: any) => {
     let calendarApi = calendarRef?.current?.getApi()
 
+    let startTime = new Intl.DateTimeFormat('es-VE', {
+      hour: 'numeric',
+      minute: "numeric",
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Use your local time zone
+      hour12: false // Use 24-hour format by default
+    }).format(new Date(e?.start))
+
+    let endTime = new Intl.DateTimeFormat('es-VE', {
+      hour: 'numeric',
+      minute: "numeric",
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Use your local time zone
+      hour12: false // Use 24-hour format by default
+    }).format(new Date(e?.end))
+
     let newEvent = {
       title: e?.title,
       _asignTo: e.selectedUserValue,
       patient: e.selectedPatientValue,
       color: EVENTS_TYPE_COLORS[e.eventType],
       eventType: e.eventType,
+      duration: { minutes: getHoursBetweenToTimes(startTime, endTime) },
       rrule: {
         freq: 'daily', // monthly  yearly  daily  weekly
         byweekday: e.selectedDaysArr,
@@ -133,8 +164,6 @@ const Scheduler = () => {
       reports: [],
       _creator: userInfo[0]._id
     };
-
-    console.log(newEventToDB)
 
     await calendarApi.addEvent(newEvent)
 
@@ -163,10 +192,10 @@ const Scheduler = () => {
     <div className='flex flex-col w-full lg:shadow-xl rounded py-8 sm:px-4 scrollbar-hide'>
 
       <EventDetailsModal
-        open={openDetails} 
-        setOpen={setOpenDetails} 
-        eventDetails={currentEvent} 
-        refetchEvents={refetchEvents} 
+        open={openDetails}
+        setOpen={setOpenDetails}
+        eventDetails={currentEvent}
+        refetchEvents={refetchEvents}
       />
 
       {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
@@ -233,8 +262,7 @@ const Scheduler = () => {
         eventClick={function (info: any) {
           let eventId = info.event._def.extendedProps._id
           let selectedEvent = formattedEventsQuery.filter((event: any) => event._id === eventId)
-          console.log(selectedEvent[0])
-          console.log(info.event._def.extendedProps._id)
+
           setCurrentEvent(selectedEvent[0])
           setOpenDetails(true)
         }}
@@ -245,7 +273,7 @@ const Scheduler = () => {
         slotLabelFormat={{ hour: 'numeric', hour12: true }}
         slotMinTime='07:00:00'
         slotMaxTime='20:00:00'
-        allDaySlot={false} 
+        allDaySlot={false}
         views={{
           resourceTimeGridDay: {
             type: 'resourceTimeGrid',
