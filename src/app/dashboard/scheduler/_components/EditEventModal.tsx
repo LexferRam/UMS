@@ -109,7 +109,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
     const onSubmit = async (data: any) => {
 
         const foundPatient: any = patients.map((patient: any) => {
-            if (!patient.isActive) return
+            // if (!patient.isActive) return
             return ({ value: patient._id, label: patient.name + patient.lastname })
         }).filter((item: any) => item?.label.trim() === data.selectedPatient)
         const foundUser: any = dataUser.map((user: any) => ({ value: user._id, label: user.name })).filter((item: any) => item?.label.trim() === data.selectedUserValue)
@@ -386,7 +386,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
                         >
                             <option key={0}></option>
                             {patients.map((patient: any) => {
-                                if (!patient.isActive) return
+                                // if (!patient.isActive) return
                                 return ({ value: patient._id, label: patient.name + patient.lastname })
                             }).map((patient: any) => {
                                 if (!patient) return
