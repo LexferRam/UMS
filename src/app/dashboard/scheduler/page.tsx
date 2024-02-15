@@ -297,7 +297,7 @@ const Scheduler = () => {
 
           return (
             <div
-              className={`text-white w-full h-full m-0 p-0 text-xs`}
+              className={`text-white w-full h-full m-0 p-0 text-xs cursor-pointer`}
               style={{
                 borderLeft: `${userInfo[0]?.role === 'admin' ? '10px' : '0px'} ${asingColor} solid`,
                 overflow: 'hidden',
