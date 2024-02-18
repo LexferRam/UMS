@@ -16,7 +16,7 @@ import moment from 'moment';
 import { useQuery } from 'react-query';
 import TimelineSkeleton from './TimelineSkeleton';
 import 'moment/locale/es'
-import { EVENTS_TYPE_COLORS } from '../../scheduler/page';
+import { EVENTS_TYPE_COLORS } from '@/util/eventsType';
 moment.locale('es');
 
 const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
