@@ -6,6 +6,7 @@ import nextAuth, { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
 import models from 'mongoose';
 import { authOptions } from "@/util/authOptions"
+import Event from "@/models/event"
 
 // ? get patient by id
 export async function GET(req: NextRequest) {
@@ -28,9 +29,16 @@ export async function GET(req: NextRequest) {
                 populate: {
                     path: 'createdBy',
                     model: User
+                },
+            })
+            .populate({
+                path: 'reports',
+                model: Report,
+                populate: {
+                    path: 'associatedEvent',
+                    model: Event
                 }
             })
-
         return NextResponse.json(patientFound, { status: 201 })
 
     } catch (error) {
