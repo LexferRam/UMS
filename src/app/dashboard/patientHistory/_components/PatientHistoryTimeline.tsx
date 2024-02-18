@@ -33,9 +33,9 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
           const dateA = a[dateFieldName];
           const dateB = b[dateFieldName];
       
-          if (dateA > dateB) {
+          if (dateA < dateB) {
             return -1; // Descending order (recent to oldest)
-          } else if (dateA < dateB) {
+          } else if (dateA > dateB) {
             return 1; // Ascending order (oldest to recent)
           } else {
             return 0; // Equal dates
@@ -114,8 +114,8 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                                         </div>
                                         <p className="font-extralight text-sm text-gray-600">
                                             <span className='font-light'>
-                                                {/* {moment(createdAt).format('LL')} */}
-                                                {createdAt}
+                                                {moment(createdAt).format('LL')}
+                                                {/* {createdAt} */}
                                             </span>
                                         </p>
                                         {/* <Typography color="gary" className="font-extralight text-sm text-gray-600">
