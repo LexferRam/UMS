@@ -8,7 +8,6 @@ import {
     TimelineHeader,
     TimelineIcon,
     TimelineBody,
-    Typography,
     Avatar,
     Card,
 } from "@material-tailwind/react";
@@ -96,7 +95,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
 
                 <Card placeholder='' shadow className='rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll scrollbar-hide'>
                     <Timeline className="w-full sm:w-[60rem] p-2 flex flex-col-reverse">
-                        {sortByDateField(patientInfo[0]?.reports)?.map(({ createdBy, description, _id, createdAt, updatedAt, associatedEvent }: any, index: number) => (
+                        {sortByDateField(patientInfo[0]?.reports)?.map(({ createdBy, description, _id, createdAt, isForEventCancel, associatedEvent }: any, index: number) => (
                             <TimelineItem key={_id}>
 
                                 {index > 0 && (
@@ -116,9 +115,8 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                                         <p className="font-extralight text-sm text-gray-600">
                                             <span className='font-light'>
                                                 {moment(createdAt).format('LL')}
-                                                {/* {createdAt} */}
                                             </span>
-                                            <span 
+                                            <span
                                                 className="ml-2 inline-block rounded-full px-3 py-1 text-[10px] font-light text-white mr-2 mb-2"
                                                 style={{
                                                     backgroundColor: EVENTS_TYPE_COLORS[associatedEvent?.eventType]
@@ -126,11 +124,19 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                                             >
                                                 {associatedEvent?.eventType}
                                             </span>
+
+                                            {isForEventCancel && (
+                                                <span
+                                                    className="ml-2 inline-block rounded-full px-3 py-1 text-[10px] font-light text-white mr-2 mb-2"
+                                                    style={{
+                                                        backgroundColor: '#e64451'
+                                                    }}
+                                                >
+                                                    Cita cancelada
+                                                </span>
+                                            )}
+
                                         </p>
-                                        {/* <Typography color="gary" className="font-extralight text-sm text-gray-600">
-                                            Actualizado:{' '}
-                                            <span className='font-semibold'>{moment(updatedAt).format('LL')}</span>
-                                        </Typography> */}
                                     </div>
                                 </TimelineHeader>
 

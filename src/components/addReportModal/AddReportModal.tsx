@@ -32,13 +32,15 @@ export const AddReportModal: FC<{
             description: data.description,
             associatedEvent: eventId,
             patient: patient._id,
-            createdAt: formatDate
+            createdAt: formatDate,
+            isForEventCancel: false
         }
 
         let reportObject = {
             description: data.description,
             associatedEvent: eventId,
-            patient: patient._id
+            patient: patient._id,
+            isForEventCancel: false
         }
 
         let reportToDB = dateOfMissingReport ? missingReportObject : reportObject
@@ -55,7 +57,7 @@ export const AddReportModal: FC<{
         if (respAddReport.ok) {
             setOpen(false)
             await refecthFns.refetchUserInfo(),
-            await refecthFns.refetchReports(),
+            // await refecthFns.refetchReports(),
             await refecthFns.refetchUserEvent(),
             reset();
             return

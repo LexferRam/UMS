@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
         let createdBy = userFound[0]._id.toString();
 
-        const { description, associatedEvent, patient, createdAt } = await req.json()
+        const { description, associatedEvent, patient, createdAt, isForEventCancel } = await req.json()
 
         await connectMongoDB()
 
@@ -28,14 +28,16 @@ export async function POST(req: NextRequest) {
             createdBy: new mongoose.Types.ObjectId(createdBy),
             associatedEvent,
             patient: patient,
-            createdAt: createdAt
+            createdAt: createdAt,
+            isForEventCancel: isForEventCancel
         }
 
         let reportObject = {
             description,
             createdBy: new mongoose.Types.ObjectId(createdBy),
             associatedEvent,
-            patient: patient
+            patient: patient,
+            isForEventCancel: isForEventCancel
         }
 
         const newReport = await Report.create(createdAt ? missingReportObject : reportObject)

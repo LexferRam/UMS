@@ -106,13 +106,19 @@ export async function POST(req: NextRequest) {
         if (selectedUser === '') {
             events = await Event
                 .find()
-                .populate({ path: "patient", model: Patient })
+                .populate({ path: "patient", model: Patient, populate: {
+                    path: 'reports',
+                    model: Report
+                } })
                 .populate({ path: "_asignTo", model: User })
                 .populate({ path: "reports", model: Report })
         }else{
             events = await Event
                 .find({ _asignTo: selectedUser })
-                .populate({ path: "patient", model: Patient })
+                .populate({ path: "patient", model: Patient, populate: {
+                    path: 'reports',
+                    model: Report
+                } })
                 .populate({ path: "_asignTo", model: User })
                 .populate({ path: "reports", model: Report })
         }

@@ -27,6 +27,7 @@ const Scheduler = () => {
   const [userInfo] = useUserInfo()
   const { width } = useWindowDimensions();
   const [currentEvent, setCurrentEvent] = useState<any>()
+  const [selectedDate, setSelectedDate] = useState<any>()
 
   const {
     isLoading: isLoadingSchedulerEvents,
@@ -186,6 +187,7 @@ const Scheduler = () => {
         open={openDetails}
         setOpen={setOpenDetails}
         eventDetails={currentEvent}
+        selectedDate={selectedDate}
         refetchEvents={refetchEvents}
       />
 
@@ -254,6 +256,12 @@ const Scheduler = () => {
           let eventId = info.event._def.extendedProps._id
           let selectedEvent = formattedEventsQuery.filter((event: any) => event._id === eventId)
 
+          setSelectedDate({
+            eventId: info.event._def.extendedProps._id,
+            date: info.event._instance?.range.start.toLocaleString("es-VE").split(',')[0],
+            patient: info.event._def.extendedProps.patient
+          })
+
           setCurrentEvent(selectedEvent[0])
           setOpenDetails(true)
         }}
@@ -278,13 +286,14 @@ const Scheduler = () => {
           }
         }}
         hiddenDays={[0]}
-        // eventClassNames= {[ 'bg-red-500' ]}
         eventContent={(eventInfo) => {
           const { event } = eventInfo;
 
+          console.log(event._def.extendedProps)
+
           let eventType = event._def.extendedProps.eventType;
           let asingColor = event._def.extendedProps._asignTo.asignColor
-          let bgColor = EVENTS_TYPE_COLORS[eventType]//`${!eventType ? '' : EVENTS_TYPE_COLORS[eventType]}`
+          let bgColor = EVENTS_TYPE_COLORS[eventType]
 
           return (
             <div
@@ -292,7 +301,14 @@ const Scheduler = () => {
               style={{
                 borderLeft: `${userInfo[0]?.role === 'admin' ? '10px' : '0px'} ${asingColor} solid`,
                 overflow: 'hidden',
-                backgroundColor: `${eventType === 'SESION' ? asingColor : bgColor}`,
+                backgroundColor: `${(
+                    event._def.extendedProps?.reports?.filter((repor: any) => repor?.isForEventCancel &&
+                      new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
+                    ).length > 0
+                  ) ?
+                    '#e9444c' :
+                    (eventType === 'SESION' ? asingColor : bgColor)
+                  }`,
                 borderRadius: '5px'
               }}
             >

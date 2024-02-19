@@ -101,7 +101,7 @@ const PatientTable: FC<{
                 <span
                   className='text-sm font-semibold text-gray-600'
                 >
-                  Ver reportes
+                  reportes
                 </span>
               </div>
             ) : (

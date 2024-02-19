@@ -15,7 +15,5 @@ export function getHoursBetweenToTimes(hour1: string, hour2: string) {
     // Convert milliseconds to minutes and round down
     const minutes = Math.floor(difference / (1000 * 60));
 
-    console.log(minutes)
-
     return Number(minutes)
 }

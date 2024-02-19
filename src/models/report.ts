@@ -14,7 +14,12 @@ const reportSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Event', required: true
     },
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    isForEventCancel: { 
+        type: Boolean, 
+        default: false, 
+        required: false
+    }
 },
     { timestamps: true }
 );
