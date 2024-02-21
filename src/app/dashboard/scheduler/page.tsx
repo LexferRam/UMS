@@ -306,7 +306,7 @@ const Scheduler = () => {
                       new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
                     ).length > 0
                   ) ?
-                    '#e9444c' :
+                    'red' :
                     (eventType === 'SESION' ? asingColor : bgColor)
                   }`,
                 borderRadius: '5px'
