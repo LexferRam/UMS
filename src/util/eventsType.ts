@@ -1,5 +1,5 @@
 export const EVENTS_TYPE_COLORS: any = {
-    "RECUPERACION": "#f9b94f",
+    "RECUPERACION": "#f17f1a",
     "ENTREVISTA": "#008001",
     "SESION": "#3688d8", // TODO: color asignado al especialista
     "EVALUACION": "#008001",

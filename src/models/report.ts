@@ -17,7 +17,6 @@ const reportSchema = new Schema({
     createdAt: { type: Date, default: Date.now },
     isForEventCancel: { 
         type: Boolean, 
-        default: false, 
         required: false
     }
 },
