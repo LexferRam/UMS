@@ -17,3 +17,23 @@ export function getHoursBetweenToTimes(hour1: string, hour2: string) {
 
     return Number(minutes)
 }
+
+export function getDateMinusSevenDays(givenDate: string) {
+
+    // Convert the date string to a Date object
+    const dateObj = new Date(givenDate);
+
+    // Calculate the number of milliseconds in 7 days
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const daysToSubtract = 7;
+    const timeDifference = daysToSubtract * millisecondsPerDay;
+
+    // Create a new Date object 7 days before the given date
+    const previousDate = new Date(dateObj.getTime() - timeDifference);
+
+    // Format the previous date as YYYY-MM-DD
+    const formattedDate = previousDate.toISOString().slice(0, 10);
+    console.log(formattedDate)
+
+    return formattedDate
+}
