@@ -10,8 +10,13 @@ import ThemeProviderMui from '@/context/ThemeProviderMUI';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Un Mundo Sensioral',
+  title: 'Un Mundo Sensiorall',
   description: 'Un Mundo Sensioral',
+  manifest: '/manifest.json',
+  icons: {
+    apple: '/icon-192x192.png',
+  },
+  themeColor: '#16b3c4',
 }
 
 export default function RootLayout({
@@ -21,7 +26,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className='scrollbar-hide'>
-      <meta name="google" content="notranslate"></meta>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icon-512x512.png" />
+        <link rel="icon" href="/icon-512x512.png" sizes="any" />
+        <link rel="shortcut icon" href="/icon-512x512.png" type="image/x-icon" />
+        <meta name="google" content="notranslate" />
+      </head>
       <body className={inter.className}>
         <ReactQueryProvider>
           <ThemeProvider
