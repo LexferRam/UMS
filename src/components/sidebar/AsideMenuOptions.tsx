@@ -7,7 +7,7 @@ import { adminNavLinks, specialistNavLinks } from "./constants/linksByUser";
 import SidebarSkeleton from "./SidebarSkeleton";
 
 const AsideMenuOptions = () => (
-    <div className="fixed overflow-y-scroll scrollbar-hide top-[100px] py-4 pr-4 mr-2 border-r-[0.1px] h-full">
+    <div className="fixed overflow-y-scroll scrollbar-hide top-[100px] py-4 pr-4 mr-2 border-r-[0.1px] h-[100vh]">
         <NavItems />
     </div>
 )
