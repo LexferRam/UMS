@@ -39,14 +39,15 @@ export async function POST(req: NextRequest) {
 
         // ? PARA EL USUARIO ADMIN
         await connectMongoDB()
-
+        
         let updatedEvent = await Event.findOneAndUpdate(
             { _id: eventId },
             {
                 $set: {
                     title,
                     start,
-                    end,
+                    // TODO: no editar la fecha final SOLO cuando la cita se ha sido cancelada
+                    // end, 
                     _asignTo,
                     patient,
                     byweekday: selectedDaysArr,
@@ -80,8 +81,6 @@ export async function PUT(req: NextRequest) {
 
         // get the new end date of the event
         const { newEndDate, _id } = await req.json()
-        console.log(newEndDate)
-        console.log(_id)
 
         // connection to DBs
         await connectMongoDB()
@@ -100,12 +99,9 @@ export async function PUT(req: NextRequest) {
 
         // get the entier event using eventID
         let foundEvent = await Event.find({ _id })
-        console.log(foundEvent)
 
         let eventEndHour = foundEvent[0]?.end.getUTCHours() > 9 ? foundEvent[0].end.getUTCHours() : '0' + foundEvent[0].end.getUTCHours()
         let eventEndMinute = foundEvent[0]?.end.getUTCMinutes() > 9 ? foundEvent[0].end.getUTCMinutes() : '0' + foundEvent[0].end.getUTCMinutes()
-
-        console.log(getDateMinusSevenDays(newEndDate.split('T')[0]) + 'T' + eventEndHour + ':' + eventEndMinute + ':00.000Z') // 2024-04-15T12:0:00.000Z
 
         // get the entier event using eventID and update the end date
         let updatedEvent = await Event.findOneAndUpdate(
