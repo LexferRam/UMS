@@ -28,9 +28,9 @@ export default function RootLayout({
     <html lang="es" className='scrollbar-hide'>
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icon-512x512.png" />
-        <link rel="icon" href="/icon-512x512.png" sizes="any" />
-        <link rel="shortcut icon" href="/icon-512x512.png" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <link rel="icon" href="/icon-192x192.png" sizes="any" />
+        <link rel="shortcut icon" href="/icon-192x192.png" type="image/x-icon" />
         <meta name="google" content="notranslate" />
       </head>
       <body className={inter.className}>
