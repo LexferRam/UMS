@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -13,7 +14,6 @@ import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { addOneDay, addOneYear } from "@/util/dates"
 import { Label } from "@radix-ui/react-dropdown-menu"
-import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 
 const daysOfWeek = [
@@ -90,6 +90,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
     const [users, setUsers] = useState([])
     const [patients, setPatients] = useState([])
     const [active, setActive] = useState(false)
+    const [isAddingEvent, setIsAddingEvent] = useState(false)
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm()
 
@@ -106,6 +107,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
     }
 
     const onSubmit = async (data: any) => {
+        setIsAddingEvent(true)
 
         const foundPatient: any = patients.filter((item: any) => item?.label.trim() === data.selectedPatient)
 
@@ -122,27 +124,6 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
             }
         }
 
-        console.log({
-            title: data.title,
-            start: data.eventDate + 'T' + data.timeStart + ':' + '00',
-            end: !selectedDaysArr.length ? 
-                    addOneDay(data.eventDate) + 'T' + data.timeEnd + ':' + '00' : 
-                    // TODO: la funcion addOneYear debe agregar un dia mas
-                    addOneYear(data.eventDate) + 'T' + data.timeEnd + ':' + '00',
-            selectedUserValue: foundUser[0].value,
-            selectedPatientValue: foundPatient[0].value,
-            eventType: foundEventType[0].value,
-            selectedDaysArr,
-            setOpen,
-            reset,
-            setActive,
-            setSelectedDays
-        })
-
-        // formato que funciona : "2024-01-20T12:30:00+00:00"
-        //                        '2024-01-18T19:00:00.000Z'
-
-        // onEventAdded
         onEventAdded({
             title: data.title,
             start: data.eventDate + 'T' + data.timeStart + ':' + '00',
@@ -157,7 +138,8 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
             setOpen,
             reset,
             setActive,
-            setSelectedDays
+            setSelectedDays,
+            setIsAddingEvent
         })
     }
 
@@ -387,8 +369,9 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                         <button
                             className=" w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffc260] hover:bg-[#f8b84e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8fafc]"
                             type="submit"
+                            disabled={isAddingEvent}
                         >
-                            Guardar
+                           {isAddingEvent ? "Agregando Evento...": "Guardar"} 
                         </button>
                     </DialogFooter>
                 </form>

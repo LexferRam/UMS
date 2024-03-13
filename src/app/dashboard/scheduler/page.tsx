@@ -173,6 +173,7 @@ const Scheduler = () => {
       e.reset()
       e.setActive(false)
       e.setSelectedDays(new Array(7).fill(false))
+      e.setIsAddingEvent(false)
       return res
     }
   }

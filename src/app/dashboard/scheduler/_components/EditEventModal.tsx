@@ -89,6 +89,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
     const [selectedUser, setSelectedUser] = useState('')
     const [patient, setPatient] = useState('')
     const [eventTp, setEventTp] = useState('')
+    const [isEditingEvent, setIsEditingEvent] = useState(false)
 
     const { data: dataUser = [] } = useQuery(['usersList'], () =>
         fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`).then(res =>
@@ -107,6 +108,8 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
     const { register, handleSubmit, formState: { errors }, setValue } = useForm()
 
     const onSubmit = async (data: any) => {
+
+        setIsEditingEvent(true)
 
         const foundPatient: any = patients.map((patient: any) => {
             // if (!patient.isActive) return
@@ -152,6 +155,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
             setOpen(false)
             await refetchEvents()
             setEditEvent(false)
+            setIsEditingEvent(false)
         }
 
 
@@ -428,9 +432,9 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
                 <button
                     className=" w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffc260] hover:bg-[#f8b84e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8fafc] cursor-pointer"
                     type="submit"
-                    // disabled
+                    disabled={isEditingEvent}
                 >
-                    Guardar
+                    {isEditingEvent ? "Actualizando Evento..." : "Guardar" }
                 </button>
             </DialogFooter>
         </form>
