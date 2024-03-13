@@ -1,4 +1,5 @@
 
+import mongoose from "mongoose"
 import { connectMongoDB } from "@/db/mongodb"
 import Event from "@/models/event"
 import Patient from "@/models/patient"
@@ -77,40 +78,45 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
     try {
 
-        const { newEndDate } = await req.json()
+        // get the new end date of the event
+        const { newEndDate, _id } = await req.json()
+        console.log(newEndDate)
+        console.log(_id)
 
-        const eventId = req.url.split('/').at(-1)
-        console.log(eventId)
+        // connection to DBs
+        await connectMongoDB()
 
+        // get the user session, to get the user role
         const session: any = await getServerSession(nextAuth(authOptions))
         const userFound: any = await User.find({ email: session?.user?.email })
         let userRole = userFound[0].role;
 
-        // ? PARA EL USUARIO ESPECIALISTA
+        // if the user is not admin return 401 status
         if (userRole !== 'admin') {
             return NextResponse.json({ msg: 'No permission' }, {
                 status: 401
             })
         }
 
-        // ? PARA EL USUARIO ADMIN
-        await connectMongoDB()
+        // get the entier event using eventID
+        let foundEvent = await Event.find({ _id })
+        console.log(foundEvent)
 
-        let foundEvent = await Event.find({ _id: eventId })
-        console.log(foundEvent[0]?.end.getUTCHours())
-        console.log(foundEvent[0]?.end.getUTCMinutes())
+        let eventEndHour = foundEvent[0]?.end.getUTCHours() > 9 ? foundEvent[0].end.getUTCHours() : '0' + foundEvent[0].end.getUTCHours()
+        let eventEndMinute = foundEvent[0]?.end.getUTCMinutes() > 9 ? foundEvent[0].end.getUTCMinutes() : '0' + foundEvent[0].end.getUTCMinutes()
 
-        console.log(newEndDate)
-        console.log(getDateMinusSevenDays(newEndDate.split('T')[0]) + 'T' + foundEvent[0]?.end.getUTCHours() + ':' + foundEvent[0]?.end.getUTCMinutes() + ':00.000Z') // T04:00:00.000Z
+        console.log(getDateMinusSevenDays(newEndDate.split('T')[0]) + 'T' + eventEndHour + ':' + eventEndMinute + ':00.000Z') // 2024-04-15T12:0:00.000Z
 
+        // get the entier event using eventID and update the end date
         let updatedEvent = await Event.findOneAndUpdate(
-            { _id: eventId },
+            { _id: _id },
             {
                 $set: {
-                    end: getDateMinusSevenDays(newEndDate.split('T')[0]) + 'T' + foundEvent[0]?.end.getUTCHours() + ':' + foundEvent[0]?.end.getUTCMinutes() + ':00.000Z',
+                    end: getDateMinusSevenDays(newEndDate.split('T')[0]) + 'T' + eventEndHour + ':' + eventEndMinute + ':00.000Z',
                 }
             },
-            { new: true })
+            { new: true }
+        )
 
         return NextResponse.json({
             msg: 'end date updated'

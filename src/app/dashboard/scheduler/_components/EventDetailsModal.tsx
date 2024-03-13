@@ -169,12 +169,15 @@ const EventDetailsModal = ({
                                             onClick={async () => {
                                                 try {
 
-                                                    await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events/${eventDetails?._id}`, {
+                                                    await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events/eventId?eventId`, {
                                                         method: 'PUT',
                                                         headers: {
                                                             "Content-Type": "application/json"
                                                         },
-                                                        body: JSON.stringify({ newEndDate })
+                                                        body: JSON.stringify({ 
+                                                            newEndDate, 
+                                                            _id: eventDetails?._id
+                                                         })
                                                     })
 
                                                     setOpen(false)
@@ -261,7 +264,7 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
         })
         if (respAddReport.ok) {
             await refetchEvents(),
-                reset();
+            reset();
             setOpen(false)
             setEditEvent(false)
             setCancelEvent(false)

@@ -42,8 +42,6 @@ export async function POST(req: NextRequest) {
 
         const newReport = await Report.create(createdAt ? missingReportObject : reportObject)
 
-        // console.log(newReport)
-        // return
         console.log(createdAt ? missingReportObject : reportObject)
         console.log(associatedEvent)
 
