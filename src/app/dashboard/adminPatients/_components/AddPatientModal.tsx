@@ -23,9 +23,11 @@ interface IAddPatientModal {
 export function AddPatientModal({ refetch }: IAddPatientModal) {
 
     const [open, setOpen] = useState(false);
+    const [isAddNewPatient, setIsAddNewPatient] = useState(false)
     const { register, handleSubmit, formState: { errors }, reset } = useForm()
 
     const onSubmit = async (data: any) => {
+        setIsAddNewPatient(true)
 
         let respPatients = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`, {
             method: 'POST',
@@ -46,6 +48,7 @@ export function AddPatientModal({ refetch }: IAddPatientModal) {
         await refetch()
         reset();
         setOpen(false)
+        setIsAddNewPatient(false)
     }
 
     return (
@@ -151,8 +154,9 @@ export function AddPatientModal({ refetch }: IAddPatientModal) {
                         <button
                             className=" w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffc260] hover:bg-[#f8b84e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8fafc]"
                             type="submit"
+                            disabled={isAddNewPatient}
                         >
-                            Guardar
+                            {isAddNewPatient ? "Guardando..." : "Guardar" }
                         </button>
                     </DialogFooter>
                 </form>
