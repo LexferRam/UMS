@@ -235,12 +235,14 @@ const EventDetailsModal = ({
 }
 
 const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchEvents, setOpen, setEditEvent, setCancelEvent }: any) => {
+    const [isAddingReport, setIsAddingReport] = useState(false)
     const { register, handleSubmit, formState: { errors }, reset } = useForm()
 
     let datePortion = dateOfMissingReport?.split('/')
     let formatDate = new Date(datePortion[2], datePortion[1] - 1, datePortion[0])
 
     const handleClick = async (data: any) => {
+        setIsAddingReport(true)
 
         let reportForCancelEvent = {
             description: data.description,
@@ -263,6 +265,7 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
             setOpen(false)
             setEditEvent(false)
             setCancelEvent(false)
+            setIsAddingReport(false)
             return
         }
     }
@@ -290,8 +293,9 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
                     <button
                         className=" w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffc260] hover:bg-[#f8b84e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8fafc]"
                         type="submit"
+                        disabled={isAddingReport}
                     >
-                        Guardar reporte
+                        {isAddingReport ? "Guardando..." : "Guardar reporte" }
                     </button>
                 </DialogFooter>
             </form>

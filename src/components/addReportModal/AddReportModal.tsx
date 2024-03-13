@@ -1,7 +1,6 @@
 'use client'
 
 import { FC, useState } from "react"
-import { Button } from "@/components/ui/button"
 import {
     Dialog,
     DialogContent,
@@ -21,12 +20,14 @@ export const AddReportModal: FC<{
 }> = ({ eventId, patient, dateOfMissingReport, refecthFns }) => {
 
     const [open, setOpen] = useState(false);
+    const [isAddingReport, setIsAddingReport] = useState(false)
     const { register, handleSubmit, formState: { errors }, reset} = useForm()
 
     let datePortion = dateOfMissingReport.split(',')[0].split('/')
     let formatDate = new Date(datePortion[2], datePortion[1]-1, datePortion[0])
     
-    const handleClick = async (data: any) => {
+    const handleSubmitReport = async (data: any) => {
+        setIsAddingReport(true)
 
         let missingReportObject = {
             description: data.description,
@@ -44,8 +45,6 @@ export const AddReportModal: FC<{
         }
 
         let reportToDB = dateOfMissingReport ? missingReportObject : reportObject
-
-        console.log(reportToDB)
         
         const respAddReport = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`, {
             method: 'POST',
@@ -57,9 +56,9 @@ export const AddReportModal: FC<{
         if (respAddReport.ok) {
             setOpen(false)
             await refecthFns.refetchUserInfo(),
-            // await refecthFns.refetchReports(),
             await refecthFns.refetchUserEvent(),
             reset();
+            setIsAddingReport(false)
             return
         }
     }
@@ -78,7 +77,7 @@ export const AddReportModal: FC<{
                     <DialogTitle>Nuevo Reporte</DialogTitle>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit(handleClick)}>
+                <form onSubmit={handleSubmit(handleSubmitReport)}>
                     <div className="grid gap-4 py-4">
                         <div className="flex flex-col justify-start items-center gap-4">
                             <Textarea
@@ -99,8 +98,9 @@ export const AddReportModal: FC<{
                         <button
                             className=" w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffc260] hover:bg-[#f8b84e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8fafc]"
                             type="submit"
+                            disabled={isAddingReport}
                         >
-                            Guardar
+                            {isAddingReport ? "Guardando..." : "Guardar" }
                         </button>
                     </DialogFooter>
                 </form>
