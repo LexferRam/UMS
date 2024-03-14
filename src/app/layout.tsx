@@ -33,7 +33,7 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/icon-512x512.png" type="image/x-icon" />
         <meta name="google" content="notranslate" />
       </head>
-      <body >
+      <body className={inter.className}>
         <ReactQueryProvider>
           <ThemeProvider
             attribute="class"
