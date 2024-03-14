@@ -23,7 +23,7 @@ export default function Home() {
               />
               <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-700">Un Mundo Sensorial</h2>
             </div>
-            <div className="mb-0 space-y-6 mt-10">
+            <div className="mb-0 mt-10">
               {/* <div>
                 <label className="block text-sm font-semibold text-gray-500">Nombre de Usuario</label>
                 <div className="mt-4">
