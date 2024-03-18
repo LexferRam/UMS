@@ -25,7 +25,7 @@ export function getDateMinusSevenDays(givenDate: string) {
 
     // Calculate the number of milliseconds in 7 days
     const millisecondsPerDay = 1000 * 60 * 60 * 24;
-    const daysToSubtract = 7;
+    const daysToSubtract = 1;
     const timeDifference = daysToSubtract * millisecondsPerDay;
 
     // Create a new Date object 7 days before the given date
@@ -33,7 +33,6 @@ export function getDateMinusSevenDays(givenDate: string) {
 
     // Format the previous date as YYYY-MM-DD
     const formattedDate = previousDate.toISOString().slice(0, 10);
-    console.log(formattedDate)
 
     return formattedDate
 }

@@ -10,7 +10,7 @@ import ThemeProviderMui from '@/context/ThemeProviderMUI';
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Un Mundo Sensiorall',
+  title: 'Un Mundo Sensioral',
   description: 'Un Mundo Sensioral',
   manifest: '/manifest.json',
   icons: {

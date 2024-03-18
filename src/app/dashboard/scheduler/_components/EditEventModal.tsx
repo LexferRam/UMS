@@ -112,7 +112,6 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
         setIsEditingEvent(true)
 
         const foundPatient: any = patients.map((patient: any) => {
-            // if (!patient.isActive) return
             return ({ value: patient._id, label: patient.name + patient.lastname })
         }).filter((item: any) => item?.label.trim() === data.selectedPatient)
         const foundUser: any = dataUser.map((user: any) => ({ value: user._id, label: user.name })).filter((item: any) => item?.label.trim() === data.selectedUserValue)
@@ -129,10 +128,11 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
         let updatedEvent = {
             title: data.title.trim(),
             start: formatDateToDB(data.eventDate + 'T' + data.timeStart),
-            end: selectedDaysArr.length > 0 ?
-                formatDateToDB(addOneYear(data.eventDate) + 'T' + data.timeEnd) :
-                // TODO: la funcion addOneYear debe agregar un dia mas
-                formatDateToDB(data.eventDate + 'T' + data.timeEnd),
+            end: formatDateToDB(data.eventEndDate + 'T' + data.timeEnd),
+            // selectedDaysArr.length > 0 ?
+            //     formatDateToDB(addOneYear(data.eventDate) + 'T' + data.timeEnd) :
+            //     // TODO: la funcion addOneYear debe agregar un dia mas
+            //     formatDateToDB(data.eventDate + 'T' + data.timeEnd),
             _asignTo: foundUser[0].value,
             patient: foundPatient[0].value,
             selectedDaysArr: selectedDaysArr,
@@ -186,6 +186,8 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
         // ? if the event is recurrent
         if (eventDetails.byweekday.length > 0) {
             setValue('eventDate', eventDetails?.rrule?.dtstart?.split('T')[0])
+            setValue('eventEndDate', eventDetails?.rrule?.until?.split('T')[0])
+
             setValue(
                 'timeStart',
                 new Intl.DateTimeFormat('es-VE', {
@@ -206,6 +208,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
             )
         } else {
             setValue('eventDate', eventDetails?.start?.split('T')[0])
+            setValue('eventEndDate', eventDetails?.end?.split('T')[0])
             setValue(
                 'timeStart',
                 new Intl.DateTimeFormat('es-VE', {
@@ -231,11 +234,11 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid gap-4 py-4">
+            <div className="grid gap-4 py-4 px-[10px]">
 
-                <div className="flex gap-4">
+                <div className="flex">
                     {/* titulo */}
-                    <div className="flex flex-col gap-2 flex-wrap justify-center items-start">
+                    <div className="flex flex-col gap-2 flex-wrap justify-center items-start w-full">
                         <Label className="text-right">
                             Título:
                         </Label>
@@ -253,9 +256,12 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
                         />
                         {errors.title && <p className="text-red-700">{JSON.stringify(errors?.title?.message)}</p>}
                     </div>
+                </div>
 
+                {/* Rango fechas */}
+                <div className="flex gap-2">
                     {/* fecha de inicio */}
-                    <div className="flex flex-col gap-2 flex-wrap justify-center items-start">
+                    <div className="w-full flex flex-col gap-2 flex-wrap justify-center items-start">
                         <Label className="text-right">
                             Fecha Inicio:
                         </Label>
@@ -263,8 +269,23 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
                             type="date"
                             {...register("eventDate",
                                 {
-                                    required: 'Ingrese la fecha del evento',
-                                    min: { value: 4, message: "The min length is 4 characters" }
+                                    required: 'Ingrese la fecha del evento'
+                                })}
+                            className="w-full"
+                        />
+                        {errors.eventDate && <p className="text-red-700">{JSON.stringify(errors?.eventDate?.message)}</p>}
+                    </div>
+
+                    {/* fecha de culminacion */}
+                    <div className="w-full flex flex-col gap-2 flex-wrap justify-center items-start">
+                        <Label className="text-right">
+                            Fecha Culminación:
+                        </Label>
+                        <input
+                            type="date"
+                            {...register("eventEndDate",
+                                {
+                                    required: 'Ingrese la fecha del evento'
                                 })}
                             className="w-full"
                         />
@@ -272,7 +293,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
                     </div>
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex gap-2">
                     {/* hora inicio */}
                     <div className="w-full flex flex-col items-start gap-2">
                         <Label className="text-right">
@@ -346,7 +367,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
                     )}
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex gap-2">
                     {/* Terapeuta */}
                     <div className="flex flex-col items-start justify-between gap-2">
                         <Label className="text-right">
@@ -428,7 +449,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
 
             </div>
 
-            <DialogFooter>
+            <DialogFooter className="px-[10px]">
                 <button
                     className=" w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffc260] hover:bg-[#f8b84e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#f8fafc] cursor-pointer"
                     type="submit"

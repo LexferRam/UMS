@@ -10,6 +10,7 @@ import { getDateMinusSevenDays } from "@/util/hours"
 import nextAuth, { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
 
+//Api de actualizacion de eventos
 export async function POST(req: NextRequest) {
 
     try {
@@ -46,8 +47,7 @@ export async function POST(req: NextRequest) {
                 $set: {
                     title,
                     start,
-                    // TODO: no editar la fecha final SOLO cuando la cita se ha sido cancelada
-                    // end, 
+                    end, 
                     _asignTo,
                     patient,
                     byweekday: selectedDaysArr,
@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
     }
 }
 
+// Api que elimina evento a partir de uno seleccionado
 export async function PUT(req: NextRequest) {
     try {
 

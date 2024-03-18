@@ -59,7 +59,7 @@ const EventDetailsModal = ({
         >
             <DialogContent className="sm:max-w-[500px]">
 
-                <ScrollArea className='max-h-[400px] sm:max-h-[400px]'>
+                <ScrollArea className='max-h-[550px] sm:max-h-[500px]'>
                     {/* // ! DIALOG HEADER  */}
                     <DialogHeader className='flex flex-row gap-4 items-center justify-start'>
                         <div>
@@ -120,7 +120,8 @@ const EventDetailsModal = ({
                         <div className='flex flex-col sm:flex-row'>
                             {(userInfo[0]?.role === 'admin') ? (
                                 <div className='flex flex-col gap-2 '>
-                                    <div className='flex gap-1 items-center cursor-not-allowed' onClick={() => setEditEvent(false)}>
+                                    {/* TODO: editar el evento actual */}
+                                    {/* <div className='flex gap-1 items-center cursor-not-allowed' onClick={() => setEditEvent(false)}>
                                         <PencilSquareIcon
                                             className="h-6 w-6 text-blue-500"
                                         />
@@ -129,9 +130,9 @@ const EventDetailsModal = ({
                                         >
                                             Editar el evento actual
                                         </span>
-                                    </div>
+                                    </div> */}
 
-                                    <div className='flex gap-1 items-center cursor-pointer' onClick={() => setEditEvent(true)}>
+                                    <div className='flex gap-1 mt-4 items-center cursor-pointer' onClick={() => setEditEvent(true)}>
                                         <PencilSquareIcon
                                             className="h-6 w-6 text-green-500"
                                         />

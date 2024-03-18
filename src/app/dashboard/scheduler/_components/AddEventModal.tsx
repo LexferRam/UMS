@@ -182,7 +182,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                     <div className="grid gap-4 py-4">
 
                         <div className="flex gap-4">
-                            <div className="flex flex-col gap-2 flex-wrap justify-center items-start">
+                            <div className="w-full flex flex-col gap-2 flex-wrap justify-center items-start">
                                 <Label className="text-right">
                                     Título:
                                 </Label>
@@ -198,7 +198,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                                 {errors.title && <p className="text-red-700">{JSON.stringify(errors?.title?.message)}</p>}
                             </div>
 
-                            <div className="flex flex-col gap-2 flex-wrap justify-center items-start">
+                            <div className=" w-full flex flex-col gap-2 flex-wrap justify-center items-start">
                                 <Label className="text-right">
                                     Fecha Inicio:
                                 </Label>
@@ -288,7 +288,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
 
                         <div className="flex gap-4">
                             {/* Terapeuta */}
-                            <div className="flex flex-col items-start justify-between gap-2">
+                            <div className="w-full flex flex-col items-start justify-between gap-2">
                                 <Label className="text-right">
                                     Especialista:
                                 </Label>
@@ -351,7 +351,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                             </select>
                             {errors.eventType && <p className="text-red-700">{JSON.stringify(errors?.eventType?.message)}</p>}
                         </div>
-
+{/* 
                         <div className="flex flex-col gap-2 flex-wrap justify-center items-start">
                             <Label className="text-right">
                                 Nota:
@@ -362,7 +362,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                                 defaultValue=""
                                 {...register("note")}
                             />
-                        </div>
+                        </div> */}
                     </div>
 
                     <DialogFooter>
