@@ -16,6 +16,7 @@ import { useUserInfo } from '@/hooks';
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
 import { ScrollArea } from '@/components/ui/ScrollArea';
+import { useRouter } from 'next/navigation';
 
 interface IEventDetailsModal {
     open: boolean
@@ -33,6 +34,7 @@ const EventDetailsModal = ({
     selectedDate
 }: IEventDetailsModal) => {
 
+    const router = useRouter()
     const [editEvent, setEditEvent] = useState(false)
     const [cancelEvent, setCancelEvent] = useState(false)
     const [userInfo] = useUserInfo()
@@ -94,7 +96,10 @@ const EventDetailsModal = ({
                         </div>
 
                         <div className='flex flex-col sm:flex-row'>
-                            <b className='mr-2'>Paciente: </b> <p>{eventDetails?.patient.name + ' ' + eventDetails?.patient?.lastname}</p>
+                            <b className='mr-2'>Paciente: </b> <p className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer' onClick={() => {
+                                if(!eventDetails?.patient.reports.length) return
+                                router.push(`/dashboard/patientHistory/${eventDetails?.patient?._id}`, { scroll: false })
+                            }}>{eventDetails?.patient.name + ' ' + eventDetails?.patient?.lastname}</p>
                         </div>
 
                         <div className='flex flex-col sm:flex-row'>
