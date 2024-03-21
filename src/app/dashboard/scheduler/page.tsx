@@ -315,6 +315,17 @@ const Scheduler = () => {
             >
               <p>{eventInfo.timeText}</p>
               <p>{event._def.title}</p>
+              <p>
+                {
+                  event._def.extendedProps?.reports?.filter((repor: any) => repor?.isForEventCancel &&
+                  new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
+                ).length > 0 && (
+                  event._def.extendedProps?.reports?.filter((repor: any) => repor?.isForEventCancel &&
+                  new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
+                )[0].description
+                )
+                }
+              </p>
             </div>
           );
         }}
