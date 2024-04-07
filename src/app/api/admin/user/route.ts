@@ -10,28 +10,6 @@ import { authOptions } from "@/util/authOptions"
 
 const secret = process.env.NEXTAUTH_SECRET
 
-
-// export async function POST(req: NextRequest) {
-//     // const token = await getToken({ req, secret })
-
-//     // if(!token) return NextResponse.json([])
-
-//     const { email } = await req.json()
-//     await connectMongoDB()
-//     let userFound = await User
-//         .find({ email })
-//         .populate({
-//             path: "events",
-//             model: Event
-//         })
-//         .populate({
-//             path: "asignedPatients",
-//             model: Patient
-//         })
-
-//     return NextResponse.json(userFound, { status: 201 })
-// }
-
 // ? API to get user info
 export async function GET(req: any, res: NextApiResponse) {
 

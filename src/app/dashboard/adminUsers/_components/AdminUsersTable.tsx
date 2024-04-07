@@ -1,7 +1,18 @@
 import { Button } from '@/components/ui/button';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import MaterialTable, { Column } from '@material-table/core';
 import Image from 'next/image';
 import { FC } from 'react';
+
+interface IPerson {
+    _id: string;
+    name: string;
+    lastname: string;
+    email: number;
+    isActive: boolean;
+    speciality?: any,
+    role?: string;
+}
 
 interface AdminUsersTableProps {
     headers: string[];
@@ -26,10 +37,139 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
         </div>
     )
 
+    const columns: Array<Column<IPerson>> = [
+        {
+            title: "Nombre",
+            field: "name",
+            render: rowData => {
+                return (
+                    <>
+                        <div className="flex flex-col items-center gap-2">
+                            <Image
+                                src={rowData.lastname}
+                                className="rounded-full"
+                                alt='logo_login'
+                                width={50}
+                                height={50}
+                                priority
+                            />
+                            <p
+                                color="blue-gray"
+                                className="font-normal text-clip text-gray-500"
+                            >
+                                {rowData.name}
+                            </p>
+                        </div>
+                    </>
+                )
+            }
+        },
+        { title: "Correo", field: "email" },
+        {
+            title: "Estatus",
+            field: "isActive",
+            render: rowData => {
+                return (
+                    <div className=''>
+                        {rowData.isActive ? (
+                            <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mb-2">
+                                Activo
+                            </span>
+                        ) : (
+                            <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold mb-2">
+                                Desactivo
+                            </span>
+                        )}
+                    </div>
+                )
+            },
+            headerStyle: { textAlign: "center" },
+            cellStyle: { textAlign: "center" }
+        },
+        {
+            title: "Role",
+            field: "role;",
+            render: rowData => (<>
+                <p
+                    color="blue-gray"
+                    className="font-normal"
+                >
+                    {rowData.role === 'admin' ? (
+                        <span className="inline-block bg-blue-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+                            Administrador
+                        </span>
+                    ) : (
+                        <span className="inline-block bg-orange-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+                            Especialista
+                        </span>
+                    )}
+                </p></>)
+        },
+    ];
+
+    const data: Array<IPerson> = users?.map(({
+        _id,
+        name,
+        lastname,
+        email,
+        isActive,
+        speciality,
+        role
+    }: any) => ({
+        _id,
+        name,
+        lastname,
+        email,
+        isActive,
+        speciality,
+        role
+    }))
+
+    const TableMUI = () => (
+        <MaterialTable
+            columns={columns}
+            data={data}
+            localization={{
+                pagination: {
+                    labelDisplayedRows: '{from}-{to} de {count}',
+                    labelRows: 'Filas',
+                    labelRowsPerPage: '',
+                    firstTooltip: 'Primera página',
+                    previousTooltip: 'Página anterior',
+                    nextTooltip: 'Página siguiente',
+                    lastTooltip: 'Última página'
+                },
+                toolbar: {
+                    searchPlaceholder: 'Buscar',
+                    searchTooltip: 'Buscar'
+                },
+                body: {
+                    deleteTooltip: 'Eliminar',
+                    editTooltip: 'Editar',
+                    addTooltip: 'Agregar',
+                    editRow: {
+                        cancelTooltip: 'Cancelar',
+                        saveTooltip: 'Guardar',
+                        deleteText: '¿Desea eliminar este registro?'
+                    }
+                }
+            }}
+            options={{
+                pageSize: 10,
+                showTitle: false,
+                headerStyle: {
+                    backgroundColor: '#E5E5E5',
+                    textAlign: 'center',
+                },
+                padding: "dense",
+            }}
+        />
+    );
+
     return (
         <div className='p-5 max-h-[700px] overflow-x-scroll sm:overflow-visible scrollbar-hide'>
             <div className="h-full w-full overflow-x-scroll sm:overflow-visible shadow-md rounded mt-8 scrollbar-hide">
-                <table className="w-full min-w-max table-auto text-left">
+                {/* <table className="w-full min-w-max table-auto text-left">
                     <thead>
                         <tr>
                             {headers.map((head) => (
@@ -116,25 +256,16 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                                         )}
 
                                     </td>
-                                    {/* <td className={classes}>
-                                        <div
-                                            className="flex gap-2 cursor-pointer items-center"
-                                        >
-                                            <PencilSquareIcon
-                                                className="h-6 w-6 text-green-500"
-                                            />
-                                            <span
-                                                className='text-sm font-semibold text-gray-600'
-                                            >
-                                                Editar
-                                            </span>
-                                        </div>
-                                    </td> */}
                                 </tr>
                             );
                         })}
                     </tbody>
-                </table>
+                </table> */}
+
+
+                <div className="h-full w-full overflow-x-scroll overflow-y-visible sm:overflow-visible shadow-md rounded my-8 scrollbar-hide pb-8">
+                    <TableMUI />
+                </div>
             </div>
         </div>
     )

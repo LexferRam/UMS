@@ -1,7 +1,7 @@
 'use client'
 
 import { FC } from 'react'
-import { DocumentMagnifyingGlassIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { DocumentMagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { AddPatientModal } from './AddPatientModal'
 import { useUserInfo } from '@/hooks'
@@ -13,13 +13,22 @@ import { calculateAgeWithMonths } from '@/util/dateOfBirth'
 import MaterialTable, { Column } from '@material-table/core';
 moment.locale('es');
 
+interface IPerson {
+  _id: string;
+  name: string;
+  lastname: string;
+  dateOfBirth: number;
+  diagnosis: string;
+  historyDescription: string;
+  isActive: boolean;
+  reports: any
+}
+
 const PatientTable: FC<{
   tableHeaders: string[],
   patients: any,
   refetch?: any
 }> = ({ tableHeaders, patients, refetch }) => {
-
-  console.log(patients)
 
   const router = useRouter()
   const [userInfo] = useUserInfo()
@@ -43,54 +52,50 @@ const PatientTable: FC<{
     </div>
   )
 
-  interface IPerson {
-    _id: string;
-    name: string;
-    lastname: string;
-    dateOfBirth: number;
-    diagnosis: string;
-    historyDescription: string;
-    isActive: boolean;
-    reports: any
-  }
-
   const columns: Array<Column<IPerson>> = [
-    { title: "Nombre", field: "name", render: rowData => (<>{rowData.name + ' ' + rowData.lastname}</>) },
-    { title: "Edad", field: "dateOfBirth", render: rowData => {return(<>
-      {moment(rowData.dateOfBirth).format('L')}  <br />
-                      {`(${calculateAgeWithMonths(rowData.dateOfBirth)?.years} años y ${calculateAgeWithMonths(rowData.dateOfBirth)?.months} meses) `}</>)}},
-    { title: "Diagnóstico", field: "diagnosis" },
-    // { title: "Motivo de consulta", field: "historyDescription", render: rowData => (<>{
-    //   rowData.historyDescription.substring(0, 50) + '...'
-    // }</>),cellStyle: { textAlign: "center" },
-    // headerStyle: { textAlign: "center" },},
     {
-      title: "Estatus", field: "isActive", render: rowData => {
-
+      title: "Nombre",
+      field: "name",
+      render: rowData => (<>{rowData.name + ' ' + rowData.lastname}</>)
+    },
+    {
+      title: "Edad",
+      field: "dateOfBirth",
+      render: rowData => {
+        return (<>
+          {moment(rowData.dateOfBirth).format('L')}  <br />
+          {`(${calculateAgeWithMonths(rowData.dateOfBirth)?.years} años y ${calculateAgeWithMonths(rowData.dateOfBirth)?.months} meses) `}</>)
+      }
+    },
+    { title: "Diagnóstico", field: "diagnosis" },
+    {
+      title: "Estatus",
+      field: "isActive",
+      render: rowData => {
         return (
-        <div className=''>
-          {rowData.isActive ? (
-            <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mb-2">
-              Activo
-            </span>
-          ) : (
-            <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold mb-2">
-              Desactivo
-            </span>
-          )}
-        </div>
-
+          <div className=''>
+            {rowData.isActive ? (
+              <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mb-2">
+                Activo
+              </span>
+            ) : (
+              <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold mb-2">
+                Desactivo
+              </span>
+            )}
+          </div>
         )
-      }, 
+      },
       headerStyle: { textAlign: "center" },
       cellStyle: { textAlign: "center" }
     },
     {
-      title: "Acciones", field: "isActive", render:( { _id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive, reports }) => {
+      title: "Acciones",
+      field: "isActive",
+      render: ({ _id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive, reports }) => {
 
         return (<>
           <div className="flex gap-2 justify-between">
-
             {reports?.length > 0 ? (
               <div
                 onClick={() => router.push(`/dashboard/patientHistory/${_id}`, { scroll: false })}
@@ -118,19 +123,25 @@ const PatientTable: FC<{
               </div>
             )}
 
-
             {userInfo[0]?.role === 'admin' && <EditPatientModal refetch={refetch} patient={{ _id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive }} />}
           </div>
         </>
-
         )
-      },cellStyle: { textAlign: "center" },
+      }, cellStyle: { textAlign: "center" },
       headerStyle: { textAlign: "center" },
-    },
-
+    }
   ];
 
-  const data: Array<IPerson> = patients?.map(({ _id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive, reports }: any, index: any) => ({
+  const data: Array<IPerson> = patients?.map(({
+    _id,
+    name,
+    lastname,
+    dateOfBirth,
+    diagnosis,
+    historyDescription,
+    isActive,
+    reports
+  }: any) => ({
     _id: _id,
     name: name,
     lastname: lastname,
@@ -141,7 +152,6 @@ const PatientTable: FC<{
     reports: reports
   }))
 
-
   const TableMUI = () => (
     <MaterialTable
       columns={columns}
@@ -149,9 +159,10 @@ const PatientTable: FC<{
       detailPanel={[
         {
           tooltip: 'Ver motivo de consulta',
-          render: ({rowData}) => {
+          render: ({ rowData }) => {
             return (
               <div className='p-5 text-md text-semibold'>
+                <p className='font-bold mb-1'>Motivo de consulta:</p>
                 {rowData.historyDescription}
               </div>
             )
@@ -173,14 +184,9 @@ const PatientTable: FC<{
           searchTooltip: 'Buscar'
         },
         body: {
-          // emptyDataSourceMessage: `${datasourceMessage}`,
           deleteTooltip: 'Eliminar',
           editTooltip: 'Editar',
           addTooltip: 'Agregar',
-          // filterRow: {
-          //   filterTooltip: 'Filtro'
-          // },
-          // editTooltip: 'Editar Datos',
           editRow: {
             cancelTooltip: 'Cancelar',
             saveTooltip: 'Guardar',
@@ -197,7 +203,8 @@ const PatientTable: FC<{
         },
         padding: "dense",
       }}
-    />);
+    />
+  );
 
   return (
     <div className='p-5 max-h-[700px] overflow-x-scroll overflow-y-visible sm:overflow-visible scrollbar-hide'>
