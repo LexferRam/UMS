@@ -80,7 +80,7 @@ const Scheduler = () => {
       return (
         {
           ...restEvent,
-          color: event?.eventType === 'SESION' ? event?._asignTo.asignColor : EVENTS_TYPE_COLORS[event?.eventType],
+          color: userInfo[0].role === 'admin' ? (event?.eventType === 'SESION' ? event?._asignTo.asignColor : EVENTS_TYPE_COLORS[event?.eventType]) : '#3688d8',
           duration: { minutes: getHoursBetweenToTimes(startTime, endTime) },
           rrule: {
             freq: event?.freq || 'daily', // monthly  yearly  daily  weekly
@@ -99,7 +99,7 @@ const Scheduler = () => {
       // ? JSON para un evento sin recurrencia
       return ({
         ...event,
-        color: event?.eventType === 'SESION' ? event?._asignTo.asignColor : EVENTS_TYPE_COLORS[event?.eventType],
+        color: userInfo[0].role === 'admin' ?(event?.eventType === 'SESION' ? event?._asignTo.asignColor : EVENTS_TYPE_COLORS[event?.eventType]): '#3688d8',
         allDay: calendarRef?.current?.props?.initialView === 'resourceTimeGridWeek' || calendarRef?.current?.props?.initialView === 'resourceTimeGridDay' ? false : true,
         // title: event?.title,
         // TODO: add this dinamically
@@ -290,8 +290,6 @@ const Scheduler = () => {
         eventContent={(eventInfo) => {
           const { event } = eventInfo;
 
-          console.log(event._def.extendedProps)
-
           let eventType = event._def.extendedProps.eventType;
           let asingColor = event._def.extendedProps._asignTo.asignColor
           let bgColor = EVENTS_TYPE_COLORS[eventType]
@@ -303,12 +301,14 @@ const Scheduler = () => {
                 borderLeft: `${userInfo[0]?.role === 'admin' ? '10px' : '0px'} ${asingColor} solid`,
                 overflow: 'hidden',
                 backgroundColor: `${(
-                    event._def.extendedProps?.reports?.filter((repor: any) => repor?.isForEventCancel &&
-                      new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
-                    ).length > 0
-                  ) ?
-                    'red' :
-                    (eventType === 'SESION' ? asingColor : bgColor)
+                  event._def.extendedProps?.reports?.filter((repor: any) => repor?.isForEventCancel &&
+                    new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
+                  ).length > 0
+                ) ?
+                  'red' :
+                  (userInfo[0].role === 'admin' ? (
+                    eventType === 'SESION' ? asingColor : bgColor) 
+                    : '#3688d8')
                   }`,
                 borderRadius: '5px'
               }}
@@ -318,12 +318,12 @@ const Scheduler = () => {
               <p>
                 {
                   event._def.extendedProps?.reports?.filter((repor: any) => repor?.isForEventCancel &&
-                  new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
-                ).length > 0 && (
-                  event._def.extendedProps?.reports?.filter((repor: any) => repor?.isForEventCancel &&
-                  new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
-                )[0].description
-                )
+                    new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
+                  ).length > 0 && (
+                    event._def.extendedProps?.reports?.filter((repor: any) => repor?.isForEventCancel &&
+                      new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
+                    )[0].description
+                  )
                 }
               </p>
             </div>
