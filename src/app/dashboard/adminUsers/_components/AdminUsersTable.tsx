@@ -44,13 +44,13 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
             render: rowData => {
                 return (
                     <>
-                        <div className="flex flex-col justify-center items-center gap-2">
+                        <div className="flex justify-start items-center gap-4">
                             <Image
                                 src={rowData.lastname}
                                 className="rounded-full"
                                 alt='logo_login'
-                                width={50}
-                                height={50}
+                                width={48}
+                                height={48}
                                 priority
                             />
                             <p
