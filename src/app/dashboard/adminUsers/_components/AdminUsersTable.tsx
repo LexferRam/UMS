@@ -12,6 +12,7 @@ interface IPerson {
     isActive: boolean;
     speciality?: any,
     role?: string;
+    asignedPatients?: any
 }
 
 interface AdminUsersTableProps {
@@ -62,14 +63,14 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                         </div>
                     </>
                 )
-            },
-            width: 200
+            }
+            // width: 200
         },
         { 
             title: "Correo", 
             field: "email",
             headerStyle: { textAlign: "center" },
-            width: 200
+            // width: 200
         },
         {
             title: "Estatus",
@@ -90,7 +91,7 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                 )
             },
             headerStyle: { textAlign: "center" },
-            width: 150
+            // width: 150
         },
         {
             title: "Role",
@@ -111,7 +112,7 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                     )}
                 </p></>),
             headerStyle: { textAlign: "center" },
-            width: 150
+            // width: 150
         },
     ];
 
@@ -122,7 +123,8 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
         email,
         isActive,
         speciality,
-        role
+        role,
+        asignedPatients
     }: any) => ({
         _id,
         name,
@@ -130,7 +132,8 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
         email,
         isActive,
         speciality,
-        role
+        role,
+        asignedPatients
     }))
 
     const TableMUI = () => (
@@ -162,12 +165,34 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                     }
                 }
             }}
+            detailPanel={[
+                {
+                    tooltip: 'Ver pacientes asignados',
+                    render: ({ rowData }) => {
+                        return (
+                            <div className='p-5 text-md text-semibold'>
+                                <p className='font-bold mb-1'>Pacientes asignados:</p>
+                                {rowData.asignedPatients.map((patient: any) => (
+                                    <div key={patient._id} className=''>
+                                        <p
+                                            color="blue-gray"
+                                            className="font-normal text-clip text-gray-500"
+                                        >
+                                            {patient.name} {patient.lastname} - {patient.diagnosis}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        )
+                    }
+                }
+            ]}
             options={{
                 pageSize: 10,
                 showTitle: false,
                 headerStyle: {
                     backgroundColor: '#E5E5E5',
-                    textAlign: 'center',
+                    // textAlign: 'center',
                 },
                 padding: "dense",
             }}

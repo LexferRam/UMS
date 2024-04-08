@@ -1,6 +1,7 @@
 
 import { connectMongoDB } from "@/db/mongodb"
 import Event from "@/models/event"
+import Patient from "@/models/patient"
 import User from "@/models/user"
 import mongoose from "mongoose"
 import { NextApiRequest } from "next"
@@ -14,7 +15,10 @@ export async function GET(req: any) {
     try {
 
         await connectMongoDB()
-        const users = await User.find()
+        const users = await User.find().populate({
+            path: 'asignedPatients',
+            model: Patient
+        })
         return NextResponse.json(users)
 
     } catch (error) {
