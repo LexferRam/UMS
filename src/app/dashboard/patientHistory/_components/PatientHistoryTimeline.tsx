@@ -33,25 +33,25 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
 
     let therapistList: any = [...new Set(patientInfo[0]?.reports.map((report: any) => report.createdBy))].reduce((acc: any, objeto: any) => {
         if (!acc.some((otroObjeto: any) => otroObjeto.name === objeto.name)) {
-          acc.push(objeto);
+            acc.push(objeto);
         }
         return acc;
-      }, [])
+    }, [])
 
-    function sortByDateField(data : any, dateFieldName : any = 'createdAt') {
+    function sortByDateField(data: any, dateFieldName: any = 'createdAt') {
         return data?.sort((a: any, b: any) => {
-          const dateA = a[dateFieldName];
-          const dateB = b[dateFieldName];
-      
-          if (dateA < dateB) {
-            return -1; // Descending order (recent to oldest)
-          } else if (dateA > dateB) {
-            return 1; // Ascending order (oldest to recent)
-          } else {
-            return 0; // Equal dates
-          }
+            const dateA = a[dateFieldName];
+            const dateB = b[dateFieldName];
+
+            if (dateA < dateB) {
+                return -1; // Descending order (recent to oldest)
+            } else if (dateA > dateB) {
+                return 1; // Ascending order (oldest to recent)
+            } else {
+                return 0; // Equal dates
+            }
         });
-      }
+    }
 
     if (isLoading) return (
         <div className='mt-4'>
@@ -79,7 +79,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
         </div>
     )
 
-    if (error) return <h2>An error has occurred</h2>
+    if (error) return <h2>Error, por favor recargue nuevamente</h2>
 
     return (
         <>
@@ -98,20 +98,39 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                 </h4>
                 <div className='flex gap-4 flex-wrap'>
                     <div  onClick={() => setTherapistSelected('')}>
-                        <ChipWithAvatar name='Todos' profilePicture='' />
+                        <ChipWithAvatar
+                            name='Todos'
+                            profilePicture=''
+                            therapistSelected={therapistList?.filter((therapist: any) => therapist._id === therapistSelected)[0]?.name || 'Todos'}
+                        />
                     </div>
                     {
                         therapistList.map((therapist: any) => (
                             <div key={therapist._id} onClick={() => setTherapistSelected(therapist._id)}>
-                                <ChipWithAvatar name={therapist.name} profilePicture={therapist.lastname} />
+                                <ChipWithAvatar
+                                    name={therapist.name}
+                                    profilePicture={therapist.lastname}
+                                    therapistSelected={therapistList.filter((therapist: any) => therapist._id === therapistSelected)[0]?.name}
+                                />
                             </div>
                         ))
                     }
                 </div>
             </div>
 
-            <div className="w-full flex justify-center mt-4">
+            <div className='flex flex-col sm:flex-row gap-2 ml-2 mt-2 sm:ml-0'>
+                <h4 className='font-bold text-gray-600'>
+                    Reportes: {
+                        sortByDateField(
+                            therapistSelected === '' ?
+                                patientInfo[0]?.reports :
+                                patientInfo[0]?.reports.filter((item: any) => item.createdBy._id === therapistSelected)
+                        )?.length
+                    }
+                </h4>
+            </div>
 
+            <div className="w-full flex justify-center mt-4">
                 <Card placeholder='' shadow className='rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll scrollbar-hide'>
                     <Timeline className="w-full sm:w-[60rem] p-2 flex flex-col-reverse">
                         {sortByDateField(
@@ -174,8 +193,6 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                     </Timeline>
 
                 </Card>
-
-
             </div>
         </>
     )
