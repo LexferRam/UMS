@@ -62,15 +62,21 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                         </div>
                     </>
                 )
-            }
+            },
+            width: 200
         },
-        { title: "Correo", field: "email" },
+        { 
+            title: "Correo", 
+            field: "email",
+            headerStyle: { textAlign: "center" },
+            width: 200
+        },
         {
             title: "Estatus",
             field: "isActive",
             render: rowData => {
                 return (
-                    <div className=''>
+                    <div>
                         {rowData.isActive ? (
                             <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mb-2">
                                 Activo
@@ -84,7 +90,7 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                 )
             },
             headerStyle: { textAlign: "center" },
-            cellStyle: { textAlign: "center" }
+            width: 150
         },
         {
             title: "Role",
@@ -103,7 +109,9 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                             Especialista
                         </span>
                     )}
-                </p></>)
+                </p></>),
+            headerStyle: { textAlign: "center" },
+            width: 150
         },
     ];
 
@@ -169,7 +177,7 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
     return (
         <div className='p-5 max-h-[700px] overflow-x-scroll sm:overflow-visible scrollbar-hide'>
             <div className="h-full w-full overflow-x-scroll sm:overflow-visible shadow-md rounded scrollbar-hide">
-               
+
                 <div className="h-full w-full overflow-x-scroll overflow-y-visible sm:overflow-visible shadow-md rounded scrollbar-hide pb-8">
                     <TableMUI />
                 </div>

@@ -73,7 +73,7 @@ const PatientTable: FC<{
       field: "isActive",
       render: rowData => {
         return (
-          <div className=''>
+          <div>
             {rowData.isActive ? (
               <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mb-2">
                 Activo
@@ -86,8 +86,7 @@ const PatientTable: FC<{
           </div>
         )
       },
-      headerStyle: { textAlign: "center" },
-      cellStyle: { textAlign: "center" }
+      width: 90,
     },
     {
       title: "Acciones",
@@ -95,7 +94,7 @@ const PatientTable: FC<{
       render: ({ _id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive, reports }) => {
 
         return (<>
-          <div className="flex gap-2 justify-between">
+          <div className="flex gap-2 justify-around">
             {reports?.length > 0 ? (
               <div
                 onClick={() => router.push(`/dashboard/patientHistory/${_id}`, { scroll: false })}
@@ -127,8 +126,7 @@ const PatientTable: FC<{
           </div>
         </>
         )
-      }, cellStyle: { textAlign: "center" },
-      headerStyle: { textAlign: "center" },
+      }, 
     }
   ];
 
