@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import MaterialTable, { Column } from '@material-table/core';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { FC } from 'react';
 
 interface IPerson {
@@ -24,6 +25,7 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
     headers,
     users
 }) => {
+    const router = useRouter()
 
     if (!users.length) return (
         <div className='w-full h-full flex items-center justify-center mt-16'>
@@ -66,8 +68,8 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
             }
             // width: 200
         },
-        { 
-            title: "Correo", 
+        {
+            title: "Correo",
             field: "email",
             headerStyle: { textAlign: "center" },
             // width: 200
@@ -172,16 +174,38 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                         return (
                             <div className='p-5 text-md text-semibold'>
                                 <p className='font-bold mb-1'>Pacientes asignados:</p>
-                                {rowData.asignedPatients.map((patient: any) => (
-                                    <div key={patient._id} className=''>
-                                        <p
-                                            color="blue-gray"
-                                            className="font-normal text-clip text-gray-500"
-                                        >
-                                            {patient.name} {patient.lastname} - {patient.diagnosis}
-                                        </p>
-                                    </div>
-                                ))}
+                                {rowData.asignedPatients.map((patient: any) => {
+
+                                    return (
+                                        <div key={patient._id} className='flex gap-2 align-middle m-1'>
+                                            <p
+                                                color="blue-gray"
+                                                className="font-normal text-clip text-gray-500 "
+                                            >
+                                                {patient.isActive ? (
+                                                    <span className="inline-block bg-green-100 rounded-full px-3 text-sm font-semibold text-gray-700 mb-2">
+                                                        Activo
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-block bg-red-100 rounded-full px-3 text-sm font-semibold mb-2">
+                                                        Desactivo
+                                                    </span>
+                                                )}
+
+                                            </p>
+                                            <p
+                                                className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
+                                                onClick={() => {
+                                                    console.log(patient)
+                                                    if (!patient.reports.length) return
+                                                    router.push(`/dashboard/patientHistory/${patient?._id}`, { scroll: false })
+                                                }}
+                                            >
+                                                {patient.name + ' ' + patient?.lastname}
+                                            </p>
+                                        </div>
+                                    )
+                                })}
                             </div>
                         )
                     }
