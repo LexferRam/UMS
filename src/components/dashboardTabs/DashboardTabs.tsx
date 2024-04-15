@@ -65,7 +65,7 @@ const DashboardTabs: FC<{
         'patients' | 'events' | 'reports' | 'missingReports'>(userInfo[0]?.role !== 'admin' ? 'patients' : 'events')
 
     const ActiveCard = {
-        'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={userInfo[0]?.asignedPatients} />,
+        'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={userInfo[0]?.asignedPatients.filter((patient: any) =>  patient.isActive)} />,
         'events': <EventsTable tableHeaders={userInfo[0]?.role !== 'admin' ? TABLE_HEAD_EVENTS : TABLE_HEAD_EVENTS_ADMIN} events={eventForToday(userEvent)} refecthFns={refecthFns} />,
         'reports': <ReportsTable tableHeaders={TABLE_HEAD_REPORTS_ADMIN} reports={userReports} />,
         'missingReports': <MissingReportsTable tableHeaders={TABLE_HEAD_MISSING_REPORTS} missingReportsWithDate={missingReportsWithDate} refecthFns={refecthFns} />

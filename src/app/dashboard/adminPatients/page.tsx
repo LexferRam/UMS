@@ -24,7 +24,7 @@ const AdminPatientsPage = () => {
   return (
     <PatientTable
       tableHeaders={TABLE_HEAD}
-      patients={userInfo[0]?.role === 'admin' ? patientList : userInfo[0]?.asignedPatients}
+      patients={userInfo[0]?.role === 'admin' ? patientList : userInfo[0]?.asignedPatients.filter((patient: any) =>  patient.isActive)}
       refetch={refetch}
     />
   )
