@@ -88,7 +88,7 @@ const DashboardTabs: FC<{
 
                                     <div className='flex flex-col items-center'>
                                         <div className="text-amber-800 text-center font-semibold">Mis Pacientes</div>
-                                        <div className="text-2xl font-bold text-amber-900">{userInfo[0]?.asignedPatients.length}</div>
+                                        <div className="text-2xl font-bold text-amber-900">{(userInfo[0]?.asignedPatients.filter((patient: any) =>  patient.isActive)).length}</div>
                                     </div>
 
                                     <div>
@@ -150,7 +150,7 @@ const DashboardTabs: FC<{
 
                         </div>
 
-                        {/* MIS REPORTES */}
+                        {/*VER CALENDARIO */}
                         <Link
                             href="/dashboard/scheduler">
                             <div className="relative overflow-hidden p-5 bg-emerald-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer">
