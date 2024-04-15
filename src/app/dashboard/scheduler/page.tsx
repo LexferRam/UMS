@@ -308,7 +308,7 @@ const Scheduler = () => {
                   'red' :
                   (userInfo[0].role === 'admin' ? (
                     eventType === 'SESION' ? asingColor : bgColor) 
-                    : '#3688d8')
+                    : eventType === 'SESION' ? '#3688d8' : bgColor )
                   }`,
                 borderRadius: '5px'
               }}
