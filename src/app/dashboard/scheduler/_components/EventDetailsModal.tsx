@@ -132,7 +132,7 @@ const EventDetailsModal = ({
                         <div className='flex flex-col mb-4'>
                             <b className='my-2'>Especialistas asignados: </b>
 
-                            <div className='flex flex-col sm:flex-row gap-5'>
+                            <div className='flex flex-row gap-5'>
                                 {selectedDate?.patient?.specialistAssigned?.map((specialist: any) => {
                                     return (
                                         <div className='flex flex-col items-center justify-center gap-2' key={specialist._id}>
