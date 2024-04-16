@@ -1,6 +1,7 @@
 'use client'
 
 import { FC } from 'react'
+import Icon from '@mui/material/Icon';
 import { DocumentMagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { AddPatientModal } from './AddPatientModal'
@@ -13,6 +14,7 @@ import { calculateAgeWithMonths } from '@/util/dateOfBirth'
 import MaterialTable, { Column } from '@material-table/core';
 moment.locale('es');
 
+
 interface IPerson {
   _id: string;
   name: string;
@@ -21,7 +23,8 @@ interface IPerson {
   diagnosis: string;
   historyDescription: string;
   isActive: boolean;
-  reports: any
+  reports: any,
+  specialistAssigned?: any
 }
 
 const PatientTable: FC<{
@@ -126,7 +129,7 @@ const PatientTable: FC<{
           </div>
         </>
         )
-      }, 
+      },
     }
   ];
 
@@ -138,7 +141,8 @@ const PatientTable: FC<{
     diagnosis,
     historyDescription,
     isActive,
-    reports
+    reports,
+    specialistAssigned
   }: any) => ({
     _id: _id,
     name: name,
@@ -147,7 +151,8 @@ const PatientTable: FC<{
     diagnosis: diagnosis,
     historyDescription: historyDescription,
     isActive: isActive,
-    reports: reports
+    reports: reports,
+    specialistAssigned: specialistAssigned
   }))
 
   const TableMUI = () => (
@@ -159,9 +164,36 @@ const PatientTable: FC<{
           tooltip: 'Ver motivo de consulta',
           render: ({ rowData }) => {
             return (
-              <div className='p-5 text-md text-semibold'>
-                <p className='font-bold mb-1'>Motivo de consulta:</p>
-                {rowData.historyDescription}
+              <div key={rowData._id} className='p-5 text-md text-semibold'>
+                <div className='mb-2'>
+                  <p className='font-bold mb-1'>Motivo de consulta:</p>
+                  {rowData.historyDescription}
+                </div>
+                <p className='font-bold mb-1'>Especialistas asignados:</p>
+                <div className="flex flex-row justify-start items-center gap-4 m-2">
+                  {rowData.specialistAssigned.map((specialist: any) => {
+                    return (
+                      <>
+                        <div>
+                          <Image
+                            src={specialist.lastname}
+                            className="rounded-full"
+                            alt='logo_login'
+                            width={48}
+                            height={48}
+                            priority
+                          />
+                        </div>
+                        <p
+                          color="blue-gray"
+                          className="font-normal text-clip text-gray-500"
+                        >
+                          {specialist.name}
+                        </p>
+                      </>
+                    )
+                  })}
+                </div>
               </div>
             )
           },

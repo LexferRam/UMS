@@ -32,6 +32,10 @@ export default function RootLayout({
         <link rel="icon" href="/icon-512x512.png" sizes="any" />
         <link rel="shortcut icon" href="/icon-512x512.png" type="image/x-icon" />
         <meta name="google" content="notranslate" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        />
       </head>
       <body className={inter.className}>
         <ReactQueryProvider>

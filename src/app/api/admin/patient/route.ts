@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { connectMongoDB } from "@/db/mongodb"
 import Patient from "@/models/patient"
+import User from "@/models/user"
 
 const secret = process.env.NEXTAUTH_SECRET
 
@@ -52,7 +53,23 @@ export async function GET(req: NextRequest) {
 
         await connectMongoDB()
         const patients = await Patient.find()
-        return NextResponse.json(patients)
+        const specialistList = await User.find()
+
+        let patientListWithSpecialistList = patients.map((patient: any) => {
+            let specialistAssigned = []
+            for (let i = 0; i < specialistList.length; i++) {
+                const specialist = specialistList[i]
+                if (specialist.asignedPatients.map((patient: any) => patient._id.toString()).includes(patient._id.toString())) {
+                    specialistAssigned.push(specialist)
+                }
+            }
+            return {
+                ...patient._doc,
+                specialistAssigned
+            }
+        })
+
+        return NextResponse.json(patientListWithSpecialistList)
 
     } catch (error) {
         console.log(error)
