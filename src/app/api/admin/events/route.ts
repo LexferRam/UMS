@@ -106,22 +106,55 @@ export async function POST(req: NextRequest) {
         if (selectedUser === '') {
             events = await Event
                 .find()
-                .populate({ path: "patient", model: Patient, populate: {
-                    path: 'reports',
-                    model: Report
-                } })
+                .populate({
+                    path: "patient", model: Patient, populate: {
+                        path: 'reports',
+                        model: Report
+                    }
+                })
                 .populate({ path: "_asignTo", model: User })
                 .populate({ path: "reports", model: Report })
-        }else{
+        } else {
             events = await Event
                 .find({ _asignTo: selectedUser })
-                .populate({ path: "patient", model: Patient, populate: {
-                    path: 'reports',
-                    model: Report
-                } })
+                .populate({
+                    path: "patient", model: Patient, populate: {
+                        path: 'reports',
+                        model: Report
+                    }
+                })
                 .populate({ path: "_asignTo", model: User })
                 .populate({ path: "reports", model: Report })
         }
+
+        // ?: agregar especialistas asignados a cada paciente
+        let patientsIds = events.map((event: any) => event.patient._id.toString())
+        const specialistList = await User.find()
+
+        let patientListWithSpecialistList = patientsIds.map((patientId: any) => {
+            let specialistAssigned = []
+            for (let i = 0; i < specialistList.length; i++) {
+                if (specialistList[i].asignedPatients.map((patient: any) => patient._id.toString()).includes(patientId)) {
+                    specialistAssigned.push(specialistList[i])
+                }
+            }
+            return {
+                patientId,
+                specialistAssigned
+            }
+        })
+
+        // agrupar patientListWithSpecialistList con events a la propiedad patient._id
+        events = events.map((event: any) => {
+            let specialistAssigned = patientListWithSpecialistList.find((patient: any) => patient.patientId === event.patient._id.toString())
+            return {
+                ...event._doc,
+                patient: {
+                    ...event.patient._doc,
+                    specialistAssigned: specialistAssigned?.specialistAssigned
+                }
+            }
+        })
 
         return NextResponse.json(events)
 

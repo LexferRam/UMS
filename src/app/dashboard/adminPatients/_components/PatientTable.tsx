@@ -186,7 +186,7 @@ const PatientTable: FC<{
                         </div>
                         <p
                           color="blue-gray"
-                          className="font-normal text-clip text-gray-500"
+                          className="font-normal text-clip text-gray-500 text-sm"
                         >
                           {specialist.name}
                         </p>

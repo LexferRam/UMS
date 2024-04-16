@@ -17,6 +17,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
 import { ScrollArea } from '@/components/ui/ScrollArea';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { EVENTS_TYPE_COLORS } from '@/util/eventsType';
 
 interface IEventDetailsModal {
     open: boolean
@@ -63,11 +65,20 @@ const EventDetailsModal = ({
 
                 <ScrollArea className='max-h-[550px] sm:max-h-[500px]'>
                     {/* // ! DIALOG HEADER  */}
-                    <DialogHeader className='flex flex-row gap-4 items-center justify-start'>
+                    <DialogHeader className='flex flex-row gap-4 items-center justify-center mb-4'>
                         <div>
                             <DialogTitle>
                                 {!editEvent ? eventDetails?.title : null}
+                                <span
+                                    className="ml-2 inline-block rounded-full px-3 py-1 text-[10px] font-light text-white mr-2 mb-1"
+                                    style={{
+                                        backgroundColor: EVENTS_TYPE_COLORS[eventDetails?.eventType]
+                                    }}
+                                >
+                                    {eventDetails?.eventType}
+                                </span>
                             </DialogTitle>
+                            <hr className='w-full' />
                         </div>
 
                         {editEvent && (
@@ -91,36 +102,62 @@ const EventDetailsModal = ({
 
                     {/* // ! DETAILS OF THE EVENT  */}
                     {!editEvent && <>
-                        <div className='flex flex-col sm:flex-row'>
-                            <b className='mr-2'>Tipo de Evento: </b> <p>{eventDetails?.eventType}</p>
-                        </div>
 
-                        <div className='flex flex-col sm:flex-row'>
+                        <div className='flex flex-col sm:flex-row mt-1'>
                             <b className='mr-2'>Paciente: </b> <p className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer' onClick={() => {
                                 if(!eventDetails?.patient.reports.length) return
                                 router.push(`/dashboard/patientHistory/${eventDetails?.patient?._id}`, { scroll: false })
                             }}>{eventDetails?.patient.name + ' ' + eventDetails?.patient?.lastname}</p>
                         </div>
 
-                        <div className='flex flex-col sm:flex-row'>
-                            <b className='mr-2'>Fecha de Nacimiento: </b> <p>{moment(eventDetails?.patient?.dateOfBirth).format('LL')}</p>
+                        <div className='flex flex-col sm:flex-row mt-1'>
+                            <b className='mr-2'>Fecha de Nacimiento: </b> <p className='mr-2'>{moment(eventDetails?.patient?.dateOfBirth).format('LL')}</p>
+                            (<p className='text-sm'>{calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.years} años y {calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.months} meses</p>)
                         </div>
 
-                        <div className='flex flex-col sm:flex-row'>
-                            <b className='mr-2'>Edad: </b> <p>{calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.years} años y {calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.months} meses</p>
-                        </div>
-
-                        <div className='flex flex-col sm:flex-row'>
+                        <div className='flex flex-col sm:flex-row mt-1'>
                             <b className='mr-2'>Diagnóstico: </b> <p>{eventDetails?.patient?.diagnosis}</p>
                         </div>
 
-                        <div className='flex flex-col sm:flex-row'>
+                        <div className='flex flex-col sm:flex-row mt-1 mb-4'>
                             <b className='mr-2'>MC: </b> <p>{eventDetails?.patient?.historyDescription}</p>
                         </div>
 
-                        <div className='flex flex-col sm:flex-row'>
+                        <hr />
+
+                        <div className='flex flex-col sm:flex-row mt-4'>
                             <b className='mr-2'>Especialista asignado: </b> <p>{eventDetails?._asignTo.name}</p>
                         </div>
+
+                        <div className='flex flex-col mb-4'>
+                            <b className='my-2'>Especialistas asignados: </b>
+
+                            <div className='flex flex-col sm:flex-row gap-5'>
+                                {selectedDate?.patient?.specialistAssigned?.map((specialist: any) => {
+                                    return (
+                                        <div className='flex flex-col items-center justify-center gap-2' key={specialist._id}>
+                                            <Image
+                                                src={specialist.lastname}
+                                                className="rounded-full"
+                                                alt='logo_login'
+                                                width={48}
+                                                height={48}
+                                                priority
+                                            />
+                                            <p
+                                                color="blue-gray"
+                                                className="font-normal text-clip text-sm text-gray-500"
+                                            >
+                                                {specialist.name}
+                                            </p>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+
+                        <hr />
+
 
                         <div className='flex flex-col sm:flex-row'>
                             {(userInfo[0]?.role === 'admin') ? (
