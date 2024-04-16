@@ -96,8 +96,37 @@ export async function POST(req: NextRequest) {
                         }
                     ]
                 })
+                
+                let patientsIds = updatedUser[0].events.map((event: any) => ({patientId: event.patient._id.toString(), eventId: event._id.toString()}))
+                const specialistList = await User.find()
 
-            return NextResponse.json(updatedUser[0].events)
+                let patientListWithSpecialistList = patientsIds.map(({patientId, eventId}: any) => {
+                    let specialistAssigned = []
+                    for (let i = 0; i < specialistList.length; i++) {
+                        if (specialistList[i].asignedPatients.map((patient: any) => patient._id.toString()).includes(patientId)) {
+                            specialistAssigned.push(specialistList[i])
+                        }
+                    }
+                    return {
+                        eventId,
+                        patientId,
+                        specialistAssigned
+                    }
+                })
+                
+               let eventsWithPatientAndAssignedSpecialist = updatedUser[0].events = updatedUser[0].events.map((event: any) => {
+                    let specialistAssigned = patientListWithSpecialistList.find(({patientId, eventId}: any) => patientId === event.patient._id.toString() && eventId === event._id.toString())
+                    return {
+                        ...event._doc,
+                        patient: {
+                            ...event.patient._doc,
+                            specialistAssigned: specialistAssigned?.specialistAssigned
+                        }
+                    }
+                })
+
+
+            return NextResponse.json(eventsWithPatientAndAssignedSpecialist)
         }
 
         // ? PARA EL USUARIO ADMIN

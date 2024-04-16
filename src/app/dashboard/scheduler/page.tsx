@@ -272,7 +272,7 @@ const Scheduler = () => {
         timeZone='local'
         slotLabelFormat={{ hour: 'numeric', hour12: true }}
         slotMinTime='07:00:00'
-        slotMaxTime='20:00:00'
+        slotMaxTime='19:00:00'
         allDaySlot={false}
         views={{
           resourceTimeGridDay: {
