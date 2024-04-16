@@ -24,7 +24,7 @@ export default function Home() {
             <div className='absolute -top-10 -left-6 w-[100px] h-[100px] bg-emerald-200 rounded-full opacity-40' />
           </div>
 
-          <div className= "py-10 pb-16 px-6 rounded-2xl sm:px-10">
+          <div className= "bg-white py-10 pb-16 px-6 rounded-2xl sm:px-10">
             <div className="flex flex-col items-center sm:mx-auto sm:w-full sm:max-w-md">
               <Image
                 src='/logo9.png'
