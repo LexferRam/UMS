@@ -21,13 +21,17 @@ const AdminPatientsPage = () => {
 
   if (isLoadingUserInfo || isLoading) return <AdmiPageSkeleton />
 
+  let patientsIdsByUser = userInfo[0]?.asignedPatients.map((patient: any) => patient._id)
+
+  let patientListByUser = patientList.filter((patient: any) => patientsIdsByUser.includes(patient._id) && patient).filter((patient: any) => patient.isActive)
+
   return (
     <PatientTable
       tableHeaders={TABLE_HEAD}
       patients={
         userInfo[0]?.role === 'admin' ?
           patientList :
-          userInfo[0]?.asignedPatients.filter((patient: any) => patient.isActive)
+          patientListByUser
       }
       refetch={refetch}
     />

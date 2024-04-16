@@ -32,6 +32,7 @@ const PatientTable: FC<{
   patients: any,
   refetch?: any
 }> = ({ tableHeaders, patients, refetch }) => {
+  console.log(patients)
 
   const router = useRouter()
   const [userInfo] = useUserInfo()

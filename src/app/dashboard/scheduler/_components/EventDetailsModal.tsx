@@ -36,6 +36,9 @@ const EventDetailsModal = ({
     selectedDate
 }: IEventDetailsModal) => {
 
+    console.log(selectedDate)
+    console.log(eventDetails)
+
     const router = useRouter()
     const [editEvent, setEditEvent] = useState(false)
     const [cancelEvent, setCancelEvent] = useState(false)

@@ -6,6 +6,7 @@ import EventsTable from '../eventsTable/EventsTable';
 import { CalendarDaysIcon, ExclamationTriangleIcon, FolderIcon, UserIcon } from '@heroicons/react/24/outline';
 import ReportsTable from '../ReportsTable';
 import MissingReportsTable from '../MissingReportsTable';
+import { useQuery } from 'react-query';
 
 const DashboardTabs: FC<{
     userInfo: any,
@@ -14,8 +15,16 @@ const DashboardTabs: FC<{
     missingReportsWithDate: any,
     refecthFns: any
 }> = ({ userInfo, userReports, userEvent, missingReportsWithDate, refecthFns }) => {
-      
-     function isDateWithinRange(today: any, startDate: any, endDate: any, event:any) {
+    const { isLoading, error, data: patientList = [], refetch } = useQuery(['patientList'], () =>
+        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`).then(res =>
+          res.json()
+        ))
+
+    let patientsIdsByUser = userInfo[0]?.asignedPatients.map((patient: any) => patient._id)
+
+    let patientListByUser = patientList.filter((patient: any) => patientsIdsByUser.includes(patient._id) && patient).filter((patient: any) => patient.isActive)
+
+    function isDateWithinRange(today: any, startDate: any, endDate: any, event:any) {
         today = today.setHours(0,0,0,0).toLocaleString("es-VE")
         startDate = new Date(startDate).setHours(0,0,0,0).toLocaleString("es-VE")
         endDate = new Date(endDate).setHours(0,0,0,0).toLocaleString("es-VE")
@@ -65,7 +74,7 @@ const DashboardTabs: FC<{
         'patients' | 'events' | 'reports' | 'missingReports'>(userInfo[0]?.role !== 'admin' ? 'patients' : 'events')
 
     const ActiveCard = {
-        'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={userInfo[0]?.asignedPatients.filter((patient: any) =>  patient.isActive)} />,
+        'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={patientListByUser} />,
         'events': <EventsTable tableHeaders={userInfo[0]?.role !== 'admin' ? TABLE_HEAD_EVENTS : TABLE_HEAD_EVENTS_ADMIN} events={eventForToday(userEvent)} refecthFns={refecthFns} />,
         'reports': <ReportsTable tableHeaders={TABLE_HEAD_REPORTS_ADMIN} reports={userReports} />,
         'missingReports': <MissingReportsTable tableHeaders={TABLE_HEAD_MISSING_REPORTS} missingReportsWithDate={missingReportsWithDate} refecthFns={refecthFns} />
