@@ -112,7 +112,7 @@ const EventDetailsModal = ({
 
                         <div className='flex flex-col sm:flex-row mt-1'>
                             <b className='mr-2'>Fecha de Nacimiento: </b> <p className='mr-2'>{moment(eventDetails?.patient?.dateOfBirth).format('LL')}</p>
-                            (<p className='text-sm'>{calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.years} años y {calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.months} meses</p>)
+                            <p className='text-sm'>{calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.years} años y {calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.months} meses</p>
                         </div>
 
                         <div className='flex flex-col sm:flex-row mt-1'>
