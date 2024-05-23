@@ -123,3 +123,35 @@ export async function PUT(req: NextRequest) {
         console.log(error)
     }
 }
+
+export async function DELETE(req: NextRequest) {
+    try {
+
+        const eventId = req.url.split('/').at(-1)
+
+        await connectMongoDB()
+
+        const session: any = await getServerSession(nextAuth(authOptions))
+        const userFound: any = await User.find({ email: session?.user?.email })
+        let userRole = userFound[0].role;
+
+        if (userRole !== 'admin') {
+            return NextResponse.json({ msg: 'No permission' }, {
+                status: 401
+            })
+        }
+
+        let deletedEvent = await Event.findOneAndDelete({ _id: eventId })
+
+        // delete the event from the user in the property events
+        let user = await User.findOne({ _id: deletedEvent._asignTo })
+        user.events = user.events.filter((event: any) => event != eventId)
+        await user.save()
+
+        return NextResponse.json({ msg: 'Cita eliminada exitosamenete' })
+
+    } catch (error) {
+        console.log(error)
+        return NextResponse.json({ msg: 'Error eliminando Cita' })
+    }
+}

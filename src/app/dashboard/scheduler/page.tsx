@@ -1,7 +1,7 @@
 'use client'
 
 import moment from 'moment'
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import esLocale from '@fullcalendar/core/locales/es';
@@ -16,6 +16,7 @@ import EventDetailsModal from './_components/EventDetailsModal'
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import { getHoursBetweenToTimes } from '@/util/hours'
 import { EVENTS_TYPE_COLORS } from '@/util/eventsType'
+import { LoadingContext } from '@/context/LoadingProvider'
 moment.locale('es');
 
 const Scheduler = () => {
@@ -28,6 +29,7 @@ const Scheduler = () => {
   const { width } = useWindowDimensions();
   const [currentEvent, setCurrentEvent] = useState<any>()
   const [selectedDate, setSelectedDate] = useState<any>()
+  const { setLoading } = useContext(LoadingContext) as any
 
   const {
     isLoading: isLoadingSchedulerEvents,
@@ -112,6 +114,7 @@ const Scheduler = () => {
 
 
   const onEventAdded = async (e: any) => {
+    setLoading(true)
     let calendarApi = calendarRef?.current?.getApi()
 
     let startTime = new Intl.DateTimeFormat('es-VE', {
@@ -174,6 +177,7 @@ const Scheduler = () => {
       e.setActive(false)
       e.setSelectedDays(new Array(7).fill(false))
       e.setIsAddingEvent(false)
+      setLoading(false)
       return res
     }
   }
@@ -183,7 +187,6 @@ const Scheduler = () => {
 
   return (
     <div className='flex flex-col w-full lg:shadow-xl rounded py-8 sm:px-4 scrollbar-hide'>
-
       <EventDetailsModal
         open={openDetails}
         setOpen={setOpenDetails}

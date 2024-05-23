@@ -1,3 +1,5 @@
+'use client'
+
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/context/ThemeProvider'
@@ -6,12 +8,15 @@ import Providers from '@/context/Providers'
 import "react-datetime/css/react-datetime.css";
 import ReactQueryProvider from '@/context/ReactQueryProvider'
 import ThemeProviderMui from '@/context/ThemeProviderMUI';
+import { ModalProvider } from '@/context/NotificationDialogProvider'
+import { LoadingProvider } from '@/context/LoadingProvider'
+import { SnackbarProvider } from 'notistack'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: 'Un Mundo Sensioral',
-  description: 'Un Mundo Sensioral',
+const metadata: Metadata = {
+  title: 'Un Mundo Sensorial',
+  description: 'Un Mundo Sensorial',
   manifest: '/manifest.json',
   icons: {
     apple: '/icon-192x192.png',
@@ -46,9 +51,15 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Providers>
-              <ThemeProviderMui>
-                {children}
-              </ThemeProviderMui>
+              <LoadingProvider>
+                <ModalProvider>
+                  <ThemeProviderMui>
+                    <SnackbarProvider>
+                      {children}
+                    </SnackbarProvider>
+                  </ThemeProviderMui>
+                </ModalProvider>
+              </LoadingProvider>
             </Providers>
           </ThemeProvider>
         </ReactQueryProvider>

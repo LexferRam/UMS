@@ -1,8 +1,11 @@
 
+'use client'
+
 import React from 'react'
 import '@/styles/globals.css'
 import AsideMenuOptions from '@/components/sidebar/AsideMenuOptions'
 import { MainNav } from '@/components/sidebar/MainNav'
+import SimpleBackdrop from '@/components/ui/Backdrop'
 
 export default function RootLayout({
     children,
@@ -12,7 +15,8 @@ export default function RootLayout({
 
     return (
         <>
-            <MainNav/>
+            <MainNav />
+            <SimpleBackdrop />
             <div className='sm:w-full sm:mx-auto sm:px-[2rem] flex-1 items-start'>
                 <aside className='z-30 -ml-5 hidden w-full'>
                     <AsideMenuOptions />
