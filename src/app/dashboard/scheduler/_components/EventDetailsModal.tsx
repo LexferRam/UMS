@@ -23,6 +23,7 @@ import { ModalContext } from '@/context/NotificationDialogProvider';
 import NotificationDialog from './NotificationDialog';
 import { LoadingContext } from '@/context/LoadingProvider';
 import { useSnackbar } from 'notistack';
+import { Alert } from '@mui/material';
 
 interface IEventDetailsModal {
     open: boolean
@@ -58,7 +59,16 @@ const EventDetailsModal = ({
 
     const {openModal, setOpenModal, setDialogMessage, handleClickOpen, handleClose} = useContext(ModalContext) as any
     const { setLoading } = useContext(LoadingContext) as any
-    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+    const { enqueueSnackbar } = useSnackbar()
+
+    const canceledReportInSelectedDate = eventDetails?.reports?.map((report: any) => {
+        return {
+            ...report,
+            createdAt: new Date(report?.createdAt)?.toLocaleString("es-VE")?.split(',')[0]
+        }
+    }).filter((report: any) => report.createdAt === selectedDate?.date)[0]
+
+    console.log(canceledReportInSelectedDate)
 
     const deleteEvent = async () => {
         try {
@@ -78,7 +88,7 @@ const EventDetailsModal = ({
                     vertical: 'top',
                     horizontal: 'right',
                 },
-                autoHideDuration: 2000,
+                autoHideDuration: 3000,
                 key: 'error-delete-event'
             })
 
@@ -91,7 +101,7 @@ const EventDetailsModal = ({
                     vertical: 'top',
                     horizontal: 'right',
                 },
-                autoHideDuration: 2000,
+                autoHideDuration: 3000,
                 key: 'error-delete-event'
             })
         }
@@ -112,7 +122,7 @@ const EventDetailsModal = ({
 
                     <ScrollArea className='max-h-[550px] sm:max-h-[500px]'>
                         {/* // ! DIALOG HEADER  */}
-                        <DialogHeader className='flex flex-row gap-4 items-center justify-center mb-4'>
+                        <DialogHeader className='flex flex-col gap-4 items-center justify-center mb-4'>
                             <div>
                                 <DialogTitle>
                                     {!editEvent ? eventDetails?.title : null}
@@ -126,6 +136,13 @@ const EventDetailsModal = ({
                                     </span>
                                 </DialogTitle>
                                 <hr className='w-full' />
+                            </div>
+                            <div className='w-full'>
+                                {canceledReportInSelectedDate?.description?.length && canceledReportInSelectedDate?.isForEventCancel && (
+                                    <Alert severity="error" className='w-[100%]'>
+                                        {canceledReportInSelectedDate?.description}
+                                    </Alert>
+                                )}
                             </div>
 
                             {editEvent && (
@@ -351,12 +368,17 @@ const EventDetailsModal = ({
 const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchEvents, setOpen, setEditEvent, setCancelEvent }: any) => {
     const [isAddingReport, setIsAddingReport] = useState(false)
     const { register, handleSubmit, formState: { errors }, reset } = useForm()
+    const { enqueueSnackbar } = useSnackbar()
+    const { setLoading } = useContext(LoadingContext) as any
 
     let datePortion = dateOfMissingReport?.split('/')
     let formatDate = new Date(datePortion[2], datePortion[1] - 1, datePortion[0])
 
     const handleClick = async (data: any) => {
+       try {
+
         setIsAddingReport(true)
+        setLoading(true)
 
         let reportForCancelEvent = {
             description: data.description,
@@ -380,8 +402,32 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
             setEditEvent(false)
             setCancelEvent(false)
             setIsAddingReport(false)
+            enqueueSnackbar('Reporte agregado exitosamente', {
+                variant: 'success',
+                anchorOrigin: {
+                    vertical: 'top',
+                    horizontal: 'right',
+                },
+                autoHideDuration: 3000,
+                key: 'error-delete-event'
+            })
+            setLoading(false)
             return
         }
+       } catch (error) {
+        console.error(error)
+        setLoading(false)
+        setOpen(false)
+        enqueueSnackbar('Error agregando reporte', {
+            variant: 'error',
+            anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+            },
+            autoHideDuration: 3000,
+            key: 'error-delete-event'
+        })
+       }
     }
 
     return (
@@ -389,13 +435,14 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
             <form onSubmit={handleSubmit(handleClick)}>
                 <div className="grid gap-4 py-4">
                     <div className="flex flex-col justify-start items-center gap-4">
+                        <Alert severity="warning" className='w-[100%]'>En caso de cancelación, no enviar reporte. El administrador lo agregará.</Alert>
                         <Textarea
                             placeholder="Agregue el motivo de cancelación de éste evento"
                             defaultValue=""
                             {...register("description",
                                 {
                                     required: 'Ingrese la descripción del reporte',
-                                    min: { value: 4, message: "Agregue una descripción mas extensa" }
+                                    min: { value: 10, message: "Agregue una descripción mas extensa" }
                                 })}
                             className="h-[250px]"
                         />
