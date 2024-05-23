@@ -50,7 +50,7 @@ const Scheduler = () => {
     {
       keepPreviousData: true,
       refetchInterval: false,
-      // refetchOnWindowFocus: true
+      refetchOnWindowFocus: false,
     })
 
   const { data: dataUser = [] } = useQuery(['usersList'], () =>
