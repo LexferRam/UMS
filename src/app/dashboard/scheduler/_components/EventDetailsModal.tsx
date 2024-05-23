@@ -122,7 +122,7 @@ const EventDetailsModal = ({
 
                     <ScrollArea className='max-h-[550px] sm:max-h-[500px]'>
                         {/* // ! DIALOG HEADER  */}
-                        <DialogHeader className='flex flex-col gap-4 items-center justify-center mb-4'>
+                        <DialogHeader className='flex flex-row gap-4 items-center justify-center mb-4'>
                             <div>
                                 <DialogTitle>
                                     {!editEvent ? eventDetails?.title : null}
@@ -136,13 +136,13 @@ const EventDetailsModal = ({
                                     </span>
                                 </DialogTitle>
                                 <hr className='w-full' />
-                            </div>
-                            <div className='w-full'>
-                                {canceledReportInSelectedDate?.description?.length && canceledReportInSelectedDate?.isForEventCancel && (
-                                    <Alert severity="error" className='w-[100%]'>
-                                        {canceledReportInSelectedDate?.description}
-                                    </Alert>
-                                )}
+                                <div className='w-full mt-3'>
+                                    {canceledReportInSelectedDate?.description?.length && canceledReportInSelectedDate?.isForEventCancel && (
+                                        <Alert severity="error" className='w-[100%]'>
+                                            {canceledReportInSelectedDate?.description}
+                                        </Alert>
+                                    )}
+                                </div>
                             </div>
 
                             {editEvent && (
