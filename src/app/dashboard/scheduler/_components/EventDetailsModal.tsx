@@ -136,7 +136,7 @@ const EventDetailsModal = ({
                                     </span>
                                 </DialogTitle>
                                 <hr className='w-full' />
-                                <div className='w-full mt-3'>
+                                <div className='w-full mt-2'>
                                     {canceledReportInSelectedDate?.description?.length && canceledReportInSelectedDate?.isForEventCancel && (
                                         <Alert severity="error" className='w-[100%]'>
                                             {canceledReportInSelectedDate?.description}
