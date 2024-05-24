@@ -88,7 +88,7 @@ const EventDetailsModal = ({
                     vertical: 'top',
                     horizontal: 'right',
                 },
-                autoHideDuration: 3000,
+                autoHideDuration: 5000,
                 key: 'error-delete-event'
             })
 
@@ -101,7 +101,7 @@ const EventDetailsModal = ({
                     vertical: 'top',
                     horizontal: 'right',
                 },
-                autoHideDuration: 3000,
+                autoHideDuration: 5000,
                 key: 'error-delete-event'
             })
         }
@@ -408,7 +408,7 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
                     vertical: 'top',
                     horizontal: 'right',
                 },
-                autoHideDuration: 3000,
+                autoHideDuration: 5000,
                 key: 'error-delete-event'
             })
             setLoading(false)
@@ -424,7 +424,7 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
                 vertical: 'top',
                 horizontal: 'right',
             },
-            autoHideDuration: 3000,
+            autoHideDuration: 5000,
             key: 'error-delete-event'
         })
        }
