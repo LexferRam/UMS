@@ -136,13 +136,6 @@ const EventDetailsModal = ({
                                     </span>
                                 </DialogTitle>
                                 <hr className='w-full' />
-                                <div className='w-full mt-2'>
-                                    {canceledReportInSelectedDate?.description?.length && canceledReportInSelectedDate?.isForEventCancel && (
-                                        <Alert severity="error" className='w-[100%]'>
-                                            {canceledReportInSelectedDate?.description}
-                                        </Alert>
-                                    )}
-                                </div>
                             </div>
 
                             {editEvent && (
@@ -167,6 +160,14 @@ const EventDetailsModal = ({
 
                         {/* // ! DETAILS OF THE EVENT  */}
                         {!editEvent && <>
+
+                            <div className='w-full mt-2 mb-4'>
+                                {canceledReportInSelectedDate?.description?.length && canceledReportInSelectedDate?.isForEventCancel && (
+                                    <Alert severity="error" className='w-[100%]'>
+                                        {canceledReportInSelectedDate?.description}
+                                    </Alert>
+                                )}
+                            </div>
 
                             <div className='flex flex-col sm:flex-row mt-1'>
                                 <b className='mr-2'>Paciente: </b> <p className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer' onClick={() => {
