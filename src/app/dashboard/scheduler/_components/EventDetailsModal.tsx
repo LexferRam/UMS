@@ -23,7 +23,7 @@ import { ModalContext } from '@/context/NotificationDialogProvider';
 import NotificationDialog from './NotificationDialog';
 import { LoadingContext } from '@/context/LoadingProvider';
 import { useSnackbar } from 'notistack';
-import { Alert } from '@mui/material';
+import { Alert, IconButton } from '@mui/material';
 
 interface IEventDetailsModal {
     open: boolean
@@ -67,8 +67,6 @@ const EventDetailsModal = ({
             createdAt: new Date(report?.createdAt)?.toLocaleString("es-VE")?.split(',')[0]
         }
     }).filter((report: any) => report.createdAt === selectedDate?.date)[0]
-
-    console.log(canceledReportInSelectedDate)
 
     const deleteEvent = async () => {
         try {
@@ -164,7 +162,14 @@ const EventDetailsModal = ({
                             <div className='w-full mt-2 mb-4'>
                                 {canceledReportInSelectedDate?.description?.length && canceledReportInSelectedDate?.isForEventCancel && (
                                     <Alert severity="error" className='w-[100%]'>
-                                        {canceledReportInSelectedDate?.description}
+                                        <div className='flex flex-col'>
+                                            <p>
+                                            {canceledReportInSelectedDate?.description}
+                                            </p>
+                                            <IconButton aria-label="Example">
+                                                <FontAwesomeIcon icon={faEllipsisV} />
+                                            </IconButton>
+                                        </div>
                                     </Alert>
                                 )}
                             </div>
@@ -436,7 +441,9 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
             <form onSubmit={handleSubmit(handleClick)}>
                 <div className="grid gap-4 py-4">
                     <div className="flex flex-col justify-start items-center gap-4">
-                        <Alert severity="warning" className='w-[100%]'>En caso de cancelación, no enviar reporte. El administrador lo agregará.</Alert>
+                        <Alert severity="warning" className='w-[100%]'>
+                            En caso de cancelación, no enviar reporte. El administrador lo agregará.
+                        </Alert>
                         <Textarea
                             placeholder="Agregue el motivo de cancelación de éste evento"
                             defaultValue=""
