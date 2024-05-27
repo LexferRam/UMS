@@ -166,9 +166,9 @@ const EventDetailsModal = ({
                                             <p>
                                             {canceledReportInSelectedDate?.description}
                                             </p>
-                                            <IconButton aria-label="Example">
+                                            {/* <IconButton aria-label="Example">
                                                 <FontAwesomeIcon icon={faEllipsisV} />
-                                            </IconButton>
+                                            </IconButton> */}
                                         </div>
                                     </Alert>
                                 )}
