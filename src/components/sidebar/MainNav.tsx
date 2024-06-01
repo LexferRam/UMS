@@ -20,7 +20,7 @@ export function MainNav({
     className,
     ...props
 }: React.HTMLAttributes<HTMLElement>) {
-    const [userInfo] = useUserInfo()
+    const [userInfo, isLoadingUserInfo] = useUserInfo()
     const [open, setOpen] = useState(false)
 
     const openDrawer = () => setOpen(true);
@@ -47,21 +47,44 @@ export function MainNav({
                         </Link>
                         <div className="flex items-center gap-4 ml-6">
                             <div>
-                                <Typography placeholder='' variant="h6">{userInfo[0]?.name || ''}</Typography>
-                                <Typography placeholder='' variant="small" color="gray" className="font-normal text-gray-500">
-                                    {userInfo[0]?.role === 'admin' ? 'Administrador' : 'Terapeuta'}
-                                </Typography>
+                                {isLoadingUserInfo ? (
+                                    <div className="flex flex-col gap-1">
+                                        <div
+                                            className="h-[15px] w-[100px] rounded bg-gray-300"
+                                        >
+                                            &nbsp;
+                                        </div>
+                                        <div
+                                            className="h-[15px] w-[100px] rounded bg-gray-300"
+                                        >
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <Typography placeholder='' variant="h6">{userInfo[0]?.name || ''}</Typography>
+                                        <Typography placeholder='' variant="small" color="gray" className="font-normal text-gray-500">
+                                            {userInfo[0]?.role === 'admin' ? 'Administrador' : 'Terapeuta'}
+                                        </Typography>
+                                    </>
+                                )}
+
                             </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-5">
 
-                        <Image
-                            src={userInfo[0]?.lastname || ''} 
-                            alt='' height={50} 
-                            width={50} 
-                            className='hidden sm:block rounded-full cursor-pointer mr-2' 
-                        />
+                        {isLoadingUserInfo ? (
+                            <div className="w-[50px] h-[50px] rounded-full bg-gray-300 animate-pulse"></div>
+                        ) : (
+                            <Image
+                                src={userInfo[0]?.lastname || ''}
+                                alt=''
+                                height={50}
+                                width={50}
+                                className='hidden sm:block rounded-full cursor-pointer mr-2'
+                            />
+                        )}
 
                         <div>
                             <Button
