@@ -23,7 +23,8 @@ import { ModalContext } from '@/context/NotificationDialogProvider';
 import NotificationDialog from './NotificationDialog';
 import { LoadingContext } from '@/context/LoadingProvider';
 import { useSnackbar } from 'notistack';
-import { Alert, IconButton } from '@mui/material';
+import { Alert, IconButton, Tooltip } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface IEventDetailsModal {
     open: boolean
@@ -52,12 +53,12 @@ const EventDetailsModal = ({
     const dateParts = selectedDate?.date.split("/")
 
     const year = dateParts && parseInt(dateParts[2], 10);
-    const month = dateParts && parseInt(dateParts[1], 10) - 1; 
+    const month = dateParts && parseInt(dateParts[1], 10) - 1;
     const day = dateParts && parseInt(dateParts[0], 10);
 
     const newEndDate = dateParts && new Date(year, month, day);
 
-    const {openModal, setOpenModal, setDialogMessage, handleClickOpen, handleClose} = useContext(ModalContext) as any
+    const { openModal, setOpenModal, setDialogMessage, handleClickOpen, handleClose } = useContext(ModalContext) as any
     const { setLoading } = useContext(LoadingContext) as any
     const { enqueueSnackbar } = useSnackbar()
 
@@ -107,7 +108,7 @@ const EventDetailsModal = ({
 
     return (
         <>
-            <NotificationDialog handleDeleteAction={deleteEvent}/>
+            <NotificationDialog handleDeleteAction={deleteEvent} />
             <Dialog
                 open={open}
                 onOpenChange={() => {
@@ -159,18 +160,23 @@ const EventDetailsModal = ({
                         {/* // ! DETAILS OF THE EVENT  */}
                         {!editEvent && <>
 
-                            <div className='w-full mt-2 mb-4'>
+                            <div className='mt-2 mb-4 w-[100%] flex'>
                                 {canceledReportInSelectedDate?.description?.length && canceledReportInSelectedDate?.isForEventCancel && (
-                                    <Alert severity="error" className='w-[100%]'>
-                                        <div className='flex flex-col'>
-                                            <p>
-                                            {canceledReportInSelectedDate?.description}
-                                            </p>
-                                            {/* <IconButton aria-label="Example">
-                                                <FontAwesomeIcon icon={faEllipsisV} />
-                                            </IconButton> */}
-                                        </div>
-                                    </Alert>
+                                    <>
+                                        <Tooltip title="Borrar reporte">
+                                            <IconButton>
+                                                <DeleteIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Alert severity="error" className='w-[100%]'>
+                                            <div className='w-[100%] flex flex-row justify-around'>
+                                                <p>
+                                                    {canceledReportInSelectedDate?.description}
+                                                </p>
+                                            </div>
+                                        </Alert>
+
+                                    </>
                                 )}
                             </div>
 
@@ -381,35 +387,51 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
     let formatDate = new Date(datePortion[2], datePortion[1] - 1, datePortion[0])
 
     const handleClick = async (data: any) => {
-       try {
+        try {
 
-        setIsAddingReport(true)
-        setLoading(true)
+            setIsAddingReport(true)
+            setLoading(true)
 
-        let reportForCancelEvent = {
-            description: data.description,
-            associatedEvent: eventId,
-            patient: patient._id,
-            createdAt: formatDate,
-            isForEventCancel: true
-        }
+            let reportForCancelEvent = {
+                description: data.description,
+                associatedEvent: eventId,
+                patient: patient._id,
+                createdAt: formatDate,
+                isForEventCancel: true
+            }
 
-        const respAddReport = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(reportForCancelEvent)
-        })
-        if (respAddReport.ok) {
-            await refetchEvents(),
-            reset();
+            const respAddReport = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(reportForCancelEvent)
+            })
+            if (respAddReport.ok) {
+                await refetchEvents(),
+                    reset();
+                setOpen(false)
+                setEditEvent(false)
+                setCancelEvent(false)
+                setIsAddingReport(false)
+                enqueueSnackbar('Evento cancelado exitosamente', {
+                    variant: 'success',
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'right',
+                    },
+                    autoHideDuration: 5000,
+                    key: 'error-delete-event'
+                })
+                setLoading(false)
+                return
+            }
+        } catch (error) {
+            console.error(error)
+            setLoading(false)
             setOpen(false)
-            setEditEvent(false)
-            setCancelEvent(false)
-            setIsAddingReport(false)
-            enqueueSnackbar('Reporte agregado exitosamente', {
-                variant: 'success',
+            enqueueSnackbar('Error cancelando evento', {
+                variant: 'error',
                 anchorOrigin: {
                     vertical: 'top',
                     horizontal: 'right',
@@ -417,23 +439,7 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
                 autoHideDuration: 5000,
                 key: 'error-delete-event'
             })
-            setLoading(false)
-            return
         }
-       } catch (error) {
-        console.error(error)
-        setLoading(false)
-        setOpen(false)
-        enqueueSnackbar('Error agregando reporte', {
-            variant: 'error',
-            anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'right',
-            },
-            autoHideDuration: 5000,
-            key: 'error-delete-event'
-        })
-       }
     }
 
     return (
@@ -461,7 +467,7 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
                         type="submit"
                         disabled={isAddingReport}
                     >
-                        {isAddingReport ? "Guardando..." : "Guardar reporte" }
+                        {isAddingReport ? "Guardando..." : "Cancelar evento"}
                     </button>
                 </DialogFooter>
             </form>
