@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useState } from "react"
+import { FC, useContext, useState } from "react"
 import {
     Dialog,
     DialogContent,
@@ -12,6 +12,8 @@ import { Textarea } from "../ui/textarea"
 import { PlusIcon } from "@heroicons/react/24/outline"
 import { useForm } from "react-hook-form"
 import { Alert } from "@mui/material"
+import { LoadingContext } from "@/context/LoadingProvider"
+import { useSnackbar } from "notistack"
 
 export const AddReportModal: FC<{ 
     eventId: string, 
@@ -22,45 +24,72 @@ export const AddReportModal: FC<{
 
     const [open, setOpen] = useState(false);
     const [isAddingReport, setIsAddingReport] = useState(false)
+    const { setLoading } = useContext(LoadingContext) as any
+    const { enqueueSnackbar } = useSnackbar()
     const { register, handleSubmit, formState: { errors }, reset} = useForm()
 
     let datePortion = dateOfMissingReport.split(',')[0].split('/')
     let formatDate = new Date(datePortion[2], datePortion[1]-1, datePortion[0])
     
     const handleSubmitReport = async (data: any) => {
-        setIsAddingReport(true)
+        try {
+            setIsAddingReport(true)
+            setLoading(true)
 
-        let missingReportObject = {
-            description: data.description,
-            associatedEvent: eventId,
-            patient: patient._id,
-            createdAt: formatDate,
-            isForEventCancel: false
-        }
+            let missingReportObject = {
+                description: data.description,
+                associatedEvent: eventId,
+                patient: patient._id,
+                createdAt: formatDate,
+                isForEventCancel: false
+            }
 
-        let reportObject = {
-            description: data.description,
-            associatedEvent: eventId,
-            patient: patient._id,
-            isForEventCancel: false
-        }
+            let reportObject = {
+                description: data.description,
+                associatedEvent: eventId,
+                patient: patient._id,
+                isForEventCancel: false
+            }
 
-        let reportToDB = dateOfMissingReport ? missingReportObject : reportObject
-        
-        const respAddReport = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(reportToDB)
-        })
-        if (respAddReport.ok) {
-            setOpen(false)
-            await refecthFns.refetchUserInfo(),
-            await refecthFns.refetchUserEvent(),
-            reset();
-            setIsAddingReport(false)
-            return
+            let reportToDB = dateOfMissingReport ? missingReportObject : reportObject
+
+            const respAddReport = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(reportToDB)
+            })
+            if (respAddReport.ok) {
+                setOpen(false)
+                await refecthFns.refetchUserInfo(),
+                    await refecthFns.refetchUserEvent(),
+                    reset();
+                setIsAddingReport(false)
+                setLoading(false)
+                enqueueSnackbar('Reporte agregado exitosamente!', {
+                    variant: 'success',
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'right',
+                    },
+                    autoHideDuration: 5000,
+                    key: 'error-delete-event'
+                })
+                return
+            }
+        } catch (error) {
+            console.error(error)
+            setLoading(false)
+            enqueueSnackbar('Error agregando reporte', {
+                variant: 'error',
+                anchorOrigin: {
+                    vertical: 'top',
+                    horizontal: 'right',
+                },
+                autoHideDuration: 5000,
+                key: 'error-delete-event'
+            })
         }
     }
 

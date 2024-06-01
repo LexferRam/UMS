@@ -17,6 +17,7 @@ import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import { getHoursBetweenToTimes } from '@/util/hours'
 import { EVENTS_TYPE_COLORS } from '@/util/eventsType'
 import { LoadingContext } from '@/context/LoadingProvider'
+import { useSnackbar } from 'notistack'
 moment.locale('es');
 
 const Scheduler = () => {
@@ -30,6 +31,7 @@ const Scheduler = () => {
   const [currentEvent, setCurrentEvent] = useState<any>()
   const [selectedDate, setSelectedDate] = useState<any>()
   const { setLoading } = useContext(LoadingContext) as any
+  const { enqueueSnackbar } = useSnackbar()
 
   const {
     isLoading: isLoadingSchedulerEvents,
@@ -114,71 +116,93 @@ const Scheduler = () => {
 
 
   const onEventAdded = async (e: any) => {
-    setLoading(true)
-    let calendarApi = calendarRef?.current?.getApi()
-
-    let startTime = new Intl.DateTimeFormat('es-VE', {
-      hour: 'numeric',
-      minute: "numeric",
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Use your local time zone
-      hour12: false // Use 24-hour format by default
-    }).format(new Date(e?.start))
-
-    let endTime = new Intl.DateTimeFormat('es-VE', {
-      hour: 'numeric',
-      minute: "numeric",
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Use your local time zone
-      hour12: false // Use 24-hour format by default
-    }).format(new Date(e?.end))
-
-    let newEvent = {
-      title: e?.title,
-      _asignTo: e.selectedUserValue,
-      patient: e.selectedPatientValue,
-      color: EVENTS_TYPE_COLORS[e.eventType],
-      eventType: e.eventType,
-      duration: { minutes: getHoursBetweenToTimes(startTime, endTime) },
-      rrule: {
-        freq: 'daily', // monthly  yearly  daily  weekly
-        byweekday: e.selectedDaysArr,
-        dtstart: new Date(e?.start).toISOString(),//moment(e.start).toDate(),
-        until: new Date(e?.end).toISOString(), //moment(e.end).toDate()
-      },
-      allDay: false,
-    }
-
-    let { rrule, ...restnewEvent } = newEvent
-
-    let newEventToDB = {
-      ...restnewEvent,
-      title: e?.title,
-      start: newEvent.rrule.dtstart,
-      end: newEvent.rrule.until,
-      freq: newEvent.rrule.freq,
-      byweekday: newEvent.rrule.byweekday,
-      reports: [],
-      _creator: userInfo[0]._id
-    };
-
-    await calendarApi.addEvent(newEvent)
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(newEventToDB)
-    })
-
-    if (res.ok) {
-      e.setOpen(false)
-      await refetchEvents()
-      e.reset()
-      e.setActive(false)
-      e.setSelectedDays(new Array(7).fill(false))
-      e.setIsAddingEvent(false)
+    try {
+      setLoading(true)
+      let calendarApi = calendarRef?.current?.getApi()
+  
+      let startTime = new Intl.DateTimeFormat('es-VE', {
+        hour: 'numeric',
+        minute: "numeric",
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Use your local time zone
+        hour12: false // Use 24-hour format by default
+      }).format(new Date(e?.start))
+  
+      let endTime = new Intl.DateTimeFormat('es-VE', {
+        hour: 'numeric',
+        minute: "numeric",
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Use your local time zone
+        hour12: false // Use 24-hour format by default
+      }).format(new Date(e?.end))
+  
+      let newEvent = {
+        title: e?.title,
+        _asignTo: e.selectedUserValue,
+        patient: e.selectedPatientValue,
+        color: EVENTS_TYPE_COLORS[e.eventType],
+        eventType: e.eventType,
+        duration: { minutes: getHoursBetweenToTimes(startTime, endTime) },
+        rrule: {
+          freq: 'daily', // monthly  yearly  daily  weekly
+          byweekday: e.selectedDaysArr,
+          dtstart: new Date(e?.start).toISOString(),//moment(e.start).toDate(),
+          until: new Date(e?.end).toISOString(), //moment(e.end).toDate()
+        },
+        allDay: false,
+      }
+  
+      let { rrule, ...restnewEvent } = newEvent
+  
+      let newEventToDB = {
+        ...restnewEvent,
+        title: e?.title,
+        start: newEvent.rrule.dtstart,
+        end: newEvent.rrule.until,
+        freq: newEvent.rrule.freq,
+        byweekday: newEvent.rrule.byweekday,
+        reports: [],
+        _creator: userInfo[0]._id
+      };
+  
+      await calendarApi.addEvent(newEvent)
+  
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newEventToDB)
+      })
+  
+      if (res.ok) {
+        e.setOpen(false)
+        await refetchEvents()
+        e.reset()
+        e.setActive(false)
+        e.setSelectedDays(new Array(7).fill(false))
+        e.setIsAddingEvent(false)
+        setLoading(false)
+        enqueueSnackbar('Cita creada exitosamente!', {
+          variant: 'success',
+          anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right',
+          },
+          autoHideDuration: 5000,
+          key: 'error-delete-event'
+      })
+        return res
+      }
+    } catch (error) {
       setLoading(false)
-      return res
+      enqueueSnackbar('Error creando cita', {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+        autoHideDuration: 5000,
+        key: 'error-delete-event'
+      })
     }
   }
 
