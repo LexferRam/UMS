@@ -441,9 +441,6 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
             <form onSubmit={handleSubmit(handleClick)}>
                 <div className="grid gap-4 py-4">
                     <div className="flex flex-col justify-start items-center gap-4">
-                        <Alert severity="warning" className='w-[100%]'>
-                            En caso de cancelación, no enviar reporte. El administrador lo agregará.
-                        </Alert>
                         <Textarea
                             placeholder="Agregue el motivo de cancelación de éste evento"
                             defaultValue=""

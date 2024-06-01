@@ -11,6 +11,7 @@ import {
 import { Textarea } from "../ui/textarea"
 import { PlusIcon } from "@heroicons/react/24/outline"
 import { useForm } from "react-hook-form"
+import { Alert } from "@mui/material"
 
 export const AddReportModal: FC<{ 
     eventId: string, 
@@ -78,8 +79,11 @@ export const AddReportModal: FC<{
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit(handleSubmitReport)}>
-                    <div className="grid gap-4 py-4">
+                    <div className="grid gap-2 pb-4">
                         <div className="flex flex-col justify-start items-center gap-4">
+                            <Alert severity="warning" className='w-[100%]'>
+                                En caso de cancelación de la cita, no enviar reporte. El administrador lo agregará.
+                            </Alert>
                             <Textarea
                                 placeholder="Agregue la descripción de su reporte"
                                 defaultValue=""
