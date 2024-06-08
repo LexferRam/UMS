@@ -1,6 +1,6 @@
 'use client'
 
-import React, { FC, useState } from 'react'
+import React, { FC, useContext, useState } from 'react'
 import {
     Timeline,
     TimelineItem,
@@ -17,15 +17,30 @@ import TimelineSkeleton from './TimelineSkeleton';
 import 'moment/locale/es'
 import { EVENTS_TYPE_COLORS } from '@/util/eventsType';
 import { ChipWithAvatar } from './AvatarChip';
+import { IconButton, Tooltip } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useUserInfo } from '@/hooks';
+import { LoadingContext } from '@/context/LoadingProvider';
+import { useSnackbar } from 'notistack';
+import NotificationDialog from '../../scheduler/_components/NotificationDialog';
+import { ModalContext } from '@/context/NotificationDialogProvider';
 moment.locale('es');
 
 const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
     patientId
 }) => {
 
-    const [therapistSelected, setTherapistSelected] = useState('')
+    const [userInfo] = useUserInfo()
+    const { setLoading } = useContext(LoadingContext) as any
+    const { enqueueSnackbar } = useSnackbar()
 
-    const { isLoading, error, data: patientInfo = [] } = useQuery(['patientInfo', [patientId]], () =>
+    const [therapistSelected, setTherapistSelected] = useState('')
+    const { openModal, setOpenModal, setDialogMessage, handleClickOpen, handleClose } = useContext(ModalContext) as any
+
+    const [associatedEventId, setAssociatedEventId] = useState('')
+    const [reportId, setReportId] = useState('')
+
+    const { isLoading, error, data: patientInfo = [], refetch } = useQuery(['patientInfo', [patientId]], () =>
         fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports/reportId?patientId=${patientId}`).then(res =>
             res.json()
         )
@@ -51,6 +66,53 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                 return 0; // Equal dates
             }
         });
+    }
+
+    const deleteReport = async (eventId: string, reportId: string) => { //associatedEvent._id
+        try {
+            console.log(eventId)
+            console.log(reportId)
+            setLoading(true)
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports/reportId?eventId=${eventId}&reportId=${reportId}`, {
+                method: 'DELETE',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    eventId,
+                    reportId
+                })
+            })
+
+            if (!resp.ok) {
+                throw new Error('Error eliminando reporte')
+            }
+
+            await refetch()
+            setLoading(false)
+            enqueueSnackbar('Reporte eliminado exitosamente', {
+                variant: 'success',
+                anchorOrigin: {
+                    vertical: 'top',
+                    horizontal: 'right',
+                },
+                autoHideDuration: 5000,
+                key: 'error-delete-event'
+            })
+
+        } catch (error) {
+            console.log(error)
+            setLoading(false)
+            enqueueSnackbar('Error eliminando reporte', {
+                variant: 'error',
+                anchorOrigin: {
+                    vertical: 'top',
+                    horizontal: 'right',
+                },
+                autoHideDuration: 5000,
+                key: 'error-delete-event'
+            })
+        }
     }
 
     if (isLoading) return (
@@ -83,6 +145,8 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
 
     return (
         <>
+            <NotificationDialog handleDeleteAction={() => deleteReport(associatedEventId, reportId)} />
+
             <div className='flex gap-2 ml-2 mt-2 sm:ml-0'>
                 <h2 className='font-bold text-gray-600'>
                     Historia médica:
@@ -97,7 +161,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                     Terapeutas:
                 </h4>
                 <div className='flex gap-4 flex-wrap'>
-                    <div  onClick={() => setTherapistSelected('')}>
+                    <div onClick={() => setTherapistSelected('')}>
                         <ChipWithAvatar
                             name='Todos'
                             profilePicture=''
@@ -137,59 +201,78 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                             therapistSelected === '' ?
                                 patientInfo[0]?.reports :
                                 patientInfo[0]?.reports.filter((item: any) => item.createdBy._id === therapistSelected)
-                        )?.map(({ createdBy, description, _id, createdAt, isForEventCancel, associatedEvent }: any, index: number) => (
-                            <TimelineItem key={_id}>
+                        )?.map(({ createdBy, description, _id, createdAt, isForEventCancel, associatedEvent, ...rest }: any, index: number) => {
 
-                                {index > 0 && (
-                                    <TimelineConnector  >
-                                        <span className="w-0.5 h-full bg-gray-200"></span>
-                                    </TimelineConnector>
-                                )}
+                            console.log(associatedEvent)
 
-                                <TimelineHeader>
-                                    <TimelineIcon className="p-0">
-                                        <Avatar placeholder='' size="md" src={createdBy?.lastname} alt={createdBy?.name} withBorder />
-                                    </TimelineIcon>
-                                    <div className="flex flex-col">
-                                        <div color="blue-gray">
-                                            {createdBy?.name}
-                                        </div>
-                                        <p className="font-extralight text-sm text-gray-600">
-                                            <span className='font-light'>
-                                                {moment(createdAt).format('LL')}
-                                            </span>
-                                            <span
-                                                className="ml-2 inline-block rounded-full px-3 py-1 text-[10px] font-light text-white mr-2 mb-2"
-                                                style={{
-                                                    backgroundColor: EVENTS_TYPE_COLORS[associatedEvent?.eventType]
-                                                }}
-                                            >
-                                                {associatedEvent?.eventType}
-                                            </span>
-
-                                            {isForEventCancel && (
+                            return (
+                                <TimelineItem key={_id}>
+    
+                                    {index > 0 && (
+                                        <TimelineConnector  >
+                                            <span className="w-0.5 h-full bg-gray-200"></span>
+                                        </TimelineConnector>
+                                    )}
+    
+                                    <TimelineHeader>
+                                        <TimelineIcon className="p-0">
+                                            <Avatar placeholder='' size="md" src={createdBy?.lastname} alt={createdBy?.name} withBorder />
+                                        </TimelineIcon>
+                                        <div className="flex flex-col">
+                                            <div color="blue-gray">
+                                                {/* !TODO: validar solo para admin */}
+                                                {(userInfo[0]?.role === 'admin') ? (
+                                                    <Tooltip title="Borrar reporte">
+                                                        <IconButton onClick={() => {
+                                                            setOpenModal(true)
+                                                            setDialogMessage('¿Estás seguro de eliminar este Reporte?')
+                                                            setAssociatedEventId(associatedEvent?._id)
+                                                            setReportId(_id)
+                                                        }}
+                                                        >
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                ) : null}
+                                                {createdBy?.name}
+                                            </div>
+                                            <p className="font-extralight text-sm text-gray-600">
+                                                <span className='font-light'>
+                                                    {moment(createdAt).format('LL')}
+                                                </span>
                                                 <span
                                                     className="ml-2 inline-block rounded-full px-3 py-1 text-[10px] font-light text-white mr-2 mb-2"
                                                     style={{
-                                                        backgroundColor: '#e64451'
+                                                        backgroundColor: EVENTS_TYPE_COLORS[associatedEvent?.eventType]
                                                     }}
                                                 >
-                                                    Cita cancelada
+                                                    {associatedEvent?.eventType}
                                                 </span>
-                                            )}
-
+    
+                                                {isForEventCancel && (
+                                                    <span
+                                                        className="ml-2 inline-block rounded-full px-3 py-1 text-[10px] font-light text-white mr-2 mb-2"
+                                                        style={{
+                                                            backgroundColor: '#e64451'
+                                                        }}
+                                                    >
+                                                        Cita cancelada
+                                                    </span>
+                                                )}
+    
+                                            </p>
+                                        </div>
+                                    </TimelineHeader>
+    
+                                    <TimelineBody className="pb-8">
+                                        <p color="gary" className="font-normal text-gray-600 italic ml-4">
+                                            {description}
                                         </p>
-                                    </div>
-                                </TimelineHeader>
-
-                                <TimelineBody className="pb-8">
-                                    <p color="gary" className="font-normal text-gray-600 italic ml-4">
-                                        {description}
-                                    </p>
-                                </TimelineBody>
-
-                            </TimelineItem>
-                        ))}
+                                    </TimelineBody>
+    
+                                </TimelineItem>
+                            )
+                        })}
                     </Timeline>
 
                 </Card>

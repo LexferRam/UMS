@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from "next/server"
 import models from 'mongoose';
 import { authOptions } from "@/util/authOptions"
 import Event from "@/models/event"
+import mongoose from "mongoose"
 
 // ? get patient by id
 export async function GET(req: NextRequest) {
@@ -40,6 +41,40 @@ export async function GET(req: NextRequest) {
                 }
             })
         return NextResponse.json(patientFound, { status: 201 })
+
+    } catch (error) {
+        console.log(error)
+        if (error instanceof Error) {
+            return NextResponse.json({
+                message: error.message
+            }, {
+                status: 400
+            })
+        }
+    }
+}
+
+export async function DELETE(req: NextRequest) {
+    try {
+        const session: any = await getServerSession(nextAuth(authOptions))
+        if (!session) return NextResponse.json({ msg: "Not authorized " }, { status: 401 })
+
+        const { reportId, eventId } = await req.json()
+
+        await connectMongoDB()
+
+        // delete report from event
+        let event: any = await Event.find({ _id: eventId })
+        event[0].reports = await event[0].reports.filter((report: any) => report != new mongoose.Types.ObjectId(reportId))
+
+        // delete report from patient
+        let patient: any = await Patient.find({ _id: event[0].patient })
+        patient[0].reports = patient[0].reports.filter((report: any) => report != new mongoose.Types.ObjectId(reportId))
+
+        // delete report
+        await Report.findByIdAndDelete(reportId)
+
+        return NextResponse.json({ msg: 'Report deleted' }, { status: 201 })
 
     } catch (error) {
         console.log(error)

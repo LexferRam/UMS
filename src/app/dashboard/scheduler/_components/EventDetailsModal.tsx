@@ -23,8 +23,8 @@ import { ModalContext } from '@/context/NotificationDialogProvider';
 import NotificationDialog from './NotificationDialog';
 import { LoadingContext } from '@/context/LoadingProvider';
 import { useSnackbar } from 'notistack';
-import { Alert, IconButton, Tooltip } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Alert } from '@mui/material';
+
 
 interface IEventDetailsModal {
     open: boolean
@@ -163,11 +163,6 @@ const EventDetailsModal = ({
                             <div className='mt-2 mb-4 w-[100%] flex'>
                                 {canceledReportInSelectedDate?.description?.length && canceledReportInSelectedDate?.isForEventCancel && (
                                     <>
-                                        <Tooltip title="Borrar reporte">
-                                            <IconButton>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Tooltip>
                                         <Alert severity="error" className='w-[100%]'>
                                             <div className='w-[100%] flex flex-row justify-around'>
                                                 <p>
@@ -175,7 +170,6 @@ const EventDetailsModal = ({
                                                 </p>
                                             </div>
                                         </Alert>
-
                                     </>
                                 )}
                             </div>
