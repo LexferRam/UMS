@@ -42,3 +42,17 @@ export function getHourFromFormattedDate(formattedDate: any) {
     return null;
   }
 }
+
+// the patient have no more than 1 year
+export function calculateAge(dateOfBirth: any): number | null {
+  const now = new Date();
+  const diff = now.getTime() - dateOfBirth.getTime();
+  const ageInMonths = Math.floor(diff / (1000 * 60 * 60 * 24 * 30.44));
+
+  if (ageInMonths <= 12) {
+      return ageInMonths;
+  } else {
+      return null;
+  }
+}
+

@@ -10,7 +10,7 @@ import { EditPatientModal } from './EditPatientModal'
 import moment from 'moment'
 import 'moment/locale/es'
 import Image from 'next/image'
-import { calculateAgeWithMonths } from '@/util/dateOfBirth'
+import { calculateAge, calculateAgeWithMonths } from '@/util/dateOfBirth'
 import MaterialTable, { Column } from '@material-table/core';
 moment.locale('es');
 
@@ -66,9 +66,18 @@ const PatientTable: FC<{
       title: "Edad",
       field: "dateOfBirth",
       render: rowData => {
-        return (<>
-          {moment(rowData.dateOfBirth).format('L')}  <br />
-          {`(${calculateAgeWithMonths(rowData.dateOfBirth)?.years} años y ${calculateAgeWithMonths(rowData.dateOfBirth)?.months} meses) `}</>)
+        return (
+          <>
+            {moment(rowData.dateOfBirth).format('L')}  <br />
+            {
+              // calculate age if the patient doents have more than 1 year
+              calculateAgeWithMonths(rowData.dateOfBirth)?.years === 0 ?
+                `(${calculateAge(new Date(rowData.dateOfBirth))} meses) `
+                :
+                `(${calculateAgeWithMonths(rowData.dateOfBirth)?.years} años y ${calculateAgeWithMonths(rowData.dateOfBirth)?.months} meses)`
+            }
+          </>
+        )
       }
     },
     { title: "Diagnóstico", field: "diagnosis" },
