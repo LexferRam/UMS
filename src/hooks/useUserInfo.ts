@@ -12,7 +12,12 @@ export const useUserInfo = () => {
   } = useQuery(['userInfo'], () =>
     fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/user`).then(res =>
       res.json()
-    ))
+    ),
+    {
+      keepPreviousData: true,
+      refetchInterval: false,
+      refetchOnWindowFocus: false,
+    })
 
   return [
     userInfo,
