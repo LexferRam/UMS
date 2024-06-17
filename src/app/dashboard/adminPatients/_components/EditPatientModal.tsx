@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { PencilSquareIcon } from "@heroicons/react/24/outline"
+import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Radio, RadioGroup } from "@mui/material"
 import { Label } from "@radix-ui/react-dropdown-menu"
 import { useEffect, useState } from "react"
 import { useForm } from 'react-hook-form'
@@ -94,6 +95,7 @@ export function EditPatientModal({ refetch, patient }: IAddPatientModal) {
                             <Input
                                 type="text"
                                 defaultValue=""
+                                autoFocus={false}
                                 {...register("name",
                                     {
                                         required: 'Ingrese el nombre',
@@ -158,10 +160,11 @@ export function EditPatientModal({ refetch, patient }: IAddPatientModal) {
                             </Label>
                             <Textarea
                                 defaultValue=""
+                                className="h-[180px]"
                                 {...register("historyDescription",
                                     {
                                         required: 'ingrese el motivo de consulta',
-                                        min: { value: 4, message: "The min length is 4 characters" }
+                                        min: { value: 10, message: "The min length is 10 characters" }
                                     })}
                             />
                             {errors.historyDescription && <p className="text-red-700">{JSON.stringify(errors?.historyDescription?.message)}</p>}

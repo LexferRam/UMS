@@ -167,34 +167,17 @@ const AdminUserPage = () => {
             })
             
           }
-          // else {
-          //   if (userEvent.byweekday.length == 0 && !arrDates2.includes(new Date(report.createdAt).toLocaleString("es-VE").split(',')[0])) {
-          //     arrDaysWithOutReports.push({
-          //       date: new Date(report.createdAt).toLocaleString("es-VE").split(',')[0],
-          //       hasReport: false,
-          //       userEventTitle: userEvent.title,
-          //       userEventId: userEvent._id,
-          //       _asignTo: userEvent._asignTo,
-          //       patient: userEvent.patient,
-          //       report: userEvent.reports,
-          //       byweekday: userEvent.byweekday
-          //     })
-          //   }
-          // }
-        // })
       }
-    // }
   })
 
   return (
     <DashboardTabs
       userInfo={userInfo}
-      userReports={[]}//{userReports}
+      userReports={[]}
       userEvent={userEvent}
       missingReportsWithDate={arrDaysWithOutReports}
       refecthFns={{
         refetchUserInfo,
-        // refetchReports,
         refetchUserEvent
       }}
     />
