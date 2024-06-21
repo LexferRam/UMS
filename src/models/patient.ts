@@ -25,7 +25,8 @@ const patientSchema = new Schema({
     isActive: {
         type: Boolean,
         default: true
-    }
+    },
+    readySpecialistList: [{ type: Schema.Types.ObjectId, ref: 'Specialist' }]
 },
     { timestamps: true }
 );

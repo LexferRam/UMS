@@ -1,7 +1,6 @@
 'use client'
 
 import { FC } from 'react'
-import Icon from '@mui/material/Icon';
 import { DocumentMagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { AddPatientModal } from './AddPatientModal'
@@ -14,7 +13,6 @@ import { calculateAge, calculateAgeWithMonths } from '@/util/dateOfBirth'
 import MaterialTable, { Column } from '@material-table/core';
 moment.locale('es');
 
-
 interface IPerson {
   _id: string;
   name: string;
@@ -25,6 +23,7 @@ interface IPerson {
   isActive: boolean;
   reports: any,
   specialistAssigned?: any
+  readySpecialistList?: any
 }
 
 const PatientTable: FC<{
@@ -32,7 +31,6 @@ const PatientTable: FC<{
   patients: any,
   refetch?: any
 }> = ({ tableHeaders, patients, refetch }) => {
-  console.log(patients)
 
   const router = useRouter()
   const [userInfo] = useUserInfo()
@@ -104,7 +102,8 @@ const PatientTable: FC<{
     {
       title: "Acciones",
       field: "isActive",
-      render: ({ _id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive, reports }) => {
+      render: ({ _id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive, reports, specialistAssigned, readySpecialistList
+      }) => {
 
         return (<>
           <div className="flex gap-2 justify-around">
@@ -135,7 +134,22 @@ const PatientTable: FC<{
               </div>
             )}
 
-            {userInfo[0]?.role === 'admin' && <EditPatientModal refetch={refetch} patient={{ _id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive }} />}
+            {userInfo[0]?.role === 'admin' && (
+              <EditPatientModal
+                refetch={refetch}
+                patient={{
+                  _id,
+                  name,
+                  lastname,
+                  dateOfBirth,
+                  diagnosis,
+                  historyDescription,
+                  isActive,
+                  specialistAssigned,
+                  readySpecialistList
+                }}
+              />
+            )}
           </div>
         </>
         )
@@ -152,7 +166,8 @@ const PatientTable: FC<{
     historyDescription,
     isActive,
     reports,
-    specialistAssigned
+    specialistAssigned,
+    readySpecialistList
   }: any) => ({
     _id: _id,
     name: name,
@@ -162,7 +177,8 @@ const PatientTable: FC<{
     historyDescription: historyDescription,
     isActive: isActive,
     reports: reports,
-    specialistAssigned: specialistAssigned
+    specialistAssigned: specialistAssigned,
+    readySpecialistList: readySpecialistList
   }))
 
   const TableMUI = () => (

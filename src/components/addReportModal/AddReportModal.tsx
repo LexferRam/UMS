@@ -63,8 +63,8 @@ export const AddReportModal: FC<{
             if (respAddReport.ok) {
                 setOpen(false)
                 await refecthFns.refetchUserInfo(),
-                    await refecthFns.refetchUserEvent(),
-                    reset();
+                await refecthFns.refetchUserEvent(),
+                reset();
                 setIsAddingReport(false)
                 setLoading(false)
                 enqueueSnackbar('Reporte agregado exitosamente!', {

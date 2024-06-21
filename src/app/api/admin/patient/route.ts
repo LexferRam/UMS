@@ -52,8 +52,14 @@ export async function GET(req: NextRequest) {
     try {
 
         await connectMongoDB()
-        const patients = await Patient.find()
+        
+        const patients = await Patient.find().populate({
+            path: "readySpecialistList",
+            model: User,
+        })
+
         const specialistList = await User.find()
+      
 
         let patientListWithSpecialistList = patients.map((patient: any) => {
             let specialistAssigned = []
@@ -96,6 +102,7 @@ export async function PATCH(req: NextRequest) {
             diagnosis,
             historyDescription,// motivo de consulta
             isActive,
+            readySpecialistList
         } = await req.json()
         await connectMongoDB()
 
@@ -108,7 +115,8 @@ export async function PATCH(req: NextRequest) {
                     dateOfBirth,
                     diagnosis,
                     historyDescription,
-                    isActive
+                    isActive,
+                    readySpecialistList
                 }
             },
             { new: true })
