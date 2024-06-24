@@ -31,9 +31,16 @@ const AdminPatientsPage = () => {
 
   if (isLoadingUserInfo || isLoading) return <AdmiPageSkeleton />
 
-  let patientsIdsByUser = userInfo[0]?.asignedPatients.map((patient: any) => patient._id)
-
-  let patientListByUser = patientList.filter((patient: any) => patientsIdsByUser.includes(patient._id) && patient).filter((patient: any) => patient.isActive)
+  
+  const userID = userInfo[0]._id
+  
+  const patientListActivatedOrDesactivated = userInfo[0].asignedPatients.map((patient: any) => {
+    if (patient.readySpecialistList.includes(userID) || patient.desactivatedForSpecialistList.includes(userID)) return
+    return patient
+  })
+  
+  // let patientsIdsByUser = userInfo[0]?.asignedPatients.map((patient: any) => patient._id)
+  // let patientListByUser = patientList.filter((patient: any) => patientsIdsByUser.includes(patient._id) && patient).filter((patient: any) => patient.isActive)
 
   return (
     <PatientTable
@@ -41,7 +48,7 @@ const AdminPatientsPage = () => {
       patients={
         userInfo[0]?.role === 'admin' ?
           patientList :
-          patientListByUser
+          patientListActivatedOrDesactivated.filter(Boolean)
       }
       refetch={refetch}
     />

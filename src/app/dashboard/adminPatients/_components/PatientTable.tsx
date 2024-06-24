@@ -24,6 +24,7 @@ interface IPerson {
   reports: any,
   specialistAssigned?: any
   readySpecialistList?: any
+  desactivatedForSpecialistList?: any
 }
 
 const PatientTable: FC<{
@@ -80,7 +81,7 @@ const PatientTable: FC<{
     },
     { title: "Diagnóstico", field: "diagnosis" },
     {
-      title: "Estatus",
+      title: "Estatus", 
       field: "isActive",
       render: rowData => {
         return (
@@ -102,7 +103,8 @@ const PatientTable: FC<{
     {
       title: "Acciones",
       field: "isActive",
-      render: ({ _id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive, reports, specialistAssigned, readySpecialistList
+      render: ({ _id, name, lastname, dateOfBirth, diagnosis, historyDescription, isActive, reports, specialistAssigned, readySpecialistList, desactivatedForSpecialistList
+
       }) => {
 
         return (<>
@@ -146,7 +148,8 @@ const PatientTable: FC<{
                   historyDescription,
                   isActive,
                   specialistAssigned,
-                  readySpecialistList
+                  readySpecialistList,
+                  desactivatedForSpecialistList
                 }}
               />
             )}
@@ -167,7 +170,8 @@ const PatientTable: FC<{
     isActive,
     reports,
     specialistAssigned,
-    readySpecialistList
+    readySpecialistList,
+    desactivatedForSpecialistList
   }: any) => ({
     _id: _id,
     name: name,
@@ -178,7 +182,8 @@ const PatientTable: FC<{
     isActive: isActive,
     reports: reports,
     specialistAssigned: specialistAssigned,
-    readySpecialistList: readySpecialistList
+    readySpecialistList: readySpecialistList,
+    desactivatedForSpecialistList: desactivatedForSpecialistList
   }))
 
   const TableMUI = () => (

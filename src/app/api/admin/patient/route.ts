@@ -56,6 +56,9 @@ export async function GET(req: NextRequest) {
         const patients = await Patient.find().populate({
             path: "readySpecialistList",
             model: User,
+        }).populate({
+            path: "desactivatedForSpecialistList",
+            model: User,
         })
 
         const specialistList = await User.find()
@@ -102,7 +105,8 @@ export async function PATCH(req: NextRequest) {
             diagnosis,
             historyDescription,// motivo de consulta
             isActive,
-            readySpecialistList
+            readySpecialistList,
+            desactivatedForSpecialistList
         } = await req.json()
         await connectMongoDB()
 
@@ -116,7 +120,8 @@ export async function PATCH(req: NextRequest) {
                     diagnosis,
                     historyDescription,
                     isActive,
-                    readySpecialistList
+                    readySpecialistList,
+                    desactivatedForSpecialistList
                 }
             },
             { new: true })

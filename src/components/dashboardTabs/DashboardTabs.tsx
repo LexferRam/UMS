@@ -66,6 +66,13 @@ const DashboardTabs: FC<{
         return eventsForTodayArray
     }
 
+    const userID = userInfo[0]._id
+  
+    const patientListActivatedOrDesactivated = userInfo[0].asignedPatients.map((patient: any) => {
+      if (patient.readySpecialistList.includes(userID) || patient.desactivatedForSpecialistList.includes(userID)) return
+      return patient
+    })
+
     const TABLE_HEAD_PATIENT = ["Nombre paciente", "Fecha de nacimiento", "Diagnóstico", "Motivo de Ingreso", "Estatus", "Reportes"];
 
     const TABLE_HEAD_EVENTS = ["Cita", "Estatus de la cita", "Hora", "Nombre paciente"];
@@ -79,7 +86,7 @@ const DashboardTabs: FC<{
         'patients' | 'events' | 'reports' | 'missingReports'>(userInfo[0]?.role !== 'admin' ? 'patients' : 'events')
 
     const ActiveCard = {
-        'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={patientListByUser} />,
+        'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={patientListActivatedOrDesactivated.filter(Boolean)} />,
         'events': <EventsTable tableHeaders={userInfo[0]?.role !== 'admin' ? TABLE_HEAD_EVENTS : TABLE_HEAD_EVENTS_ADMIN} events={eventForToday(userEvent)} refecthFns={refecthFns} />,
         'reports': <ReportsTable tableHeaders={TABLE_HEAD_REPORTS_ADMIN} reports={userReports} />,
         'missingReports': <MissingReportsTable tableHeaders={TABLE_HEAD_MISSING_REPORTS} missingReportsWithDate={missingReportsWithDate} refecthFns={refecthFns} />
@@ -102,7 +109,9 @@ const DashboardTabs: FC<{
 
                                     <div className='flex flex-col items-center'>
                                         <div className="text-amber-800 text-center font-semibold">Mis Pacientes</div>
-                                        <div className="text-2xl font-bold text-amber-900">{(userInfo[0]?.asignedPatients.filter((patient: any) =>  patient.isActive)).length}</div>
+                                        <div className="text-2xl font-bold text-amber-900">
+                                            {patientListActivatedOrDesactivated.filter(Boolean).length}
+                                        </div>
                                     </div>
 
                                     <div>
