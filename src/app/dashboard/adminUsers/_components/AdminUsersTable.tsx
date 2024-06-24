@@ -4,6 +4,8 @@ import MaterialTable, { Column } from '@material-table/core';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FC } from 'react';
+import { EditUserModal } from './EditUserModal';
+import { SPECIALITIES_VALUES_DICTIONARY } from '../constants';
 
 interface IPerson {
     _id: string;
@@ -13,17 +15,20 @@ interface IPerson {
     isActive: boolean;
     speciality?: any,
     role?: string;
-    asignedPatients?: any
+    asignedPatients?: any;
+    asignColor?: string;
 }
 
 interface AdminUsersTableProps {
     headers: string[];
     users: any;
+    refetchUsers?: any;
 }
 
 const AdminUsersTable: FC<AdminUsersTableProps> = ({
     headers,
-    users
+    users,
+    refetchUsers
 }) => {
     const router = useRouter()
 
@@ -96,6 +101,35 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
             // width: 150
         },
         {
+            title: "Color",
+            field: "asignColor",
+            render: rowData => {
+                return (
+                    <div style={{ backgroundColor: `${rowData?.asignColor}`, borderRadius: '50%', height: 16, width: 16 }}></div>
+                )
+            },
+            headerStyle: { textAlign: "center" },
+            // width: 150
+        },
+        {
+            title: "Especialidad",
+            field: "role;",
+            render: rowData => (<>
+                <p
+                    color="blue-gray"
+                    className="font-normal"
+                >
+                    <span className="inline-block px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+                        {
+                            rowData.role === 'admin' ?
+                                '-' :
+                                SPECIALITIES_VALUES_DICTIONARY[rowData?.speciality] || '-'
+                        }
+                    </span>
+                </p></>),
+            // headerStyle: { textAlign: "center" },
+        },
+        {
             title: "Role",
             field: "role;",
             render: rowData => (<>
@@ -116,6 +150,21 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
             headerStyle: { textAlign: "center" },
             // width: 150
         },
+        {
+            title: "Editar", 
+            field: "isActive",
+            render: rowData => {
+                return (
+                    <div>
+                        <EditUserModal
+                            refetchUsers={refetchUsers}
+                            userData={rowData}
+                        />
+                    </div>
+                )
+            },
+            width: 90,
+          },
     ];
 
     const data: Array<IPerson> = users?.map(({
@@ -126,7 +175,8 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
         isActive,
         speciality,
         role,
-        asignedPatients
+        asignedPatients,
+        asignColor
     }: any) => ({
         _id,
         name,
@@ -135,7 +185,8 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
         isActive,
         speciality,
         role,
-        asignedPatients
+        asignedPatients,
+        asignColor
     }))
 
     const TableMUI = () => (
@@ -196,7 +247,6 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                                             <p
                                                 className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
                                                 onClick={() => {
-                                                    console.log(patient)
                                                     if (!patient.reports.length) return
                                                     router.push(`/dashboard/patientHistory/${patient?._id}`, { scroll: false })
                                                 }}

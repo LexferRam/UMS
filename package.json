@@ -50,6 +50,7 @@
     "react-datetime": "^3.2.0",
     "react-dom": "^18",
     "react-hook-form": "^7.49.2",
+    "react-pick-color": "^2.0.0",
     "react-query": "^3.39.3",
     "react-tippy": "^1.4.0",
     "styled-components": "^6.1.11",

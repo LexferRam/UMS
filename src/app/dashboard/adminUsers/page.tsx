@@ -10,11 +10,18 @@ const UsersAdmin = () => {
     const { isLoading, error, data = [], refetch } = useQuery(['usersList'], () =>
     fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`).then(res =>
       res.json()
-    ))
+    ),
+    {
+        keepPreviousData: true,
+        refetchInterval: false,
+        refetchOnWindowFocus: false,
+    })
 
     if (isLoading) return <AdmiPageSkeleton />
 
-    return <AdminUsersTable headers={TABLE_HEAD} users={data} />
+    console.log(data)
+
+    return <AdminUsersTable headers={TABLE_HEAD} users={data} refetchUsers={refetch} />
 }
 
 export default UsersAdmin

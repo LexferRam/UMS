@@ -33,7 +33,11 @@ const userSchema = new Schema({
     asignedPatients : [{ 
         type: Schema.Types.ObjectId, 
         ref: 'Patient' 
-    }]
+    }],
+    asignColor: {
+        type: String,
+        required: true
+    },
 },
     { timestamps: true }
 );
