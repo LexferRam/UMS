@@ -31,21 +31,21 @@ export const authOptions: NextAuthOptions = {
 
                     if(!userExists?.isActive || !userExists) return
 
-                    // if (!userExists) {
-                    //     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/user`, {
-                    //         method: 'POST',
-                    //         headers: {
-                    //             "Content-Type": "application/json"
-                    //         },
-                    //         body: JSON.stringify({
-                    //             name, email, lastname: image
-                    //         })
-                    //     })
+                     if (!userExists) {
+                         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/user`, {
+                             method: 'POST',
+                             headers: {
+                                 "Content-Type": "application/json"
+                             },
+                             body: JSON.stringify({
+                                 name, email, lastname: image
+                             })
+                         })
 
-                    //     if (res.ok) {
-                    //         return user
-                    //     }
-                    // }
+                         if (res.ok) {
+                             return user
+                         }
+                     }
                     if (userExists) return user
 
                 } catch (error) {
