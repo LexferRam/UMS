@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
                     await connectMongoDB()
                     const userExists = await User.findOne({ email })
 
-                    if(!userExists?.isActive || !userExists) return
+                    // if(!userExists?.isActive || !userExists) return
 
                      if (!userExists) {
                          const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/user`, {
