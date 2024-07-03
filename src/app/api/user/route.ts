@@ -12,7 +12,8 @@ export async function POST(request: NextRequest) {
             lastname, 
             isActive: true, 
             role: 'specialist', 
-            speciality: ''
+            speciality: '',
+            asignColor: ''
         })
     return NextResponse.json({ message: "User Register" }, { status: 201 })
 }

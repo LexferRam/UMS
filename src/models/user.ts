@@ -36,7 +36,7 @@ const userSchema = new Schema({
     }],
     asignColor: {
         type: String,
-        required: true
+        required: false
     },
 },
     { timestamps: true }
