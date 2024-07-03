@@ -52,7 +52,7 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
             render: rowData => {
                 return (
                     <>
-                        <div className="flex justify-start items-center gap-4">
+                        <div className="flex flex-col md:flex-row justify-start items-center sm:gap-2">
                             <Image
                                 src={rowData.lastname}
                                 className="rounded-full"
@@ -63,7 +63,7 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                             />
                             <p
                                 color="blue-gray"
-                                className="font-normal text-clip text-gray-500"
+                                className="font-normal text-clip text-gray-500 text-center"
                             >
                                 {rowData.name}
                             </p>
@@ -71,13 +71,17 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                     </>
                 )
             }
-            // width: 200
         },
         {
             title: "Correo",
             field: "email",
-            headerStyle: { textAlign: "center" },
-            // width: 200
+            render: rowData => {
+                return (
+                    <>
+                        {rowData.email}
+                    </>
+                )
+            }
         },
         {
             title: "Estatus",
@@ -266,7 +270,7 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                 showTitle: false,
                 headerStyle: {
                     backgroundColor: '#E5E5E5',
-                    // textAlign: 'center',
+                    textAlign: 'center',
                 },
                 padding: "dense",
             }}

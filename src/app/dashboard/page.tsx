@@ -27,6 +27,16 @@ const AdminUserPage = () => {
       refetchOnWindowFocus: false,
     })
 
+    const { isLoading: isLoadingReports, error: reportsError, data: reports = [], refetch: refetchReports } = useQuery(['reports'], () =>
+      fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`).then(res =>
+        res.json()
+      ),
+      {
+        keepPreviousData: true,
+        refetchInterval: false,
+        refetchOnWindowFocus: false,
+      })
+
   if (isLoadingUserInfo || isLoadingUserEvent) return <DashboardSkeleton />
 
   // ? Calculo de reportes faltantes
@@ -173,7 +183,7 @@ const AdminUserPage = () => {
   return (
     <DashboardTabs
       userInfo={userInfo}
-      userReports={[]}
+      userReports={reports}
       userEvent={userEvent}
       missingReportsWithDate={arrDaysWithOutReports}
       refecthFns={{

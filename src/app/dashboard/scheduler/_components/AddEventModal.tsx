@@ -15,6 +15,7 @@ import { Switch } from "@/components/ui/switch"
 import { addOneDay, addOneYear } from "@/util/dates"
 import { Label } from "@radix-ui/react-dropdown-menu"
 import { useForm } from "react-hook-form"
+import moment from "moment"
 
 const daysOfWeek = [
     {
@@ -85,14 +86,14 @@ const eventTypeArray = [
     }
 ]
 
-export function AddEventModal({ onEventAdded, open, setOpen }: any) {
+export function AddEventModal({ onEventAdded, open, setOpen, recoverEvent, rowData }: any) {
 
     const [users, setUsers] = useState([])
     const [patients, setPatients] = useState([])
     const [active, setActive] = useState(false)
     const [isAddingEvent, setIsAddingEvent] = useState(false)
 
-    const { register, handleSubmit, formState: { errors }, reset } = useForm()
+    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm()
 
     const [selectedDays, setSelectedDays] = useState<boolean[]>(
         new Array(7).fill(false)
@@ -127,10 +128,10 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
         onEventAdded({
             title: data.title,
             start: data.eventDate + 'T' + data.timeStart + ':' + '00',
-            end: !selectedDaysArr.length ? 
-                    addOneDay(data.eventDate) + 'T' + data.timeEnd + ':' + '00' : 
-                    // TODO: la funcion addOneYear debe agregar un dia mas
-                    addOneYear(data.eventDate) + 'T' + data.timeEnd + ':' + '00',
+            end: !selectedDaysArr.length ?
+                addOneDay(data.eventDate) + 'T' + data.timeEnd + ':' + '00' :
+                // TODO: la funcion addOneYear debe agregar un dia mas
+                addOneYear(data.eventDate) + 'T' + data.timeEnd + ':' + '00',
             selectedUserValue: foundUser[0].value,
             selectedPatientValue: foundPatient[0].value,
             eventType: foundEventType[0].value,
@@ -162,6 +163,12 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
         }
         getUsers()
     }, [open])
+
+    useEffect(() => {
+        if (recoverEvent) {
+            setValue('title', `RECUPERACIÓN: ${rowData?.associatedEvent?.patient?.name} (${moment(rowData?.createdAt).format('L')})`)
+        }
+    }, [])
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -248,20 +255,22 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                         </div>
 
                         <div className="flex flex-col gap-4 flex-wrap justify-center">
-                            <div className="flex gap-4">
-                                <div>
-                                    Seleccione días de recurrencia:
+                            {!recoverEvent && (
+                                <div className="flex gap-4">
+                                    <div>
+                                        Seleccione días de recurrencia:
+                                    </div>
+                                    <div>
+                                        <Switch
+                                            className="bg-green-700"
+                                            checked={active}
+                                            onCheckedChange={(e) => {
+                                                setActive(e)
+                                            }}
+                                        />
+                                    </div>
                                 </div>
-                                <div>
-                                    <Switch
-                                        className="bg-green-700"
-                                        checked={active}
-                                        onCheckedChange={(e) => {
-                                            setActive(e)
-                                        }}
-                                    />
-                                </div>
-                            </div>
+                            )}
                             {active && (
                                 <div className="flex gap-4 flex-wrap justify-center">
                                     {daysOfWeek.map((day, i) => (
@@ -286,83 +295,76 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                             )}
                         </div>
 
-                        <div className="flex gap-4">
-                            {/* Terapeuta */}
-                            <div className="w-full flex flex-col items-start justify-between gap-2">
-                                <Label className="text-right">
-                                    Especialista:
-                                </Label>
-                                <select
-                                    {...register('selectedUserValue',
-                                        {
-                                            required: 'Seleccione un terapeuta'
-                                        })}
-                                >
-                                    <option key={0}></option>
-                                    {users.map((user: any) => {
-                                        if (!user) return
-                                        return (
-                                            <option key={user.value}>{user.label}</option>
-                                        )
-                                    })}
-                                </select>
-                                {errors.selectedUserValue && <p className="text-red-700">{JSON.stringify(errors?.selectedUserValue?.message)}</p>}
-                            </div>
+                        {!recoverEvent && (
+                            <>
+                                <div className="flex gap-4">
+                                    {/* Terapeuta */}
+                                    <div className="w-full flex flex-col items-start justify-between gap-2">
+                                        <Label className="text-right">
+                                            Especialista:
+                                        </Label>
+                                        <select
+                                            {...register('selectedUserValue',
+                                                {
+                                                    required: 'Seleccione un terapeuta'
+                                                })}
+                                        >
+                                            <option key={0}></option>
+                                            {users.map((user: any) => {
+                                                if (!user) return
+                                                return (
+                                                    <option key={user.value}>{user.label}</option>
+                                                )
+                                            })}
+                                        </select>
+                                        {errors.selectedUserValue && <p className="text-red-700">{JSON.stringify(errors?.selectedUserValue?.message)}</p>}
+                                    </div>
 
-                            {/* Paciente */}
-                            <div className="flex flex-col items-start justify-between gap-2">
-                                <Label className="text-right">
-                                    Paciente:
-                                </Label>
-                                <select
-                                    {...register('selectedPatient',
-                                        {
-                                            required: 'Seleccione un paciente'
-                                        })}
-                                >
-                                    <option key={0}></option>
-                                    {patients.map((patient: any) => {
-                                        if (!patient) return
-                                        return (
-                                            <option key={patient.value}>{patient.label}</option>
-                                        )
-                                    })}
-                                </select>
-                                {errors.selectedPatient && <p className="text-red-700">{JSON.stringify(errors?.selectedPatient?.message)}</p>}
-                            </div>
-                        </div>
+                                    {/* Paciente */}
+                                    <div className="flex flex-col items-start justify-between gap-2">
+                                        <Label className="text-right">
+                                            Paciente:
+                                        </Label>
+                                        <select
+                                            {...register('selectedPatient',
+                                                {
+                                                    required: 'Seleccione un paciente'
+                                                })}
+                                        >
+                                            <option key={0}></option>
+                                            {patients.map((patient: any) => {
+                                                if (!patient) return
+                                                return (
+                                                    <option key={patient.value}>{patient.label}</option>
+                                                )
+                                            })}
+                                        </select>
+                                        {errors.selectedPatient && <p className="text-red-700">{JSON.stringify(errors?.selectedPatient?.message)}</p>}
+                                    </div>
+                                </div>
 
-                        <div className="flex flex-col items-start justify-between gap-2">
-                            <Label className="text-right">
-                                Tipo de cita:
-                            </Label>
-                            <select
-                                {...register('eventType',
-                                    {
-                                        required: 'Seleccione el tipo de evento'
-                                    })}
-                            >
-                                <option key={0}></option>
-                                {eventTypeArray.map((eventType: any) => {
-                                    return (
-                                        <option key={eventType.value}>{eventType.label}</option>
-                                    )
-                                })}
-                            </select>
-                            {errors.eventType && <p className="text-red-700">{JSON.stringify(errors?.eventType?.message)}</p>}
-                        </div>
-{/* 
-                        <div className="flex flex-col gap-2 flex-wrap justify-center items-start">
-                            <Label className="text-right">
-                                Nota:
-                            </Label>
-                            <Input
-                                disabled
-                                type="text"
-                                defaultValue=""
-                                {...register("note")}
-                            />
-                        </div> */}
+                                <div className="flex flex-col items-start justify-between gap-2">
+                                    <Label className="text-right">
+                                        Tipo de cita:
+                                    </Label>
+                                    <select
+                                        {...register('eventType',
+                                            {
+                                                required: 'Seleccione el tipo de evento'
+                                            })}
+                                    >
+                                        <option key={0}></option>
+                                        {eventTypeArray.map((eventType: any) => {
+                                            return (
+                                                <option key={eventType.value}>{eventType.label}</option>
+                                            )
+                                        })}
+                                    </select>
+                                    {errors.eventType && <p className="text-red-700">{JSON.stringify(errors?.eventType?.message)}</p>}
+                                </div>
+                            </>
+                        )}
+
                     </div>
 
                     <DialogFooter>
@@ -371,7 +373,7 @@ export function AddEventModal({ onEventAdded, open, setOpen }: any) {
                             type="submit"
                             disabled={isAddingEvent}
                         >
-                           {isAddingEvent ? "Agregando Evento...": "Guardar"} 
+                            {isAddingEvent ? "Agregando Evento..." : "Guardar"}
                         </button>
                     </DialogFooter>
                 </form>

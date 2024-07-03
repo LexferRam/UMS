@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
         let createdBy = userFound[0]._id.toString();
 
-        const { description, associatedEvent, patient, createdAt, isForEventCancel } = await req.json()
+        const { description, associatedEvent, patient, createdAt, isForEventCancel, hasRecovery } = await req.json()
 
         await connectMongoDB()
 
@@ -29,7 +29,8 @@ export async function POST(req: NextRequest) {
             associatedEvent,
             patient: patient,
             createdAt: createdAt,
-            isForEventCancel: isForEventCancel
+            isForEventCancel: isForEventCancel,
+            hasRecovery: true
         }
 
         let reportObject = {
@@ -37,20 +38,15 @@ export async function POST(req: NextRequest) {
             createdBy: new mongoose.Types.ObjectId(createdBy),
             associatedEvent,
             patient: patient,
-            isForEventCancel: isForEventCancel
+            isForEventCancel: isForEventCancel,
+            hasRecovery: hasRecovery
         }
 
         const newReport = await Report.create(createdAt ? missingReportObject : reportObject)
 
-        console.log(createdAt ? missingReportObject : reportObject)
-        console.log(associatedEvent)
-
         // ? buscar en Patient usando asignTo
         const patientFound = await Patient.find({ _id: patient })
         const eventFound = await Event.find({ _id: associatedEvent })
-
-        console.log(patientFound)
-        console.log(eventFound)
 
         // ? actualizar paciente encontrado en su prop reports con el nuevo reporte
         await patientFound[0]?.reports.push(newReport)
@@ -92,12 +88,17 @@ export async function GET(req: NextRequest) {
                 .populate({
                     path: 'associatedEvent',
                     model: Event,
-                    populate: {
-                        path: 'patient',
-                        model: Patient
-                    }
+                    populate: [
+                        {
+                            path: 'patient',
+                            model: Patient
+                        },
+                        {
+                            path: '_asignTo',
+                            model: User
+                        }]
                 }).sort({ createdAt: -1 })
-            
+
             return NextResponse.json(userReports, { status: 201 })
         } else {
             const userReports: any = await Report.find({ createdBy: userId })
@@ -113,7 +114,7 @@ export async function GET(req: NextRequest) {
                         model: Patient
                     }
                 }).sort({ createdAt: -1 })
-            
+
 
             return NextResponse.json(userReports, { status: 201 })
         }

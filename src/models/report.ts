@@ -18,6 +18,11 @@ const reportSchema = new Schema({
     isForEventCancel: { 
         type: Boolean, 
         required: false
+    },
+    hasRecovery: { 
+        type: Boolean, 
+        required: false,
+        default: false
     }
 },
     { timestamps: true }

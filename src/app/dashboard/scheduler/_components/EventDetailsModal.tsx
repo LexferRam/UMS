@@ -399,7 +399,8 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
                 associatedEvent: eventId,
                 patient: patient._id,
                 createdAt: formatDate,
-                isForEventCancel: true
+                isForEventCancel: true,
+                hasRecovery: true
             }
 
             const respAddReport = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`, {
