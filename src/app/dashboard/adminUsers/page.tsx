@@ -7,8 +7,8 @@ const UsersAdmin = () => {
 
     const TABLE_HEAD = ["Usuario", "Correo electrónico", "Rol", "Especialidad", "Estatus"];
 
-    const { isLoading, error, data = [], refetch } = useQuery(['usersList'], () =>
-    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`).then(res =>
+    const { isLoading, error, data = [], refetch } = useQuery(['usersList'], async ({ signal }) =>
+    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`,{ signal }).then(res =>
       res.json()
     ),
     {

@@ -21,8 +21,7 @@ const reportSchema = new Schema({
     },
     hasRecovery: { 
         type: Boolean, 
-        required: false,
-        default: false
+        required: false
     }
 },
     { timestamps: true }

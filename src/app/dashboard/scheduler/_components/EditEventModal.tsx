@@ -91,13 +91,13 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
     const [eventTp, setEventTp] = useState('')
     const [isEditingEvent, setIsEditingEvent] = useState(false)
 
-    const { data: dataUser = [] } = useQuery(['usersList'], () =>
-        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`).then(res =>
+    const { data: dataUser = [] } = useQuery(['usersList'], async ({ signal }) =>
+        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`,{ signal }).then(res =>
             res.json()
         ))
 
-    const { data: patients = [] } = useQuery(['patientsList'], () =>
-        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`).then(res =>
+    const { data: patients = [] } = useQuery(['patientsList'], async ({ signal }) =>
+        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`,{ signal }).then(res =>
             res.json()
         ))
 

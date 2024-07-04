@@ -40,8 +40,8 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
     const [associatedEventId, setAssociatedEventId] = useState('')
     const [reportId, setReportId] = useState('')
 
-    const { isLoading, error, data: patientInfo = [], refetch } = useQuery(['patientInfo', [patientId]], () =>
-        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports/reportId?patientId=${patientId}`).then(res =>
+    const { isLoading, error, data: patientInfo = [], refetch } = useQuery(['patientInfo', [patientId]], async ({ signal }) =>
+        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports/reportId?patientId=${patientId}`,{ signal }).then(res =>
             res.json()
         )
     )

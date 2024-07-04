@@ -7,8 +7,10 @@ import DashboardSkeleton from "@/components/DashboardSkeleton"
 
 const AdminUserPage = () => {
 
-  const { isLoading: isLoadingUserInfo, error: userInfoError, data: userInfo = [], refetch: refetchUserInfo } = useQuery(['userInfo'], () =>
-    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/user`).then(res =>
+  const { isLoading: isLoadingUserInfo, error: userInfoError, data: userInfo = [], refetch: refetchUserInfo } = useQuery(['userInfo'], async ({ signal }) =>
+    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/user`, {
+      signal,
+    }).then(res =>
       res.json()
     ),
     {
@@ -17,8 +19,10 @@ const AdminUserPage = () => {
       refetchOnWindowFocus: false,
     })
 
-  const { isLoading: isLoadingUserEvent, error: userEventError, data: userEvent = [], refetch: refetchUserEvent } = useQuery(['userEvent'], () =>
-    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events`).then(res =>
+  const { isLoading: isLoadingUserEvent, error: userEventError, data: userEvent = [], refetch: refetchUserEvent } = useQuery(['userEvent'], async ({ signal }) =>
+    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events`, {
+      signal,
+    }).then(res =>
       res.json()
     ),
     {
@@ -27,17 +31,19 @@ const AdminUserPage = () => {
       refetchOnWindowFocus: false,
     })
 
-    const { isLoading: isLoadingReports, error: reportsError, data: reports = [], refetch: refetchReports } = useQuery(['reports'], () =>
-      fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`).then(res =>
-        res.json()
-      ),
-      {
-        keepPreviousData: true,
-        refetchInterval: false,
-        refetchOnWindowFocus: false,
-      })
+  const { isLoading: isLoadingReports, error: reportsError, data: reports = [], refetch: refetchReports } = useQuery(['reports'], async ({ signal }) =>
+    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`, {
+      signal,
+    }).then(res =>
+      res.json()
+    ),
+    {
+      keepPreviousData: true,
+      refetchInterval: false,
+      refetchOnWindowFocus: false,
+    })
 
-  if (isLoadingUserInfo || isLoadingUserEvent) return <DashboardSkeleton />
+  if (isLoadingUserInfo || isLoadingUserEvent || isLoadingReports) return <DashboardSkeleton />
 
   // ? Calculo de reportes faltantes
   const missingUserReports = userEvent?.map((userEvent: any) => {

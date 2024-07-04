@@ -42,7 +42,10 @@ export async function POST(req: NextRequest) {
             hasRecovery: hasRecovery
         }
 
-        const newReport = await Report.create(createdAt ? missingReportObject : reportObject)
+        let reportObjectToCreate = createdAt ? missingReportObject : reportObject
+
+        const newReport = await Report.create(reportObjectToCreate)
+        console.log(newReport)
 
         // ? buscar en Patient usando asignTo
         const patientFound = await Patient.find({ _id: patient })

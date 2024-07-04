@@ -144,6 +144,7 @@ export function AddEventModal({ onEventAdded, open, setOpen, recoverEvent, rowDa
         })
     }
 
+    //TODO: COLOCAR CON REACT QUERY Y ABORT REQUEST
     useEffect(() => {
         const getUsers = async () => {
             let respUsers = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`)
@@ -188,7 +189,7 @@ export function AddEventModal({ onEventAdded, open, setOpen, recoverEvent, rowDa
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="grid gap-4 py-4">
 
-                        <div className="flex gap-4">
+                        <div className="flex flex-col gap-4">
                             <div className="w-full flex flex-col gap-2 flex-wrap justify-center items-start">
                                 <Label className="text-right">
                                     Título:

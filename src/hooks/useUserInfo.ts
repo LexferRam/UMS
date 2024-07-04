@@ -9,8 +9,8 @@ export const useUserInfo = () => {
     error: userInfoError,
     data: userInfo = [],
     refetch: refetchUserInfo
-  } = useQuery(['userInfo'], () =>
-    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/user`).then(res =>
+  } = useQuery(['userInfo'], async ({ signal }) =>
+    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/user`,{ signal }).then(res =>
       res.json()
     ),
     {

@@ -15,8 +15,8 @@ const DashboardTabs: FC<{
     missingReportsWithDate: any,
     refecthFns: any
 }> = ({ userInfo, userReports, userEvent, missingReportsWithDate, refecthFns }) => {
-    const { isLoading, error, data: patientList = [], refetch } = useQuery(['patientList'], () =>
-        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`).then(res =>
+    const { isLoading, error, data: patientList = [], refetch } = useQuery(['patientList'], async ({ signal }) =>
+        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`,{signal}).then(res =>
             res.json()
         ),
         {

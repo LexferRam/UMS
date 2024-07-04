@@ -39,8 +39,9 @@ const Scheduler = () => {
     error,
     data: schedulerEvents = [],
     refetch: refetchEvents
-  } = useQuery(['sschedulerEvents', selectedUser], () =>
+  } = useQuery(['sschedulerEvents', selectedUser], async({ signal }) =>
     fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events`, {
+      signal,
       method: 'POST',
       headers: {
         'content-type': 'application/json',
@@ -55,10 +56,15 @@ const Scheduler = () => {
       refetchOnWindowFocus: false,
     })
 
-  const { data: dataUser = [] } = useQuery(['usersList'], () =>
-    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`).then(res =>
+  const { data: dataUser = [] } = useQuery(['usersList'], async({ signal }) =>
+    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`,{ signal }).then(res =>
       res.json()
-    ))
+    ),
+    {
+      keepPreviousData: true,
+      refetchInterval: false,
+      refetchOnWindowFocus: false,
+    })
 
   const formattedEventsQuery = schedulerEvents?.map((event: any) => {
 
@@ -252,17 +258,6 @@ const Scheduler = () => {
         ref={calendarRef}
         viewClassNames='h-[100vh]'
         events={formattedEventsQuery}
-        //   events={formattedEventsQuery.sort((event1: any, event2: any) => {
-        //     const start1 = new Date(event1.start);
-        //   const start2 = new Date(event2.start);
-        //   return start1.getHours() - start2.getHours();
-        // })}
-        // eventOrder={(event1: any, event2: any) => {
-        //   const start1 = new Date(event1?.start / 1000);
-        //   const start2 = new Date(event2?.start / 1000);
-
-        //   return start1?.getHours() - start2?.getHours();
-        // }}
         plugins={[dayGridPlugin, interactionPlugin, rrulePlugin, resourceTimeGridPlugin]}
         initialView={width as any < 500 ? "resourceTimeGridDay" : "resourceTimeGridWeek"} //dayGridWeek 
         locale={esLocale}
@@ -342,17 +337,6 @@ const Scheduler = () => {
             >
               <p>{eventInfo.timeText}</p>
               <p>{event._def.title}</p>
-              {/* <p>
-                {
-                  event._def.extendedProps?.reports?.filter((repor: any) => repor?.isForEventCancel &&
-                    new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
-                  ).length > 0 && (
-                    event._def.extendedProps?.reports?.filter((repor: any) => repor?.isForEventCancel &&
-                      new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
-                    )[0].description
-                  )
-                }
-              </p> */}
             </div>
           );
         }}
