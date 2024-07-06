@@ -86,7 +86,7 @@ const eventTypeArray = [
     }
 ]
 
-export function AddEventModal({ onEventAdded, open, setOpen, recoverEvent, rowData }: any) {
+export default function AddEventModal({ onEventAdded, open, setOpen, recoverEvent, rowData }: any) {
 
     const [users, setUsers] = useState([])
     const [patients, setPatients] = useState([])
@@ -144,23 +144,27 @@ export function AddEventModal({ onEventAdded, open, setOpen, recoverEvent, rowDa
         })
     }
 
-    //TODO: COLOCAR CON REACT QUERY Y ABORT REQUEST
+    // //TODO: COLOCAR CON REACT QUERY Y ABORT REQUEST
     useEffect(() => {
         const getUsers = async () => {
-            let respUsers = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`)
-            let usersResp = await respUsers.json()
+            try {
+                let respUsers = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`)
+                let usersResp = await respUsers.json()
 
-            let respPatients = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`)
-            let patientsResp = await respPatients.json()
+                let respPatients = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`)
+                let patientsResp = await respPatients.json()
 
-            let users = await usersResp.map((user: any) => ({ value: user._id, label: user.name }))
-            let patients = await patientsResp.map((patient: any) => {
-                if (!patient.isActive) return
-                return ({ value: patient._id, label: patient.name + patient.lastname })
-            })
+                let users = await usersResp.map((user: any) => ({ value: user._id, label: user.name }))
+                let patients = await patientsResp.map((patient: any) => {
+                    if (!patient.isActive) return
+                    return ({ value: patient._id, label: patient.name + patient.lastname })
+                })
 
-            setUsers(users)
-            setPatients(patients)
+                setUsers(users)
+                setPatients(patients)
+            } catch (error) {
+                console.log(error)
+            }
         }
         getUsers()
     }, [open])

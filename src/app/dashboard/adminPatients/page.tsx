@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react';
 import AdmiPageSkeleton from './_components/AdmiPageSkeleton';
 import PatientTable from './_components/PatientTable';
 import { useQuery } from 'react-query';
@@ -31,7 +32,6 @@ const AdminPatientsPage = () => {
 
   if (isLoadingUserInfo || isLoading) return <AdmiPageSkeleton />
 
-  
   const userID = userInfo[0]._id
   
   const patientListActivatedOrDesactivated = userInfo[0].asignedPatients.map((patient: any) => {
@@ -40,15 +40,17 @@ const AdminPatientsPage = () => {
   })
   
   return (
-    <PatientTable
-      tableHeaders={TABLE_HEAD}
-      patients={
-        userInfo[0]?.role === 'admin' ?
-          patientList :
-          patientListActivatedOrDesactivated.filter(Boolean)
-      }
-      refetch={refetch}
-    />
+    <Suspense fallback={<AdmiPageSkeleton />}>
+      <PatientTable
+        tableHeaders={TABLE_HEAD}
+        patients={
+          userInfo[0]?.role === 'admin' ?
+            patientList :
+            patientListActivatedOrDesactivated.filter(Boolean)
+        }
+        refetch={refetch}
+      />
+    </Suspense>
   )
 }
 

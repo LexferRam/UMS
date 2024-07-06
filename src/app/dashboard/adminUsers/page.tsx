@@ -1,7 +1,9 @@
 'use client'
-import AdminUsersTable from './_components/AdminUsersTable';
+import dynamic from 'next/dynamic';
 import { useQuery } from 'react-query';
 import AdmiPageSkeleton from '../adminPatients/_components/AdmiPageSkeleton';
+import { Suspense } from 'react';
+const AdminUsersTable = dynamic(() => import('./_components/AdminUsersTable'))
 
 const UsersAdmin = () => {
 
@@ -21,7 +23,11 @@ const UsersAdmin = () => {
 
     console.log(data)
 
-    return <AdminUsersTable headers={TABLE_HEAD} users={data} refetchUsers={refetch} />
+    return (
+      <Suspense fallback={<AdmiPageSkeleton />}>
+        <AdminUsersTable headers={TABLE_HEAD} users={data} refetchUsers={refetch} />
+      </Suspense>
+    )
 }
 
 export default UsersAdmin

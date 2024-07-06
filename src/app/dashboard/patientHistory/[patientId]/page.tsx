@@ -1,17 +1,19 @@
 'use client'
 
+import { Suspense } from "react"
 import { useParams } from "next/navigation"
-import ReportsByPatientTable from "../_components/ReportsByPatientTable"
-import PatientHistoryTimeline from "../_components/PatientHistoryTimeline"
+import dynamic from "next/dynamic"
+import TimelineSkeleton from "../_components/TimelineSkeleton"
+const PatientHistoryTimeline = dynamic(() => import('../_components/PatientHistoryTimeline'))
 
 const PatientHistory = () => {
 
   const { patientId } = useParams()
 
   return (
-    <div>
+    <Suspense fallback={<TimelineSkeleton/>}>
       <PatientHistoryTimeline patientId={patientId} />
-    </div>
+    </Suspense>
   )
 }
 
