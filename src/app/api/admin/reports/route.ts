@@ -133,3 +133,30 @@ export async function GET(req: NextRequest) {
         }
     }
 }
+
+export async function PATCH(req: NextRequest) {
+
+    try {
+
+        const { id } = await req.json()
+        await connectMongoDB()
+
+        const updatedReport = await Report.findByIdAndUpdate(
+            { _id: id },
+            {
+                hasRecovery: false
+            })
+
+        return NextResponse.json(updatedReport)
+
+    } catch (error) {
+        console.log(error)
+        if (error instanceof Error) {
+            return NextResponse.json({
+                message: error.message
+            }, {
+                status: 400
+            })
+        }
+    }
+}

@@ -179,7 +179,8 @@ const AdminUserPage = () => {
         missingReportsWithDate={arrDaysWithOutReports}
         refecthFns={{
           refetchUserInfo,
-          refetchUserEvent
+          refetchUserEvent,
+          refetchReports
         }}
       />
     </Suspense>

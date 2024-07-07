@@ -15,15 +15,6 @@ const DashboardTabs: FC<{
     missingReportsWithDate: any,
     refecthFns: any
 }> = ({ userInfo, userReports, userEvent, missingReportsWithDate, refecthFns }) => {
-    const { isLoading, error, data: patientList = [], refetch } = useQuery(['patientList'], async ({ signal }) =>
-        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`,{signal}).then(res =>
-            res.json()
-        ),
-        {
-            keepPreviousData: true,
-            refetchInterval: false,
-            refetchOnWindowFocus: false,
-        })
 
     function isDateWithinRange(today: any, startDate: any, endDate: any, event:any) {
         today = today.setHours(0,0,0,0).toLocaleString("es-VE")
@@ -83,7 +74,7 @@ const DashboardTabs: FC<{
         'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={patientListActivatedOrDesactivated.filter(Boolean)} />,
         'events': <EventsTable tableHeaders={userInfo[0]?.role !== 'admin' ? TABLE_HEAD_EVENTS : TABLE_HEAD_EVENTS_ADMIN} events={eventForToday(userEvent)} refecthFns={refecthFns} />,
         'missingReports': <MissingReportsTable tableHeaders={TABLE_HEAD_MISSING_REPORTS} missingReportsWithDate={missingReportsWithDate} refecthFns={refecthFns} />,
-        'cancelEventsWithoutRecovery': <ReportsTable reports={userReports.filter((report: any) => report?.hasRecovery)}/>
+        'cancelEventsWithoutRecovery': <ReportsTable reports={userReports.filter((report: any) => report?.hasRecovery)} refecthFns={refecthFns}/>
     }
 
     return (

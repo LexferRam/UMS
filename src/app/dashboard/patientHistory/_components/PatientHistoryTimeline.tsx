@@ -70,8 +70,6 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
 
     const deleteReport = async (eventId: string, reportId: string) => { //associatedEvent._id
         try {
-            console.log(eventId)
-            console.log(reportId)
             setLoading(true)
             const resp = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports/reportId?eventId=${eventId}&reportId=${reportId}`, {
                 method: 'DELETE',
@@ -84,9 +82,21 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                 })
             })
 
-            if (!resp.ok) {
-                throw new Error('Error eliminando reporte')
+            if(resp.status ===403){
+                setLoading(false)
+                enqueueSnackbar('El reporte no puede ser eliminado porque el evento cancelado tiene citas de recuperación asociadas', {
+                    variant: 'warning',
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    },
+                    autoHideDuration: 10000,
+                    key: 'error-delete-event'
+                })
+                return
             }
+
+            if (!resp.ok) throw new Error('Error eliminando reporte')
 
             await refetch()
             setLoading(false)
@@ -100,8 +110,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                 key: 'error-delete-event'
             })
 
-        } catch (error) {
-            console.log(error)
+        } catch (error: any) {
             setLoading(false)
             enqueueSnackbar('Error eliminando reporte', {
                 variant: 'error',
@@ -202,8 +211,6 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                                 patientInfo[0]?.reports :
                                 patientInfo[0]?.reports.filter((item: any) => item.createdBy._id === therapistSelected)
                         )?.map(({ createdBy, description, _id, createdAt, isForEventCancel, associatedEvent, ...rest }: any, index: number) => {
-
-                            console.log(associatedEvent)
 
                             return (
                                 <TimelineItem key={_id}>

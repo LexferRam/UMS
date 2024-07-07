@@ -63,6 +63,16 @@ export async function DELETE(req: NextRequest) {
 
         await connectMongoDB()
 
+        let reportToDelete = await Report.find({ _id: reportId })
+
+        // if the report has associated recovered Events then we can not be able to delete the report
+        if(reportToDelete.length > 0 && reportToDelete[0]?.recoveredEvents.length > 0) {
+            return NextResponse.json(
+                { msg: 'El reporte no puede ser eliminado porque el evento cancelado tiene citas de recuperación asociadas' },
+                { status: 403 }
+            )
+        }
+
         // delete report from event
         let event: any = await Event.find({ _id: eventId })
         event[0].reports = await event[0].reports.filter((report: any) => report != new mongoose.Types.ObjectId(reportId))

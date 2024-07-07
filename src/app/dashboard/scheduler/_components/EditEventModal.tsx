@@ -3,9 +3,11 @@
 import { DialogFooter } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
+import { LoadingContext } from "@/context/LoadingProvider"
 import { addOneYear } from "@/util/dates"
 import { Label } from "@radix-ui/react-dropdown-menu"
-import { useEffect, useState } from "react"
+import { enqueueSnackbar } from "notistack"
+import { useContext, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useQuery } from "react-query"
 
@@ -90,6 +92,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
     const [patient, setPatient] = useState('')
     const [eventTp, setEventTp] = useState('')
     const [isEditingEvent, setIsEditingEvent] = useState(false)
+    const { setLoading } = useContext(LoadingContext) as any
 
     const { data: dataUser = [] } = useQuery(['usersList'], async ({ signal }) =>
         fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin`,{ signal }).then(res =>
@@ -108,54 +111,74 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
     const { register, handleSubmit, formState: { errors }, setValue } = useForm()
 
     const onSubmit = async (data: any) => {
+        setLoading(true)
 
-        setIsEditingEvent(true)
+        try {
+            setIsEditingEvent(true)
 
-        const foundPatient: any = patients.map((patient: any) => {
-            return ({ value: patient._id, label: patient.name + patient.lastname })
-        }).filter((item: any) => item?.label.trim() === data.selectedPatient)
-        const foundUser: any = dataUser.map((user: any) => ({ value: user._id, label: user.name })).filter((item: any) => item?.label.trim() === data.selectedUserValue)
-        const foundEventType: any = eventTypeArray.filter((item: any) => item?.label === data.eventType)
-
-        const selectedDaysArr: any = [];
-
-        for (let i = 0; i < selectedDays.length; i++) {
-            if (selectedDays[i]) {
-                selectedDaysArr.push(valuesDaysOfWeek[i]);
+            const foundPatient: any = patients.map((patient: any) => {
+                return ({ value: patient._id, label: patient.name + patient.lastname })
+            }).filter((item: any) => item?.label.trim() === data.selectedPatient)
+            const foundUser: any = dataUser.map((user: any) => ({ value: user._id, label: user.name })).filter((item: any) => item?.label.trim() === data.selectedUserValue)
+            const foundEventType: any = eventTypeArray.filter((item: any) => item?.label === data.eventType)
+    
+            const selectedDaysArr: any = [];
+    
+            for (let i = 0; i < selectedDays.length; i++) {
+                if (selectedDays[i]) {
+                    selectedDaysArr.push(valuesDaysOfWeek[i]);
+                }
             }
-        }
-
-        let updatedEvent = {
-            title: data.title.trim(),
-            start: formatDateToDB(data.eventDate + 'T' + data.timeStart),
-            end: formatDateToDB(data.eventEndDate + 'T' + data.timeEnd),
-            // selectedDaysArr.length > 0 ?
-            //     formatDateToDB(addOneYear(data.eventDate) + 'T' + data.timeEnd) :
-            //     // TODO: la funcion addOneYear debe agregar un dia mas
-            //     formatDateToDB(data.eventDate + 'T' + data.timeEnd),
-            _asignTo: foundUser[0].value,
-            patient: foundPatient[0].value,
-            selectedDaysArr: selectedDaysArr,
-            eventType: foundEventType[0].value
-        };
-
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events/${eventDetails._id}`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                ...updatedEvent,
-                start: updatedEvent.start,
-                end: updatedEvent.end
+    
+            let updatedEvent = {
+                title: data.title.trim(),
+                start: formatDateToDB(data.eventDate + 'T' + data.timeStart),
+                end: formatDateToDB(data.eventEndDate + 'T' + data.timeEnd),
+                _asignTo: foundUser[0].value,
+                patient: foundPatient[0].value,
+                selectedDaysArr: selectedDaysArr,
+                eventType: foundEventType[0].value
+            };
+    
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events/${eventDetails._id}`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    ...updatedEvent,
+                    start: updatedEvent.start,
+                    end: updatedEvent.end
+                })
             })
-        })
-
-        if (res.ok) {
-            setOpen(false)
-            await refetchEvents()
-            setEditEvent(false)
-            setIsEditingEvent(false)
+    
+            if (res.ok) {
+                setOpen(false)
+                await refetchEvents()
+                setEditEvent(false)
+                setIsEditingEvent(false)
+                setLoading(false)
+                enqueueSnackbar('Cita actualizada exitosamente!', {
+                    variant: 'success',
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'right',
+                    },
+                    autoHideDuration: 5000,
+                    key: 'error-delete-event'
+                })
+            }
+        } catch (error) {
+            console.log(error)
+            enqueueSnackbar('Error!', {
+                variant: 'error',
+                anchorOrigin: {
+                    vertical: 'top',
+                    horizontal: 'right',
+                },
+                autoHideDuration: 5000,
+                key: 'error-delete-event'
+            })
         }
 
 

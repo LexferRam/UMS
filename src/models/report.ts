@@ -19,9 +19,14 @@ const reportSchema = new Schema({
         type: Boolean, 
         required: false
     },
+    // indica que el reporte pertenece a una cita que fue cancelada y por defecto aplica una recuperacion
     hasRecovery: { 
         type: Boolean, 
         required: false
+    },
+    recoveredEvents:{
+        type: Array,
+        require: false
     }
 },
     { timestamps: true }
