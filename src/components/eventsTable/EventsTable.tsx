@@ -78,22 +78,6 @@ const EventsTable: FC<{ tableHeaders: string[], events: any, refecthFns?: any }>
                                             color="blue-gray"
                                             className="font-normal"
                                         >
-                                            {eventStatus ? (
-                                                <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                    Activo
-                                                </span>
-                                            ) : (
-                                                <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                    Desactivo
-                                                </span>
-                                            )}
-                                        </p>
-                                    </td>
-                                    <td className={classes}>
-                                        <p
-                                            color="blue-gray"
-                                            className="font-normal"
-                                        >
                                             {moment(start).format('h:mm a')}
                                         </p>
                                     </td>
@@ -107,22 +91,6 @@ const EventsTable: FC<{ tableHeaders: string[], events: any, refecthFns?: any }>
                                     </td>
                                     {userInfo[0]?.role === 'admin' ? (
                                         <>
-                                            <td className={classes}>
-                                                <p
-                                                    color="blue-gray"
-                                                    className="font-normal"
-                                                >
-                                                    {patient.isActive ? (
-                                                        <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                            Activo
-                                                        </span>
-                                                    ) : (
-                                                        <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                                                            Desactivo
-                                                        </span>
-                                                    )}
-                                                </p>
-                                            </td>
                                             <td className={classes}>
                                                 <div className="flex flex-col items-center gap-2">
                                                     <Image

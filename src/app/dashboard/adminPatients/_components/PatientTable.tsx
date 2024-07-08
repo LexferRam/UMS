@@ -11,6 +11,7 @@ import 'moment/locale/es'
 import Image from 'next/image'
 import { calculateAge, calculateAgeWithMonths } from '@/util/dateOfBirth'
 import MaterialTable, { Column } from '@material-table/core';
+import { localizationTableConfig, tableOptionConfig } from '@/util/tablesConfig'
 moment.locale('es');
 
 interface IPerson {
@@ -80,26 +81,6 @@ const PatientTable: FC<{
       }
     },
     { title: "Diagnóstico", field: "diagnosis" },
-    {
-      title: "Estatus", 
-      field: "isActive",
-      render: rowData => {
-        return (
-          <div>
-            {rowData.isActive ? (
-              <span className="inline-block bg-green-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mb-2">
-                Activo
-              </span>
-            ) : (
-              <span className="inline-block bg-red-100 rounded-full px-3 py-1 text-sm font-semibold mb-2">
-                Desactivo
-              </span>
-            )}
-          </div>
-        )
-      },
-      width: 90,
-    },
     {
       title: "Acciones",
       field: "isActive",
@@ -194,76 +175,110 @@ const PatientTable: FC<{
         {
           tooltip: 'Ver motivo de consulta',
           render: ({ rowData }) => {
+
             return (
               <div key={rowData._id} className='p-5 text-md text-semibold'>
                 <div className='mb-2'>
                   <p className='font-bold mb-1'>Motivo de consulta:</p>
                   {rowData.historyDescription}
                 </div>
-                <p className='font-bold mb-1'>Especialistas asignados:</p>
-                <div className="flex flex-row justify-start items-center gap-4 m-2">
-                  {rowData.specialistAssigned.map((specialist: any) => {
-                    return (
-                      <>
-                        <div>
-                          <Image
-                            src={specialist.lastname}
-                            className="rounded-full"
-                            alt='logo_login'
-                            width={48}
-                            height={48}
-                            priority
-                          />
-                        </div>
-                        <p
-                          color="blue-gray"
-                          className="font-normal text-clip text-gray-500 text-sm"
-                        >
-                          {specialist.name}
-                        </p>
-                      </>
-                    )
-                  })}
-                </div>
+                {rowData?.specialistAssigned?.length > 0 && (
+                  <>
+                    <p className='font-bold mb-1'>Especialistas tratantes:</p>
+                    <div className="flex flex-row justify-start items-center gap-4 m-2">
+                      {rowData?.specialistAssigned?.map((specialist: any) => {
+
+                        return (
+                          <>
+                            <div>
+                              <Image
+                                src={specialist.lastname}
+                                className="rounded-full"
+                                alt='logo_login'
+                                width={30}
+                                height={30}
+                                priority
+                              />
+                            </div>
+                            <p
+                              color="blue-gray"
+                              className="font-normal text-clip text-gray-500 text-sm"
+                            >
+                              {specialist.name}
+                            </p>
+                          </>
+                        )
+                      })}
+                    </div>
+                  </>
+                )}
+
+                {
+                  rowData?.readySpecialistList?.length > 0 && (
+                    <div className='flex flex-col'>
+                      <p className='font-bold mb-1'>Dado de alta por:</p>
+                      <div className="flex flex-row justify-start items-center gap-4 m-2">
+                        {rowData?.readySpecialistList?.map((specialist: any) => (
+                          <>
+                            <div>
+                              <Image
+                                src={specialist.lastname}
+                                className="rounded-full"
+                                alt='logo_login'
+                                width={30}
+                                height={30}
+                                priority
+                              />
+                            </div>
+                            <p
+                              color="blue-gray"
+                              className="font-normal text-clip text-gray-500 text-sm"
+                            >
+                              {specialist.name}
+                            </p>
+                          </>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                }
+
+                {
+                  rowData?.desactivatedForSpecialistList?.length > 0 && (
+                    <div className='flex flex-col'>
+                      <p className='font-bold mb-1'>Desactivado para:</p>
+                      <div className="flex flex-row justify-start items-center gap-4 m-2">
+                        {rowData?.desactivatedForSpecialistList?.map((specialist: any) => (
+                          <>
+                            <div>
+                              <Image
+                                src={specialist.lastname}
+                                className="rounded-full"
+                                alt='logo_login'
+                                width={30}
+                                height={30}
+                                priority
+                              />
+                            </div>
+                            <p
+                              color="blue-gray"
+                              className="font-normal text-clip text-gray-500 text-sm"
+                            >
+                              {specialist.name}
+                            </p>
+                          </>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                }
               </div>
             )
           },
         }
       ]}
-      localization={{
-        pagination: {
-          labelDisplayedRows: '{from}-{to} de {count}',
-          labelRows: 'Filas',
-          labelRowsPerPage: '',
-          firstTooltip: 'Primera página',
-          previousTooltip: 'Página anterior',
-          nextTooltip: 'Página siguiente',
-          lastTooltip: 'Última página'
-        },
-        toolbar: {
-          searchPlaceholder: 'Buscar',
-          searchTooltip: 'Buscar'
-        },
-        body: {
-          deleteTooltip: 'Eliminar',
-          editTooltip: 'Editar',
-          addTooltip: 'Agregar',
-          editRow: {
-            cancelTooltip: 'Cancelar',
-            saveTooltip: 'Guardar',
-            deleteText: '¿Desea eliminar este registro?'
-          }
-        }
-      }}
-      options={{
-        pageSize: 10,
-        showTitle: false,
-        headerStyle: {
-          backgroundColor: '#E5E5E5',
-          textAlign: 'center',
-        },
-        padding: "dense",
-      }}
+      localization={localizationTableConfig}
+      options={tableOptionConfig}
     />
   );
 

@@ -14,7 +14,8 @@ var eventSchema = new Schema({
     required: true
   },
   eventStatus: {
-    type: Boolean
+    type: Boolean,
+    require: false
   },
   start: {
     type: Date,
@@ -44,6 +45,22 @@ var eventSchema = new Schema({
     type: Array,
     required: true
   },
+  // associatedCancelledEventId:{
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'Event',
+  //   require: false
+  // },
+  // indicador booleano que dice si un evento es de recuperacion
+  recoverEvent:{
+    type: Boolean,
+    require: false
+  },
+  // ID de un reporte de un evento cancelado
+  reportOfCancelEventID: {
+    type: Schema.Types.ObjectId,
+    ref: 'Report',
+    require: false
+  }
 });
 
 const Event = models.Event || mongoose.model('Event', eventSchema);

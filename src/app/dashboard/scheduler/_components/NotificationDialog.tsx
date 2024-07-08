@@ -4,14 +4,8 @@ import React, { FC, useContext } from 'react'
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { ModalContext } from '@/context/NotificationDialogProvider';
-
-import LoadingButton from '@mui/lab/LoadingButton';
-import SaveIcon from '@mui/icons-material/Save';
-import Stack from '@mui/material/Stack';
 
 interface NotificationDialogProps {
     open: boolean,
@@ -21,23 +15,10 @@ interface NotificationDialogProps {
 }
 
 const NotificationDialog: FC<any> = ({
-    // openModal,
-    // setDialogMessage,
-    // dialogMessage,
-    // handleClickOpen,
-    // handleClose
     handleDeleteAction
 }) => {
 
-    const { openModal,
-        setOpenModal,
-        setDialogMessage,
-        dialogMessage,
-        handleClickOpen,
-        handleClose,
-        setExecuteCallbackFn } = useContext(ModalContext) as any
-
-        
+    const { openModal, setOpenModal, dialogMessage, handleClose } = useContext(ModalContext) as any
 
     return (
         <Dialog
@@ -50,11 +31,7 @@ const NotificationDialog: FC<any> = ({
             <DialogTitle style={{ fontSize: '18px' }}>
                 {dialogMessage}
             </DialogTitle>
-            {/* <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    {dialogMessage}
-                </DialogContentText>
-            </DialogContent> */}
+
             <DialogActions>
                 <Button
                     size="small"

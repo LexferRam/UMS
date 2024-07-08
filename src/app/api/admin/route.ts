@@ -2,6 +2,7 @@
 import { connectMongoDB } from "@/db/mongodb"
 import Event from "@/models/event"
 import Patient from "@/models/patient"
+import Report from "@/models/report"
 import User from "@/models/user"
 import mongoose from "mongoose"
 import { NextApiRequest } from "next"
@@ -39,10 +40,10 @@ export async function POST(req: NextRequest) {
     try {
 
         try {
-            const { _creator, _asignTo, title, start, end, patient, eventType, freq, byweekday, reports } = await req.json()
+            const { _creator, _asignTo, title, start, end, patient, eventType, freq, byweekday, reports, recoverEvent, reportOfCancelEventID } = await req.json()
             await connectMongoDB()
 
-            const event = await Event.create({
+            let newEventObject = {
                 _creator,
                 _asignTo: new mongoose.Types.ObjectId(_asignTo),
                 title,
@@ -54,7 +55,17 @@ export async function POST(req: NextRequest) {
                 freq,
                 byweekday,
                 reports
-            })
+            }
+
+            let newRecoverEvent = {
+                ...newEventObject,
+                recoverEvent,
+                reportOfCancelEventID
+            }
+
+            const event = await Event.create(recoverEvent ? newRecoverEvent : newEventObject)
+
+            console.log(event)
 
             // ? Buscar user por campo _asignTo
             let userFound = await User.findById({ _id: _asignTo })
@@ -74,6 +85,13 @@ export async function POST(req: NextRequest) {
 
                 // ? guardar informacion del nueva del user
                 await userFound.save()
+            }
+
+            if (recoverEvent) {
+                let reportFound = await Report.findById({ _id: reportOfCancelEventID })
+                await Report.updateOne({ _id: reportOfCancelEventID }, { $set: { hasRecovery: false } });
+                await reportFound.recoveredEvents.push(event._id)
+                await reportFound.save()
             }
 
             return NextResponse.json(event, { status: 201 })

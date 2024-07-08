@@ -141,6 +141,21 @@ export async function DELETE(req: NextRequest) {
             })
         }
 
+        // look for event ID
+        let eventFound = await Event.findById({ _id: eventId })
+
+        // si es un evento de recuperacion, se busca el reporte asociado por id
+        if (eventFound.recoverEvent) {
+            let reportOfEventCancelled = await Report.findById({ _id: eventFound?.reportOfCancelEventID })
+            await Report.findByIdAndUpdate(
+                { _id: eventFound?.reportOfCancelEventID },
+                {
+                    hasRecovery: true,
+                    recoveredEvents: reportOfEventCancelled.recoveredEvents.filter((event: any) => String(event) != String(eventFound._id))
+                }
+            )
+        }
+
         let deletedEvent = await Event.findOneAndDelete({ _id: eventId })
 
         // delete the event from the user in the property events

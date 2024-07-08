@@ -58,7 +58,7 @@ const EventDetailsModal = ({
 
     const newEndDate = dateParts && new Date(year, month, day);
 
-    const { openModal, setOpenModal, setDialogMessage, handleClickOpen, handleClose } = useContext(ModalContext) as any
+    const { setOpenModal, setDialogMessage } = useContext(ModalContext) as any
     const { setLoading } = useContext(LoadingContext) as any
     const { enqueueSnackbar } = useSnackbar()
 
@@ -72,12 +72,14 @@ const EventDetailsModal = ({
     const deleteEvent = async () => {
         try {
             setLoading(true)
-            await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events/${eventDetails?._id}`, {
+            const respDeleteEvent = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events/${eventDetails?._id}`, {
                 method: 'DELETE',
                 headers: {
                     "Content-Type": "application/json"
                 }
             })
+
+            if(!respDeleteEvent.ok) throw new Error('Error eliminando cita')
 
             await refetchEvents()
             setLoading(false)
@@ -175,10 +177,16 @@ const EventDetailsModal = ({
                             </div>
 
                             <div className='flex flex-col sm:flex-row mt-1'>
-                                <b className='mr-2'>Paciente: </b> <p className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer' onClick={() => {
-                                    if (!eventDetails?.patient.reports.length) return
-                                    router.push(`/dashboard/patientHistory/${eventDetails?.patient?._id}`, { scroll: false })
-                                }}>{eventDetails?.patient.name + ' ' + eventDetails?.patient?.lastname}</p>
+                                <b className='mr-2'>Paciente: </b>
+                                <p
+                                    className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
+                                    onClick={() => {
+                                        if (!eventDetails?.patient.reports.length) return
+                                        router.push(`/dashboard/patientHistory/${eventDetails?.patient?._id}`, { scroll: false })
+                                    }}
+                                >
+                                    {eventDetails?.patient.name + ' ' + eventDetails?.patient?.lastname}
+                                </p>
                             </div>
 
                             <div className='flex flex-col sm:flex-row mt-1'>
@@ -399,7 +407,8 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
                 associatedEvent: eventId,
                 patient: patient._id,
                 createdAt: formatDate,
-                isForEventCancel: true
+                isForEventCancel: true,
+                hasRecovery: true
             }
 
             const respAddReport = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`, {
