@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
             patient: patient,
             createdAt: createdAt,
             isForEventCancel: isForEventCancel,
-            hasRecovery: true
+            hasRecovery: isForEventCancel ? true : false
         }
 
         let reportObject = {
