@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useContext, useState } from "react";
+import { FC, useCallback, useContext, useState } from "react";
 import moment from "moment";
 import 'moment/locale/es'
 import Image from "next/image";
@@ -19,6 +19,7 @@ moment.locale('es');
 const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ reports, refecthFns }) => {
     const [openModal, setOpenModal] = useState()
     const router = useRouter()
+
     const { setLoading } = useContext(LoadingContext) as any
 
     const columns: Array<Column<IRecoverEvents>> = [
@@ -93,7 +94,8 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
         {
             title: "Crear evento de recuperación",
             field: "actions",
-            render: (rowData) => {
+            render: useCallback((rowData: any) => {
+                console.log(rowData)
                 return (
                     <AddEventModal
                         open={openModal}
@@ -102,8 +104,9 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
                         recoverEvent
                         rowData={rowData}
                         refecthFns={refecthFns}
-                    />)
-            },
+                    />
+                )
+            },[])
         },
         {
             title: "Anular recuperación",

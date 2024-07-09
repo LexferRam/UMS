@@ -248,8 +248,9 @@ export default function AddEventModal({ onEventAdded, open, setOpen, recoverEven
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button
-                    onClick={() => setOpen(true)} variant="outline"
-                    className="mb-6 bg-blue-100"
+                    onClick={() => setOpen(true)} 
+                    variant="outline"
+                    className="bg-blue-100"
                 >
                     Agregar Evento
                 </Button>
