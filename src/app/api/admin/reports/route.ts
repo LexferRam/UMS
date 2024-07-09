@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
 
         // ? si es admin se devuelven todos los reportes
         if (userFound[0].role === 'admin') {
-            const userReports: any = await Report.find()
+            const userReports: any = await Report.find({ hasRecovery: true })
                 .populate({
                     path: 'createdBy',
                     model: User
