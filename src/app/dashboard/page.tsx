@@ -5,7 +5,8 @@ import dynamic from "next/dynamic"
 import { useQuery } from "react-query"
 import DashboardSkeleton from "@/components/DashboardSkeleton"
 import { useSession } from "next-auth/react"
-const DashboardTabs = dynamic(() => import('@/components/dashboardTabs/DashboardTabs'))
+import DashboardTabs from '@/components/dashboardTabs/DashboardTabs'
+// const DashboardTabs = dynamic(() => import('@/components/dashboardTabs/DashboardTabs'))
 
 const AdminUserPage = () => {
 
@@ -36,7 +37,7 @@ const AdminUserPage = () => {
     })
 
   //status === 'authenticated' ||
-  if ( isLoadingUserEvent || isLoadingReports) return <DashboardSkeleton />
+  if (isLoadingUserEvent || isLoadingReports) return <DashboardSkeleton />
 
   // ? ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -163,18 +164,18 @@ const AdminUserPage = () => {
   })
 
   return (
-    <Suspense fallback={<DashboardSkeleton />}>
-      <DashboardTabs
-        userInfo={[session]}
-        userReports={reports}
-        userEvent={userEvent}
-        missingReportsWithDate={arrDaysWithOutReports}
-        refecthFns={{
-          refetchUserEvent,
-          refetchReports
-        }}
-      />
-    </Suspense>
+    // <Suspense fallback={<DashboardSkeleton />}>
+    <DashboardTabs
+      userInfo={[session]}
+      userReports={reports}
+      userEvent={userEvent}
+      missingReportsWithDate={arrDaysWithOutReports}
+      refecthFns={{
+        refetchUserEvent,
+        refetchReports
+      }}
+    />
+    // </Suspense>
   )
 }
 
