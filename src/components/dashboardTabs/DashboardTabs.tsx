@@ -55,7 +55,7 @@ const DashboardTabs: FC<{
 
     const userID = userInfo[0]._id
   
-    const patientListActivatedOrDesactivated = userInfo[0].asignedPatients.map((patient: any) => {
+    const patientListActivatedOrDesactivated = userInfo[0]?.asignedPatients.map((patient: any) => {
         if (patient.readySpecialistList.includes(userID) || patient.desactivatedForSpecialistList.includes(userID)) return
         return patient
     })
