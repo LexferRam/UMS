@@ -1,4 +1,6 @@
 import { connectMongoDB } from "@/db/mongodb";
+import Event from "@/models/event";
+import Patient from "@/models/patient";
 import User from "@/models/user";
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider from 'next-auth/providers/google'
@@ -11,13 +13,17 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
-        // async session({ session, token }) {
-        //     const sessionUser = await User.findOne({ email: session?.user?.email });
+        async session({ session }: any) {
+            const sessionUser = await User.findOne({ email: session?.user?.email }).populate({
+                path: 'asignedPatients',
+                model: Patient
+            }).populate({
+                path: 'events',
+                model: Event
+            });
 
-        //     // session.user && (session.user.id = sessionUser._id.toString())
-        //     // console.log( {...session.user, id : sessionUser._id.toString()})
-        //     return {...session.user, id : sessionUser._id.toString()}
-        // },
+            return sessionUser
+        },
         async signIn({ user, account }: any) {
             // console.log("User: " + JSON.stringify(user))
             // console.log("Account: " + JSON.stringify(account))
@@ -46,7 +52,7 @@ export const authOptions: NextAuthOptions = {
                              return user
                          }
                      }
-                    if (userExists) return user
+                    return userExists
 
                 } catch (error) {
                     console.log(error)

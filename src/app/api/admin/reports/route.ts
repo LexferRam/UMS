@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
     try {
         const session: any = await getServerSession(authOptions)
 
-        const userFound: any = await User.find({ email: session?.user.email }).lean()
+        const userFound: any = await User.find({ email: session?.email }).lean()
 
         let userId = userFound[0]._id.toString();
 

@@ -4,21 +4,12 @@ import { Suspense } from "react"
 import dynamic from "next/dynamic"
 import { useQuery } from "react-query"
 import DashboardSkeleton from "@/components/DashboardSkeleton"
+import { useSession } from "next-auth/react"
 const DashboardTabs = dynamic(() => import('@/components/dashboardTabs/DashboardTabs'))
 
 const AdminUserPage = () => {
 
-  const { isLoading: isLoadingUserInfo, error: userInfoError, data: userInfo = [], refetch: refetchUserInfo } = useQuery(['userInfo'], async ({ signal }) =>
-    fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/user`, {
-      signal,
-    }).then(res =>
-      res.json()
-    ),
-    {
-      keepPreviousData: true,
-      refetchInterval: false,
-      refetchOnWindowFocus: false,
-    })
+  const { data: session, status } = useSession();
 
   const { isLoading: isLoadingUserEvent, error: userEventError, data: userEvent = [], refetch: refetchUserEvent } = useQuery(['userEvent'], async ({ signal }) =>
     fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events`, {
@@ -44,7 +35,8 @@ const AdminUserPage = () => {
       refetchOnWindowFocus: false,
     })
 
-  if (isLoadingUserInfo || isLoadingUserEvent || isLoadingReports) return <DashboardSkeleton />
+  //status === 'authenticated' ||
+  if ( isLoadingUserEvent || isLoadingReports) return <DashboardSkeleton />
 
   // ? ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -173,12 +165,11 @@ const AdminUserPage = () => {
   return (
     <Suspense fallback={<DashboardSkeleton />}>
       <DashboardTabs
-        userInfo={userInfo}
+        userInfo={[session]}
         userReports={reports}
         userEvent={userEvent}
         missingReportsWithDate={arrDaysWithOutReports}
         refecthFns={{
-          refetchUserInfo,
           refetchUserEvent,
           refetchReports
         }}
