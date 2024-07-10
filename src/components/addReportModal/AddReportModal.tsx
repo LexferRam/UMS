@@ -62,7 +62,7 @@ export const AddReportModal: FC<{
             })
             if (respAddReport.ok) {
                 setOpen(false)
-                await refecthFns.refetchUserInfo(),
+                await refecthFns.refetchReports(),
                 await refecthFns.refetchUserEvent(),
                 reset();
                 setIsAddingReport(false)
