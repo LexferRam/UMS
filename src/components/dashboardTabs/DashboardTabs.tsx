@@ -171,7 +171,7 @@ const DashboardTabs: FC<{
                                     <div className='flex flex-col items-center'>
                                         <div className="text-red-800 text-center font-semibold max-w-[150px]">Citas canceladas sin recuperaciones</div>
                                         <div className="text-2xl font-bold text-red-900">
-                                            {userReports.filter((report: any) => report?.hasRecovery).length}
+                                            {userReports?.filter((report: any) => report?.hasRecovery)?.length}
                                         </div>
                                     </div>
                                     <div>

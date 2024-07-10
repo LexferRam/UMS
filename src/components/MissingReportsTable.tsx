@@ -59,7 +59,7 @@ const MissingReportsTable: React.FC<{
                                     _asignTo,  
                                     patient,
                                 }: any, index: any) => {
-                                const isLast = index === missingReportsWithDate.length - 1;
+                                const isLast = index === missingReportsWithDate?.length - 1;
                                 const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
 
                                 return (
