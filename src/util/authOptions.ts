@@ -33,7 +33,7 @@ export const authOptions: NextAuthOptions = {
 
                 try {
                     await connectMongoDB()
-                    const userExists = await User.findOne({ email })
+                    const userExists = await User.find({ email })
 
                     // if(!userExists?.isActive || !userExists) return
 

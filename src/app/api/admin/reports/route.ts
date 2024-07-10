@@ -78,12 +78,12 @@ export async function GET(req: NextRequest) {
     try {
         const session: any = await getServerSession(authOptions)
 
-        const userFound: any = await User.find({ email: session?.email }).lean()
+        // const userFound: any = await User.find({ email: session?.email }).lean()
 
-        let userId = userFound[0]._id.toString();
+        let userId = session._id.toString();
 
         // ? si es admin se devuelven todos los reportes
-        if (userFound[0].role === 'admin') {
+        if (session.role === 'admin') {
             const userReports: any = await Report.find({ hasRecovery: true })
                 .populate({
                     path: 'createdBy',
