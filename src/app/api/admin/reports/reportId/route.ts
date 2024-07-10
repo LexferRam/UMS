@@ -73,13 +73,27 @@ export async function DELETE(req: NextRequest) {
             )
         }
 
-        // delete report from event
-        let event: any = await Event.find({ _id: eventId })
-        event[0].reports = await event[0].reports.filter((report: any) => report != new mongoose.Types.ObjectId(reportId))
-
-        // delete report from patient
-        let patient: any = await Patient.find({ _id: event[0].patient })
-        patient[0].reports = patient[0].reports.filter((report: any) => report != new mongoose.Types.ObjectId(reportId))
+        let events: any = await Event.find({ _id: eventId })
+        await Event.findOneAndUpdate(
+            { _id: eventId },
+            {
+                $set: {
+                    reports: events[0].reports.filter((report: any) => String(report) != reportId)
+                }
+            },
+            { new: true })
+        
+        let patient: any = await Patient.find({ _id: events[0].patient })
+        console.log(patient[0].reports)
+        console.log(reportId)
+        await Patient.findOneAndUpdate(
+            { _id: events[0].patient },
+            {
+                $set: {
+                    reports: patient[0].reports.filter((report: any) => String(report) != reportId)
+                }
+            },
+            { new: true })
 
         // delete report
         await Report.findByIdAndDelete(reportId)
