@@ -8,6 +8,7 @@ import { authOptions } from "@/util/authOptions"
 import nextAuth, { getServerSession } from "next-auth"
 import { NextRequest, NextResponse } from "next/server"
 
+export const maxDuration = 60;
 export async function GET(req: NextRequest) {
 
     try {

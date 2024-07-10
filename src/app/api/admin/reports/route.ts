@@ -8,6 +8,7 @@ import mongoose from "mongoose"
 import Event from "@/models/event"
 import { authOptions } from "@/util/authOptions"
 
+export const maxDuration = 60;
 // ? Create new report
 export async function POST(req: NextRequest) {
 
