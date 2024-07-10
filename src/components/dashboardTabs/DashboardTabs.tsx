@@ -55,7 +55,7 @@ const DashboardTabs: FC<{
 
     const userID = userInfo[0]?._id
   
-    const patientListActivatedOrDesactivated = userInfo[0]?.asignedPatients.map((patient: any) => {
+    const patientListActivatedOrDesactivated = userInfo[0]?.asignedPatients?.map((patient: any) => {
         if (patient.readySpecialistList.includes(userID) || patient.desactivatedForSpecialistList.includes(userID)) return
         return patient
     })
@@ -171,7 +171,7 @@ const DashboardTabs: FC<{
                                     <div className='flex flex-col items-center'>
                                         <div className="text-red-800 text-center font-semibold max-w-[150px]">Citas canceladas sin recuperaciones</div>
                                         <div className="text-2xl font-bold text-red-900">
-                                            {userReports?.filter((report: any) => report?.hasRecovery)?.length}
+                                            {userReports?.length}
                                         </div>
                                     </div>
                                     <div>

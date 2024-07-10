@@ -24,8 +24,6 @@ const AdminUserPage = () => {
       refetchOnWindowFocus: false,
     })
 
-  console.log(userEvent)
-
   const { isLoading: isLoadingReports, error: reportsError, data: reports = [], refetch: refetchReports } = useQuery(['reports'], async ({ signal }) =>
     fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`, {
       signal,
