@@ -84,8 +84,6 @@ export async function DELETE(req: NextRequest) {
             { new: true })
         
         let patient: any = await Patient.find({ _id: events[0].patient })
-        console.log(patient[0].reports)
-        console.log(reportId)
         await Patient.findOneAndUpdate(
             { _id: events[0].patient },
             {
