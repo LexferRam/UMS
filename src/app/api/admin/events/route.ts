@@ -29,7 +29,7 @@ const weekdays = ["mo", "tu", "we", "th", "fr", "sa", "su"];
 export async function GET(req: NextRequest) {
 
     try {
-
+        await connectMongoDB()
         const session: any = await getServerSession(nextAuth(authOptions))
         const userFound: any = await User.find({ email: session?.user?.email })
         let userRole = userFound[0].role;
