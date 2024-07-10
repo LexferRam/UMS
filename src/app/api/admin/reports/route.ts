@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
 // ? Get reports by userId
 export async function GET(req: NextRequest) {
     try {
+        await connectMongoDB()
         const session: any = await getServerSession(authOptions)
 
         // const userFound: any = await User.find({ email: session?.email }).lean()
