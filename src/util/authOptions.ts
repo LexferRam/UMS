@@ -14,6 +14,7 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async session({ session }: any) {
+            await connectMongoDB()
             const sessionUser = await User.findOne({ email: session?.user?.email }).populate({
                 path: 'asignedPatients',
                 model: Patient
