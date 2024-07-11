@@ -21,7 +21,7 @@ const AdminUserPage = () => {
     {
       keepPreviousData: true,
       refetchInterval: false,
-      refetchOnWindowFocus: false,
+      // refetchOnWindowFocus: false,
     })
 
   const { isLoading: isLoadingReports, error: reportsError, data: reports = [], refetch: refetchReports } = useQuery(['reports'], async ({ signal }) =>
@@ -33,7 +33,7 @@ const AdminUserPage = () => {
     {
       keepPreviousData: true,
       refetchInterval: false,
-      refetchOnWindowFocus: false,
+      // refetchOnWindowFocus: false,
     })
 
   //status === 'authenticated' ||
