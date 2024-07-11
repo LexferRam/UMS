@@ -3,7 +3,8 @@ import dynamic from 'next/dynamic';
 import { useQuery } from 'react-query';
 import AdmiPageSkeleton from '../adminPatients/_components/AdmiPageSkeleton';
 import { Suspense } from 'react';
-const AdminUsersTable = dynamic(() => import('./_components/AdminUsersTable'))
+import AdminUsersTable from './_components/AdminUsersTable'
+// const AdminUsersTable = dynamic(() => import('./_components/AdminUsersTable'))
 
 const UsersAdmin = () => {
 
@@ -20,8 +21,6 @@ const UsersAdmin = () => {
     })
 
     if (isLoading) return <AdmiPageSkeleton />
-
-    console.log(data)
 
     return (
       <Suspense fallback={<AdmiPageSkeleton />}>
