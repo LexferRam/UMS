@@ -80,8 +80,7 @@ export async function GET(req: NextRequest) {
         const session: any = await getServerSession(authOptions)
 
         // const userFound: any = await User.find({ email: session?.email }).lean()
-
-        let userId = session._id.toString();
+        let userId = session?._id.toString();
 
         // ? si es admin se devuelven todos los reportes
         if (session.role === 'admin') {

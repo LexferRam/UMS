@@ -95,7 +95,7 @@ const DashboardTabs: FC<{
                                     <div className='flex flex-col items-center'>
                                         <div className="text-amber-800 text-center font-semibold">Mis Pacientes</div>
                                         <div className="text-2xl font-bold text-amber-900">
-                                            {patientListActivatedOrDesactivated.filter(Boolean).length}
+                                            {patientListActivatedOrDesactivated?.filter(Boolean).length}
                                         </div>
                                     </div>
 

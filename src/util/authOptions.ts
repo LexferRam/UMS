@@ -38,7 +38,8 @@ export const authOptions: NextAuthOptions = {
 
                     // if(!userExists?.isActive || !userExists) return
 
-                     if (!userExists) {
+                     if (!userExists.length) {
+                        console.log('nuevo user3')
                          const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/user`, {
                              method: 'POST',
                              headers: {
