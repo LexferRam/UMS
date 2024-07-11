@@ -222,7 +222,7 @@ const Scheduler = () => {
 
   return (
     <Suspense fallback={<SchedulerSkeleton />}>
-      <div className='flex flex-col w-full lg:shadow-xl rounded py-8 sm:px-4 scrollbar-hide'>
+      <div className='flex flex-col w-full lg:shadow-xl rounded sm:py-8 sm:px-4 scrollbar-hide'>
         <EventDetailsModal
           open={openDetails}
           setOpen={setOpenDetails}
