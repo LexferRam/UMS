@@ -262,7 +262,7 @@ export default function AddEventModal({ onEventAdded, open, setOpen, recoverEven
                 </DialogHeader>
                 {recoverEvent && (
                     <Alert severity="warning" className='w-[100%]'>
-                        Las sesiones de recuperación pueden ser 1 ,2 o 3, y en total deben sumar un total de 45min
+                        Las sesiones de recuperación pueden ser 1 ,2 o 3, y en total deben sumar 45min
                     </Alert>
                 )}
                 <form onSubmit={handleSubmit(onSubmit)}>
