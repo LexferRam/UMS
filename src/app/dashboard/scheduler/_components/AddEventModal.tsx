@@ -309,6 +309,7 @@ export default function AddEventModal({ onEventAdded, open, setOpen, recoverEven
                                 </Label>
                                 <input
                                     type="time"
+                                    step="600"
                                     {...register("timeStart",
                                         {
                                             required: 'Ingrese la hora de inicio'
@@ -324,6 +325,7 @@ export default function AddEventModal({ onEventAdded, open, setOpen, recoverEven
                                 </Label>
                                 <input
                                     type="time"
+                                    step="600"
                                     {...register("timeEnd",
                                         {
                                             required: 'Ingrese la hora de culminación'
