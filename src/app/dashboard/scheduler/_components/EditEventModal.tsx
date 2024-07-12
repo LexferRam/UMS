@@ -324,7 +324,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
                         </Label>
                         <input
                             type="time"
-                            step="600"
+                            // step="600"
                             {...register("timeStart",
                                 {
                                     required: 'Ingrese la hora de inicio'
@@ -341,7 +341,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
                         </Label>
                         <input
                             type="time"
-                            step="600"
+                            // step="600"
                             {...register("timeEnd",
                                 {
                                     required: 'Ingrese la hora de culminación'
