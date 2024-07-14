@@ -271,7 +271,7 @@ const Scheduler = () => {
           headerToolbar={{
             left: 'prev,next,today',
             center: (width as any < 500) ? '' : 'title',
-            right: (width as any < 500) ? 'resourceTimeGridDay,resourceTimeGridWeek' : 'resourceTimeGridDay,resourceTimeGridWeek,dayGridMonth'
+            right: "timeGridDay,timeGridWeek,dayGridMonth"
           }}
           displayEventTime={false}
           eventTimeFormat={
@@ -295,7 +295,7 @@ const Scheduler = () => {
             setOpenDetails(true)
           }}
           resources={[
-            { id: 'a', title: 'Citas hoy' }
+            { id: 'a', title: ' ' }
           ]}
           timeZone='local'
           slotLabelFormat={{ hour: 'numeric', hour12: true }}
@@ -346,6 +346,7 @@ const Scheduler = () => {
               </div>
             );
           }}
+          nowIndicator
         />
       </div>
     </Suspense>
