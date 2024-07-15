@@ -1,7 +1,7 @@
 'use client'
 
-import { Suspense } from "react"
-import dynamic from "next/dynamic"
+// import { Suspense } from "react"
+// import dynamic from "next/dynamic"
 import { useQuery } from "react-query"
 import DashboardSkeleton from "@/components/DashboardSkeleton"
 import { useSession } from "next-auth/react"
@@ -19,9 +19,9 @@ const AdminUserPage = () => {
       res.json()
     ),
     {
-      keepPreviousData: true,
-      refetchInterval: false,
-      // refetchOnWindowFocus: false,
+      // keepPreviousData: true,
+      // refetchInterval: false,
+      refetchOnWindowFocus: true,
     })
 
   const { isLoading: isLoadingReports, error: reportsError, data: reports = [], refetch: refetchReports } = useQuery(['reports'], async ({ signal }) =>
@@ -31,9 +31,9 @@ const AdminUserPage = () => {
       res.json()
     ),
     {
-      keepPreviousData: true,
-      refetchInterval: false,
-      // refetchOnWindowFocus: false,
+      // keepPreviousData: true,
+      // refetchInterval: false,
+      refetchOnWindowFocus: true,
     })
 
   //status === 'authenticated' ||

@@ -5,7 +5,6 @@ import Link from "next/link"
 import EventsTable from '../eventsTable/EventsTable';
 import { CalendarDaysIcon, ExclamationTriangleIcon, FolderIcon, UserIcon } from '@heroicons/react/24/outline';
 import MissingReportsTable from '../MissingReportsTable';
-import { useQuery } from 'react-query';
 import ReportsTable from '../ReportsTable';
 
 const DashboardTabs: FC<{

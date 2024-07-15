@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useCallback, useContext, useState } from "react";
+import React, { FC, useCallback, useContext, useState } from "react";
 import moment from "moment";
 import 'moment/locale/es'
 import Image from "next/image";
@@ -9,18 +9,29 @@ import MaterialTable, { Column } from "@material-table/core";
 import DoDisturbOnIcon from '@mui/icons-material/DoDisturbOn';
 import { IRecoverEvents } from "@/interfaces/recoverEvents";
 import { localizationTableConfig, tableOptionConfig } from "@/util/tablesConfig";
-import AddEventModal from "@/app/dashboard/scheduler/_components/AddEventModal";
 import { useRouter } from "next/navigation";
-import { IconButton } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import { LoadingContext } from "@/context/LoadingProvider";
 import { enqueueSnackbar } from "notistack";
+import AddRecoverEvent from "@/app/dashboard/scheduler/_components/AddRecoverEvent";
+import EventIcon from '@mui/icons-material/Event';
 moment.locale('es');
 
 const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ reports, refecthFns }) => {
-    const [openModal, setOpenModal] = useState()
+    const [openModal, setOpenModal] = useState<Boolean>(false)
+    const [currentRowData, setCurrentRowData] = useState()
     const router = useRouter()
 
     const { setLoading } = useContext(LoadingContext) as any
+
+    const MyTooltipComponent = React.forwardRef(function MyComponent(props: any, ref) {
+        //  Spread the props to the underlying DOM element.
+        return (
+          <div {...props} ref={ref}>
+            {props.title.substring(0, 50)}{props.title.length > 30 && '...'}
+          </div>
+        );
+      });
 
     const columns: Array<Column<IRecoverEvents>> = [
         {
@@ -88,25 +99,32 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
             title: "Motivo de cancelación",
             field: "cancelMotive",
             render: rowData => {
-                return <>{rowData.description}</>
+                return (
+                    <Tooltip title={rowData.description}>
+                        <MyTooltipComponent title={rowData.description} />
+                    </Tooltip>
+                )
             }
         },
         {
             title: "Crear evento de recuperación",
             field: "actions",
-            render: useCallback((rowData: any) => {
-                console.log(rowData)
+            render: (rowData: any) => {
                 return (
-                    <AddEventModal
-                        open={openModal}
-                        setOpen={setOpenModal}
-                        onEventAdded={(e: any) => { }} //onEventAdded(e)
-                        recoverEvent
-                        rowData={rowData}
-                        refecthFns={refecthFns}
-                    />
+                    <Button
+                        onClick={() => {
+                            setCurrentRowData(rowData);
+                            setOpenModal(true)
+                        }}
+                        style={{
+                            textTransform: 'capitalize'
+                        }}
+                        startIcon={<EventIcon />}
+                    >
+                        Agregar Evento
+                    </Button>
                 )
-            },[])
+            }
         },
         {
             title: "Anular recuperación",
@@ -168,6 +186,13 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
 
     return (
         <div className='p-5'>
+            <AddRecoverEvent
+                open={openModal}
+                setOpen={setOpenModal}
+                recoverEvent
+                rowData={currentRowData}
+                refecthFns={refecthFns}
+            />
             <h3 className='font-semibold text-gray-600 text-xl w-full'>Citas canceladas sin recuperaciones:</h3>
             <div className="h-full w-full overflow-scroll shadow-md rounded mt-8 scrollbar-hide">
                 <MaterialTable
@@ -183,6 +208,3 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
 }
 
 export default ReportsTable
-
-// ! las sesiones de recuracion pueden ser 1 ,2 o 3, y en total deben sumar un total de 45min
-// ! si no suman 45min en total la cita cancelada debe seguir apareciendo com faltante por recupracion

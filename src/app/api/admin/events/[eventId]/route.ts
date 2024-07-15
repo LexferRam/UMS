@@ -150,8 +150,14 @@ export async function DELETE(req: NextRequest) {
             await Report.findByIdAndUpdate(
                 { _id: eventFound?.reportOfCancelEventID },
                 {
-                    hasRecovery: true,
                     recoveredEvents: reportOfEventCancelled.recoveredEvents.filter((event: any) => String(event) != String(eventFound._id))
+                }
+            )
+            let reportOfEventCancelledWithRepostUpdated = await Report.findById({ _id: eventFound?.reportOfCancelEventID })
+            await Report.findByIdAndUpdate(
+                { _id: eventFound?.reportOfCancelEventID },
+                {
+                    hasRecovery: reportOfEventCancelledWithRepostUpdated?.recoveredEvents?.length > 0 ? false : true
                 }
             )
         }
