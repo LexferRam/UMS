@@ -185,9 +185,9 @@ export default function AddRecoverEvent({ open, setOpen, recoverEvent, rowData, 
 
                         {/* BLOQUES DE FECHAS DE RECUPERACION */}
                         {eventsQuatity.map((recoveryEvent, i) => (
-                            <div style={{ display: 'flex', flexDirection: 'column'}}>
+                            <div key={i} style={{ display: 'flex', flexDirection: 'column'}}>
                                 <h3 style={{fontWeight: 'bold', marginBottom: '3px'}}>Bloque {i+1}:</h3>
-                                <div key={i} className="flex gap-4">
+                                <div className="flex gap-4">
                                     <div className=" w-full flex flex-col gap-2 flex-wrap justify-center items-start">
                                         <Label className="text-right">
                                             Fecha Inicio:
