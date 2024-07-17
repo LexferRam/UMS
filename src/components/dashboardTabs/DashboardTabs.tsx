@@ -52,6 +52,7 @@ const DashboardTabs: FC<{
         return eventsForTodayArray
     }
 
+    console.log(userInfo)
     const userID = userInfo[0]?._id
   
     const patientListActivatedOrDesactivated = userInfo[0]?.asignedPatients?.map((patient: any) => {

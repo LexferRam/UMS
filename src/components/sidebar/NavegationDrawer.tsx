@@ -10,7 +10,7 @@ export function DrawerWithNavigation({ open, setOpen }: any) {
             <div className="flex justify-end cursor-pointer">
                 <XCircleIcon className="h-10 w-10 text-gray-500" onClick={closeDrawer} />
             </div>
-            <NavItems />
+            {/* <NavItems /> */}
         </Drawer>
     );
 }

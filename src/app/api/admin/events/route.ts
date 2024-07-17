@@ -6,6 +6,7 @@ import Report from "@/models/report"
 import User from "@/models/user"
 import { authOptions } from "@/util/authOptions"
 import nextAuth, { getServerSession } from "next-auth"
+import { getSession } from "next-auth/react"
 import { NextRequest, NextResponse } from "next/server"
 
 export const maxDuration = 60;
@@ -26,13 +27,15 @@ function calculateMondays(startDate: any, today: any, dayWeek: number) {
 
 const weekdays = ["mo", "tu", "we", "th", "fr", "sa", "su"];
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest, res: any) {
 
     try {
         await connectMongoDB()
         const session: any = await getServerSession(nextAuth(authOptions))
         const userFound: any = await User.find({ email: session?.user?.email })
         let userRole = userFound[0]?.role;
+
+        console.log(session)
 
         // TODO: Validar con el role del usuario
         if (userRole !== 'admin') {
@@ -165,7 +168,7 @@ export async function GET(req: NextRequest) {
                     }
                 })
 
-            return NextResponse.json({arrDaysWithOutReports, events: updatedUser[0].events}) 
+            return NextResponse.json({arrDaysWithOutReports, events: updatedUser[0]?.events}) 
         }
 
         await connectMongoDB()
