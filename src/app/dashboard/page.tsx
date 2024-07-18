@@ -10,6 +10,7 @@ import DashboardTabs from '@/components/dashboardTabs/DashboardTabs'
 import { headers } from 'next/headers'
 import nextAuth, { getServerSession } from "next-auth"
 import { authOptions } from "@/util/authOptions"
+import DashboardContainer from "@/components/DashboardContainer"
 
 export const getUserEventsResp = async () => {
   try {
@@ -105,15 +106,15 @@ const AdminUserPage = async () => {
 
   return (
     // <Suspense fallback={<DashboardSkeleton />}>
-    <DashboardTabs
-      userInfo={session}
-      userReports={reports}
-      userEvent={userEvent?.events}
-      missingReportsWithDate={userEvent?.arrDaysWithOutReports}
-      refecthFns={{
-        // refetchUserEvent,
-        // refetchReports
-      }}
+    <DashboardContainer
+      // session={session}
+      reportsInitData={reports}
+      userEventInitData={userEvent}
+      // missingReportsWithDate={userEvent?.arrDaysWithOutReports}
+      // refecthFns={{
+      //   // refetchUserEvent,
+      //   // refetchReports
+      // }}
     />
     // </Suspense>
 
