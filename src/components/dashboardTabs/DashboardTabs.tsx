@@ -15,13 +15,13 @@ const DashboardTabs: FC<{
     refecthFns: any
 }> = ({ userInfo, userReports, userEvent, missingReportsWithDate, refecthFns }) => {
 
-    function isDateWithinRange(today: any, startDate: any, endDate: any, event:any) {
-        today = today.setHours(0,0,0,0).toLocaleString("es-VE")
-        startDate = new Date(startDate).setHours(0,0,0,0).toLocaleString("es-VE")
-        endDate = new Date(endDate).setHours(0,0,0,0).toLocaleString("es-VE")
-         return today >= startDate && today <= endDate;
-     }
-      
+    function isDateWithinRange(today: any, startDate: any, endDate: any, event: any) {
+        today = today.setHours(0, 0, 0, 0).toLocaleString("es-VE")
+        startDate = new Date(startDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
+        endDate = new Date(endDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
+        return today >= startDate && today <= endDate;
+    }
+
     const eventForToday = (eventsArray: any) => {
         let daysWeek: any = {
             mo: 1,
@@ -52,9 +52,8 @@ const DashboardTabs: FC<{
         return eventsForTodayArray
     }
 
-    console.log(userInfo)
     const userID = userInfo[0]?._id
-  
+
     const patientListActivatedOrDesactivated = userInfo[0]?.asignedPatients?.map((patient: any) => {
         if (patient.readySpecialistList.includes(userID) || patient.desactivatedForSpecialistList.includes(userID)) return
         return patient
@@ -74,7 +73,7 @@ const DashboardTabs: FC<{
         'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={patientListActivatedOrDesactivated?.filter(Boolean)} />,
         'events': <EventsTable tableHeaders={userInfo[0]?.role !== 'admin' ? TABLE_HEAD_EVENTS : TABLE_HEAD_EVENTS_ADMIN} events={eventForToday(userEvent)} refecthFns={refecthFns} />,
         'missingReports': <MissingReportsTable tableHeaders={TABLE_HEAD_MISSING_REPORTS} missingReportsWithDate={missingReportsWithDate} refecthFns={refecthFns} />,
-        'cancelEventsWithoutRecovery': <ReportsTable reports={userReports} refecthFns={refecthFns}/>
+        'cancelEventsWithoutRecovery': <ReportsTable reports={userReports} refecthFns={refecthFns} />
     }
 
     return (
