@@ -1,17 +1,22 @@
 import { headers } from "next/headers"
 
+const headersList = headers()
+const cookie = headersList.get('cookie') as any
+
 export const getUserEventsResp = async () => {
     try {
         const userEventsResp = await fetch(
             `${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events`,
             {
-                headers: headers(),
+                headers: {
+                    'Cookie': cookie
+                },
                 cache: 'no-store'
                 // next: {
                 //   revalidate: 5000 // revalidate after 1 day ==>  ISR
                 // }
             }
-        )
+        ) 
         const userEvents = await userEventsResp.json()
         return userEvents
     } catch (error) {
@@ -24,7 +29,9 @@ export const getReportsResp = async () => {
         const reportsResp = await fetch(
             `${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports`,
             {
-                headers: headers(),
+                headers: {
+                    'Cookie': cookie
+                },
                 cache: 'no-store'
                 // next: {
                 //   revalidate: 5000 // revalidate after 1 day ==>  ISR
@@ -43,7 +50,9 @@ export const getUserResp = async () => {
         const userResp = await fetch(
             `${process.env.NEXT_PUBLIC_BASE_API}/api/admin/user`,
             {
-                headers: headers(),
+                headers: {
+                    'Cookie': cookie
+                },
                 cache: 'no-store'
                 // next: {
                 //   revalidate: 5000 // revalidate after 1 day ==>  ISR
