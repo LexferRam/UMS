@@ -1,18 +1,5 @@
 
 import React from "react"
-// import Link from "next/link"
-// import { Button } from "../ui/button"
-// import { signOut } from "next-auth/react"
-// import Image from "next/image"
-
-
-// import {
-//     Navbar,
-//     Typography,
-// } from "@material-tailwind/react";
-// import { Bars3Icon } from "@heroicons/react/24/outline";
-// import { DrawerWithNavigation } from "./NavegationDrawer"
-// import { useUserInfo } from "@/hooks"
 import { MainNavContainer } from "./MainNavContainer"
 import { headers } from 'next/headers'
 

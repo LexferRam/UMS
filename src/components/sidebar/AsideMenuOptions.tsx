@@ -44,29 +44,4 @@ const AsideMenuOptions = async () => {
     </div>
 )}
 
-export const NavItems = async () => {
-
-    // if (isLoadingUserInfo) return <SidebarSkeleton />
-    const userInfo: any = await getUserResp()
-
-    const arrayLinks = userInfo[0]?.role === 'admin' 
-        ? adminNavLinks 
-        : specialistNavLinks;
-
-
-    return (
-        <>
-            {arrayLinks?.map(item => (
-                <div key={item.mainTitle}>
-                    <h4 className='rounded-md px-2 py-4 text-sm font-medium'>
-                        {item.mainTitle}
-                    </h4>
-
-                    <ItemsMenuOptions item={item} />
-                </div>
-            ))}
-        </>
-    )
-}
-
 export default AsideMenuOptions

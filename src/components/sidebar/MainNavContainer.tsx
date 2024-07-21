@@ -98,7 +98,7 @@ export function MainNavContainer({
                     </div>
                 </div>
             </Navbar>
-            <DrawerWithNavigation open={open} setOpen={setOpen} />
+            <DrawerWithNavigation open={open} setOpen={setOpen} userInfo={userInfo}/>
         </>
     )
 }
