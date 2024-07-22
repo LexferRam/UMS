@@ -15,8 +15,8 @@ import { SnackbarProvider } from 'notistack'
 const inter = Inter({ subsets: ['latin'] })
 
 const metadata: Metadata = {
-  title: 'Un Mundo Sensorial',
-  description: 'Un Mundo Sensorial',
+  title: 'UMS - Guatire',
+  description: 'Un Mundo Sensorial - Guatire',
   manifest: '/manifest.json',
   icons: {
     apple: '/icon-192x192.png',

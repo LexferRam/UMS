@@ -1,12 +1,12 @@
 {
-    "theme_color": "#cdf3f7",
-    "background_color": "#cdf3f7",
+    "theme_color": "#feead2",
+    "background_color": "#feead2",
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
-    "name": "Un Mundo Sensorial",
-    "short_name": "UMS",
-    "description": "Un Mundo Sensorial",
+    "name": "Un Mundo Sensorial - Guatire",
+    "short_name": "UMS Guatire",
+    "description": "Un Mundo Sensorial - Guatire",
     "icons": [
         {
             "src": "/icon-192x192.png",
