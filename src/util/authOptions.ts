@@ -15,13 +15,7 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async session({ session }: any) {
             await connectMongoDB()
-            const sessionUser = await User.findOne({ email: session?.user?.email }).populate({
-                path: 'asignedPatients',
-                model: Patient
-            }).populate({
-                path: 'events',
-                model: Event
-            });
+            const sessionUser = await User.findOne({ email: session?.user?.email })
 
             return sessionUser
         },
@@ -32,13 +26,7 @@ export const authOptions: NextAuthOptions = {
 
                 try {
                     await connectMongoDB()
-                    const userExists = await User.find({ email }).populate({
-                        path: 'asignedPatients',
-                        model: Patient
-                    }).populate({
-                        path: 'events',
-                        model: Event
-                    })
+                    const userExists = await User.find({ email })
 
                     // if(!userExists?.isActive || !userExists) return
 

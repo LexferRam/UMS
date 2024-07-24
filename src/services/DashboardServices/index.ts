@@ -40,3 +40,24 @@ export const getReportsResp = async (cookies: any) => {
         console.error(error)
     }
 }
+
+export const getUserResp = async (cookies: any) => {
+    try {
+        const userResp = await fetch(
+            `${process.env.NEXT_PUBLIC_BASE_API}/api/admin/user`,
+            {
+                headers: {
+                    'Cookie': cookies
+                },
+                cache: 'no-store'
+                // next: {
+                //   revalidate: 5000 // revalidate after 1 day ==>  ISR
+                // }
+            }
+        )
+        const userResponse = await userResp.json()
+        return userResponse
+    } catch (error) {
+        console.error(error)
+    }
+}
