@@ -59,9 +59,9 @@ export function MainNavContainer({
                                     </div>
                                 ) : ( */}
                                     <>
-                                        <Typography placeholder='' variant="h6">{userInfo[0]?.name || ''}</Typography>
+                                        <Typography placeholder='' variant="h6">{userInfo?.name || ''}</Typography>
                                         <Typography placeholder='' variant="small" color="gray" className="font-normal text-gray-500">
-                                            {userInfo[0]?.role === 'admin' ? 'Administrador' : 'Terapeuta'}
+                                            {userInfo?.role === 'admin' ? 'Administrador' : 'Terapeuta'}
                                         </Typography>
                                     </>
                                 {/* )} */}
@@ -75,7 +75,7 @@ export function MainNavContainer({
                             <div className="w-[50px] h-[50px] rounded-full bg-gray-300 animate-pulse"></div>
                         ) : ( */}
                             <Image
-                                src={userInfo[0]?.lastname || ''}
+                                src={userInfo?.lastname || ''}
                                 alt=''
                                 height={50}
                                 width={50}

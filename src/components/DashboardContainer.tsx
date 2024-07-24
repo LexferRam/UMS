@@ -1,9 +1,10 @@
 'use client'
 
 import React from 'react'
-import DashboardTabs from './dashboardTabs/DashboardTabs'
+
 import DashboardSkeleton from './DashboardSkeleton'
 import { useUserEvents, useUserReports } from '@/hooks'
+import DashboardTabs from './dashboardTabs/DashboardTabs'
 
 const DashboardContainer = ({
   session,

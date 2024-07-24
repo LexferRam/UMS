@@ -20,7 +20,7 @@ export const NavItems = ({ userInfo }: any) => {
 
     // if (isLoadingUserInfo) return <SidebarSkeleton />
 
-    const arrayLinks = userInfo[0]?.role === 'admin' 
+    const arrayLinks = userInfo?.role === 'admin' 
         ? adminNavLinks 
         : specialistNavLinks;
 

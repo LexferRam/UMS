@@ -1,32 +1,13 @@
 
 import { adminNavLinks, specialistNavLinks } from "./constants/linksByUser";
-// import SidebarSkeleton from "./SidebarSkeleton";
+import { getSession } from "@/util/authOptions";
 import ItemsMenuOptions from "./ItemsMenuOptions";
-import { headers } from "next/headers";
-
-export const getUserResp = async () => {
-    try {
-      const userResp = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_API}/api/admin/user`,
-        {
-          headers: headers(),
-          next: {
-            revalidate: 5000 // revalidate after 1 day ==>  ISR
-          }
-        }
-      )
-      const userResponse = await userResp.json()
-      return userResponse
-    } catch (error) {
-      console.error(error)
-    }
-  }
 
 const AsideMenuOptions = async () => {
 
-    const userInfo: any = await getUserResp()
+    const session = await getSession() as any
 
-    const arrayLinks = userInfo[0]?.role === 'admin' 
+    const arrayLinks = session?.role === 'admin' 
         ? adminNavLinks 
         : specialistNavLinks;
     

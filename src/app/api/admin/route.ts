@@ -65,8 +65,6 @@ export async function POST(req: NextRequest) {
 
             const event = await Event.create(recoverEvent ? newRecoverEvent : newEventObject)
 
-            console.log(event)
-
             // ? Buscar user por campo _asignTo
             let userFound = await User.findById({ _id: _asignTo })
 

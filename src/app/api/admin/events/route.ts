@@ -35,8 +35,6 @@ export async function GET(req: NextRequest, res: any) {
         const userFound: any = await User.find({ email: session?.user?.email })
         let userRole = userFound[0]?.role;
 
-        console.log(session)
-
         // TODO: Validar con el role del usuario
         if (userRole !== 'admin') {
             await connectMongoDB()

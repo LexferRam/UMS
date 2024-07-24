@@ -1,16 +1,18 @@
-'use client'
 
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { ThemeProvider } from '@/context/ThemeProvider'
-import '@/styles/globals.css'
-import Providers from '@/context/Providers'
-import "react-datetime/css/react-datetime.css";
+
 import ReactQueryProvider from '@/context/ReactQueryProvider'
-import ThemeProviderMui from '@/context/ThemeProviderMUI';
-import { ModalProvider } from '@/context/NotificationDialogProvider'
+import { ThemeProvider } from '@/context/ThemeProvider'
+import Providers from '@/context/Providers'
 import { LoadingProvider } from '@/context/LoadingProvider'
-import { SnackbarProvider } from 'notistack'
+import { ModalProvider } from '@/context/NotificationDialogProvider'
+import ThemeProviderMui from '@/context/ThemeProviderMUI';
+import NotiStackProvider from '@/context/NotiStackProvider'
+
+import '@/styles/globals.css'
+import "react-datetime/css/react-datetime.css";
+import { getSession } from '@/util/authOptions'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,11 +26,14 @@ const metadata: Metadata = {
   themeColor: '#16b3c4',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+
+  const session = await getSession()
+
   return (
     <html lang="es" className='scrollbar-hide'>
       <head>
@@ -43,26 +48,26 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <ReactQueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Providers>
+        <Providers session={session}>
+          <ReactQueryProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
               <LoadingProvider>
                 <ModalProvider>
                   <ThemeProviderMui>
-                    <SnackbarProvider>
+                    <NotiStackProvider>
                       {children}
-                    </SnackbarProvider>
+                    </NotiStackProvider>
                   </ThemeProviderMui>
                 </ModalProvider>
               </LoadingProvider>
-            </Providers>
-          </ThemeProvider>
-        </ReactQueryProvider>
+            </ThemeProvider>
+          </ReactQueryProvider>
+        </Providers>
       </body>
     </html>
   )

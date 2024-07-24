@@ -52,6 +52,7 @@
     "react-pick-color": "^2.0.0",
     "react-query": "^3.39.3",
     "react-tippy": "^1.4.0",
+    "sharp": "^0.33.4",
     "styled-components": "^6.1.11",
     "tailwind-merge": "^2.1.0",
     "tippy.js": "^6.3.7",

@@ -2,7 +2,7 @@ import { connectMongoDB } from "@/db/mongodb";
 import Event from "@/models/event";
 import Patient from "@/models/patient";
 import User from "@/models/user";
-import { NextAuthOptions } from "next-auth";
+import { getServerSession, NextAuthOptions } from "next-auth";
 import GoogleProvider from 'next-auth/providers/google'
 
 export const authOptions: NextAuthOptions = {
@@ -26,20 +26,23 @@ export const authOptions: NextAuthOptions = {
             return sessionUser
         },
         async signIn({ user, account }: any) {
-            // console.log("User: " + JSON.stringify(user))
-            // console.log("Account: " + JSON.stringify(account))
 
             if (account?.provider === 'google') {
                 const { name, email, image } = user;
 
                 try {
                     await connectMongoDB()
-                    const userExists = await User.find({ email })
+                    const userExists = await User.find({ email }).populate({
+                        path: 'asignedPatients',
+                        model: Patient
+                    }).populate({
+                        path: 'events',
+                        model: Event
+                    })
 
                     // if(!userExists?.isActive || !userExists) return
 
                      if (!userExists.length) {
-                        console.log('nuevo user3')
                          const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/user`, {
                              method: 'POST',
                              headers: {
@@ -64,3 +67,5 @@ export const authOptions: NextAuthOptions = {
         }
     }
 }
+
+export const getSession = async () =>  await getServerSession(authOptions)
