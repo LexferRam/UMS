@@ -1,24 +1,23 @@
-import { Drawer } from "@material-tailwind/react";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import { adminNavLinks, specialistNavLinks } from "./constants/linksByUser";
 import ItemsMenuOptions from "./ItemsMenuOptions";
+import { SwipeableDrawer } from "@mui/material";
 
 export function DrawerWithNavigation({ open, setOpen, userInfo }: any) {
     const closeDrawer = () => setOpen(false);
+    const openDrawer = () => setOpen(true);
 
     return (
-        <Drawer placeholder='' className="z-50 p-8 bg-white" open={open} onClose={closeDrawer}>
-            <div className="flex justify-end cursor-pointer">
+        <SwipeableDrawer  className="z-50" open={open} onClose={closeDrawer} onOpen={openDrawer}>
+            <div className="flex justify-end cursor-pointer p-8">
                 <XCircleIcon className="h-10 w-10 text-gray-500" onClick={closeDrawer} />
             </div>
             <NavItems userInfo={userInfo} />
-        </Drawer>
+        </SwipeableDrawer>
     );
 }
 
 export const NavItems = ({ userInfo }: any) => {
-
-    // if (isLoadingUserInfo) return <SidebarSkeleton />
 
     const arrayLinks = userInfo?.role === 'admin' 
         ? adminNavLinks 
@@ -28,7 +27,7 @@ export const NavItems = ({ userInfo }: any) => {
     return (
         <>
             {arrayLinks?.map(item => (
-                <div key={item.mainTitle}>
+                <div key={item.mainTitle} className="px-12">
                     <h4 className='rounded-md px-2 py-4 text-sm font-medium'>
                         {item.mainTitle}
                     </h4>

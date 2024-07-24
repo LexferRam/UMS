@@ -18,7 +18,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 const metadata: Metadata = {
   title: 'UMS - Guatire',
-  description: 'Un Mundo Sensorial - Guatire',
+  description: 'Un Mundo Sensorial',
   manifest: '/manifest.json',
   icons: {
     apple: '/icon-192x192.png',

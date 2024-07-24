@@ -19,7 +19,7 @@ export default function RootLayout({
                 <aside className='z-30 -ml-5 hidden w-full'>
                     <AsideMenuOptions />
                 </aside>
-                <main className='py-6 p-1 sm:px-6 sm:relative sm:top-[80px]'>
+                <main className='py-6 p-1 sm:px-6 sm:relative'>
                     {children}
                 </main>
             </div>

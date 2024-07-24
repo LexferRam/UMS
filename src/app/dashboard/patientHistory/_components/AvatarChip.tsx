@@ -1,4 +1,4 @@
-import { Chip, Avatar, Typography } from "@material-tailwind/react";
+import { Avatar, Chip, Typography } from "@mui/material"
 
 interface IChipWithAvatar {
     name: string,
@@ -16,20 +16,16 @@ export function ChipWithAvatar({
             {
                 therapistSelected === name || therapistSelected === 'Todos' ? (
                     <Chip
-                        icon={
+                        avatar={
                             <Avatar
-                                placeholder=''
-                                size="xxl"
-                                variant="circular"
                                 className="h-full w-full"
                                 alt={name}
                                 src={profilePicture || '/icon-512x512.png'}
                             />
                         }
-                        value={
+                        label={
                             <Typography
-                                placeholder=''
-                                variant="small"
+                                variant="caption"
                                 color="white"
                                 className="font-medium capitalize leading-none text-white"
                             >
@@ -40,20 +36,16 @@ export function ChipWithAvatar({
                     />
                 ) : (
                     <Chip
-                        icon={
+                        avatar={
                             <Avatar
-                                placeholder=''
-                                size="xxl"
-                                variant="circular"
                                 className="h-full w-full"
                                 alt={name}
                                 src={profilePicture || '/icon-512x512.png'}
                             />
                         }
-                        value={
+                        label={
                             <Typography
-                                placeholder=''
-                                variant="small"
+                                variant="caption"
                                 color="white"
                                 className="font-medium capitalize leading-none text-[#16b3c4]"
                             >

@@ -9,10 +9,11 @@ import Image from "next/image"
 
 import {
     Navbar,
-    Typography,
 } from "@material-tailwind/react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { DrawerWithNavigation } from "./NavegationDrawer"
+import Typography from '@mui/material/Typography';
+import { AppBar } from "@mui/material"
 
 
 export function MainNavContainer({
@@ -24,7 +25,7 @@ export function MainNavContainer({
 
     return (
         <>
-            <Navbar className="sm:fixed z-30 w-full px-6 text-black" placeholder=''>
+            <AppBar style={{ backgroundColor: 'white', position: 'static', color: 'black', width: '100%'}} className="z-30 px-6 py-4">
                 <div className="flex items-center justify-between text-blue-gray-900">
 
                     <div className="flex items-center mr-2 sm:mr-10">
@@ -59,8 +60,8 @@ export function MainNavContainer({
                                     </div>
                                 ) : ( */}
                                     <>
-                                        <Typography placeholder='' variant="h6">{userInfo?.name || ''}</Typography>
-                                        <Typography placeholder='' variant="small" color="gray" className="font-normal text-gray-500">
+                                        <Typography variant="subtitle1">{userInfo?.name || ''}</Typography>
+                                        <Typography variant="body2" color="gray" className="font-normal text-gray-500">
                                             {userInfo?.role === 'admin' ? 'Administrador' : 'Terapeuta'}
                                         </Typography>
                                     </>
@@ -97,7 +98,7 @@ export function MainNavContainer({
                         </div>
                     </div>
                 </div>
-            </Navbar>
+            </AppBar>
             <DrawerWithNavigation open={open} setOpen={setOpen} userInfo={userInfo}/>
         </>
     )

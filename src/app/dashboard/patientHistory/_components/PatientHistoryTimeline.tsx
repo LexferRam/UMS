@@ -8,8 +8,8 @@ import {
     TimelineHeader,
     TimelineIcon,
     TimelineBody,
-    Avatar,
-    Card,
+    // Avatar,
+    // Card,
 } from "@material-tailwind/react";
 import moment from 'moment';
 import { useQuery } from 'react-query';
@@ -17,7 +17,7 @@ import TimelineSkeleton from './TimelineSkeleton';
 import 'moment/locale/es'
 import { EVENTS_TYPE_COLORS } from '@/util/eventsType';
 import { ChipWithAvatar } from './AvatarChip';
-import { IconButton, Tooltip } from '@mui/material';
+import { Avatar, Card, IconButton, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useUserInfo } from '@/hooks';
 import { LoadingContext } from '@/context/LoadingProvider';
@@ -141,7 +141,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                 </div>
             </h3>
             <div className="w-full flex justify-center mt-6">
-                <Card placeholder='' shadow className='w-full sm:w-[60rem] rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll scrollbar-hide'>
+                <Card className='w-full sm:w-[60rem] rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll scrollbar-hide'>
                     <TimelineSkeleton />
                     <TimelineSkeleton />
                     <TimelineSkeleton />
@@ -204,7 +204,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
             </div>
 
             <div className="w-full flex justify-center mt-4">
-                <Card placeholder='' shadow className='rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll scrollbar-hide'>
+                <Card className='rounded-xl p-4 sm:p-10 bg-[#f8fafc] max-h-[76vh] overflow-y-scroll scrollbar-hide'>
                     <Timeline className="w-full sm:w-[60rem] p-2 flex flex-col-reverse">
                         {sortByDateField(
                             therapistSelected === '' ?
@@ -223,7 +223,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
     
                                     <TimelineHeader>
                                         <TimelineIcon className="p-0">
-                                            <Avatar placeholder='' size="md" src={createdBy?.lastname} alt={createdBy?.name} withBorder />
+                                            <Avatar src={createdBy?.lastname} alt={createdBy?.name} />
                                         </TimelineIcon>
                                         <div className="flex flex-col">
                                             <div color="blue-gray">
