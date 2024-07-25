@@ -17,8 +17,8 @@ import { getSession } from '@/util/authOptions'
 const inter = Inter({ subsets: ['latin'] })
 
 const metadata: Metadata = {
-  title: 'UMS - Guatire',
-  description: 'Un Mundo Sensorial',
+  title: 'UMS - La Trinidad',
+  description: 'Un Mundo Sensorial - La Trinidad',
   manifest: '/manifest.json',
   icons: {
     apple: '/icon-192x192.png',
