@@ -125,7 +125,7 @@ export default function AddRecoverEvent({ open, setOpen, recoverEvent, rowData, 
 
     useEffect(() => {
         if (recoverEvent) {
-            setValue('title', `RECUPERACIÓN: ${rowData?.associatedEvent?.patient?.name} (${moment(rowData?.createdAt).format('L')})`)
+            setValue('title', `RECUPERACIÓN: ${rowData?.associatedEvent?.patient?.name} ${rowData?.associatedEvent?.patient?.lastname} (${moment(rowData?.createdAt).format('L')})`)
             setValues('1')
             setEventsQuatity(Array.from({ length: 1 }))
         }

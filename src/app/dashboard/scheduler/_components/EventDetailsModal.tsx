@@ -24,7 +24,7 @@ import NotificationDialog from './NotificationDialog';
 import { LoadingContext } from '@/context/LoadingProvider';
 import { useSnackbar } from 'notistack';
 import { Alert } from '@mui/material';
-
+import { weekDays } from '@/util/weekDays';
 
 interface IEventDetailsModal {
     open: boolean
@@ -46,6 +46,7 @@ const EventDetailsModal = ({
     const [editEvent, setEditEvent] = useState(false)
     const [cancelEvent, setCancelEvent] = useState(false)
     const [userInfo] = useUserInfo()
+    let patientID = selectedDate?.patient?._id
 
     let isRecurrentEvent = eventDetails?.byweekday?.length || false
     let hasReports = eventDetails?.reports?.length || false
@@ -61,6 +62,7 @@ const EventDetailsModal = ({
     const { setOpenModal, setDialogMessage } = useContext(ModalContext) as any
     const { setLoading } = useContext(LoadingContext) as any
     const { enqueueSnackbar } = useSnackbar()
+    const [showMore, setShowMore] = useState(false)
 
     const canceledReportInSelectedDate = eventDetails?.reports?.map((report: any) => {
         return {
@@ -117,11 +119,12 @@ const EventDetailsModal = ({
                     setOpen(!open)
                     setEditEvent(false)
                     setCancelEvent(false)
+                    setShowMore(false)
                 }}
             >
                 <DialogContent className="sm:max-w-[500px]" >
 
-                    <ScrollArea className='max-h-[550px] sm:max-h-[500px]'>
+                    <ScrollArea className='max-h-[100vh] sm:max-h-[600px]'>
                         {/* // ! DIALOG HEADER  */}
                         <DialogHeader className='flex flex-row gap-4 items-center justify-center mb-4'>
                             <div>
@@ -207,7 +210,21 @@ const EventDetailsModal = ({
                             </div>
 
                             <div className='flex flex-col sm:flex-row mt-1 mb-4'>
-                                <b className='mr-2'>MC: </b> <p>{eventDetails?.patient?.historyDescription}</p>
+                                <b className='mr-2'>MC: </b>
+                                <p>
+
+                                    {!showMore && eventDetails?.patient?.historyDescription.substring(0, 50) }
+                                    {showMore && eventDetails?.patient?.historyDescription}
+
+                                    {eventDetails?.patient?.historyDescription.length < 53 ? null :
+                                        <a
+                                            className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
+                                            onClick={() => setShowMore(!showMore)}>
+                                            {!showMore ? '...Ver más' : 'Ver menos'}
+                                        </a>
+                                    }
+
+                                </p>
                             </div>
 
                             <hr />
@@ -221,8 +238,21 @@ const EventDetailsModal = ({
 
                                 <div className='flex flex-row gap-5'>
                                     {selectedDate?.patient?.specialistAssigned?.map((specialist: any) => {
+
+                                        let eventsBySpecialist = specialist.events.map((event: any) => {
+
+                                            const fechaActual = new Date();
+
+                                            const tiempoFechaAComparar = new Date(event.end).getTime();
+                                            const tiempoFechaActual = fechaActual.getTime();
+
+                                            // si la fecha final es menor a hoy, entonces es una sesion que ya terminó
+                                            if (tiempoFechaAComparar < tiempoFechaActual) return
+                                            return event
+                                        }).filter(Boolean).map((event: any) => (event.byweekday.length > 0) && event).filter((event: any) => (event.patient === patientID && event.eventType === 'SESION'))
+
                                         return (
-                                            <div className='flex flex-col items-center justify-center gap-2' key={specialist._id}>
+                                            <div className='flex flex-col items-center justify-center gap-1' key={specialist._id}>
                                                 <Image
                                                     src={specialist.lastname}
                                                     className="rounded-full"
@@ -233,10 +263,35 @@ const EventDetailsModal = ({
                                                 />
                                                 <p
                                                     color="blue-gray"
-                                                    className="font-normal text-clip text-sm text-gray-500"
+                                                    className="font-semibold text-clip text-sm text-gray-600"
                                                 >
                                                     {specialist.name}
                                                 </p>
+
+                                                {eventsBySpecialist.map((event: any) => (
+                                                    <>
+                                                        <p
+                                                            color="blue-gray"
+                                                            className="font-medium text-clip text-sm text-gray-500"
+                                                        >
+                                                            {event.byweekday.map((day: any) => {
+
+                                                                const isLast = event.byweekday.findIndex((ele: any) => ele === day) === event.byweekday.length - 1;
+                                                                
+                                                                return (`${weekDays[day]} ${!isLast ? '-' : ''} `)
+                                                            })}
+                                                        </p>
+
+                                                        <p
+                                                            color="blue-gray"
+                                                            className="font-light text-clip text-sm text-gray-500"
+                                                        >
+
+                                                            ({moment(new Date(event?.start)).format('LT')}-
+                                                            {moment(new Date(event?.end)).format('LT')})
+                                                        </p>
+                                                    </>
+                                                ))}
                                             </div>
                                         )
                                     })}

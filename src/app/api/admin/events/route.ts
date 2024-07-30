@@ -331,7 +331,7 @@ export async function POST(req: NextRequest) {
                 })
                 
                 let patientsIds = updatedUser[0].events.map((event: any) => ({patientId: event.patient._id.toString(), eventId: event._id.toString()}))
-                const specialistList = await User.find()
+                const specialistList = await User.find().populate({path: 'events', model: Event})
 
                 let patientListWithSpecialistList = patientsIds.map(({patientId, eventId}: any) => {
                     let specialistAssigned = []
@@ -391,7 +391,7 @@ export async function POST(req: NextRequest) {
 
         // ?: agregar especialistas asignados a cada paciente
         let patientsIds = events.map((event: any) => event.patient._id.toString())
-        const specialistList = await User.find()
+        const specialistList = await User.find().populate({path: 'events', model: Event})
 
         let patientListWithSpecialistList = patientsIds.map((patientId: any) => {
             let specialistAssigned = []

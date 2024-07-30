@@ -27,7 +27,7 @@ export const NavItems = ({ userInfo }: any) => {
     return (
         <>
             {arrayLinks?.map(item => (
-                <div key={item.mainTitle} className="px-12">
+                <div key={item.mainTitle} className="mx-10">
                     <h4 className='rounded-md px-2 py-4 text-sm font-medium'>
                         {item.mainTitle}
                     </h4>

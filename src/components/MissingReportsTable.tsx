@@ -3,122 +3,112 @@ import moment from 'moment';
 import 'moment/locale/es'
 import { AddReportModal } from './addReportModal/AddReportModal';
 import Image from 'next/image';
+import NoDataToShow from './NoDataToShow';
+import MaterialTable, { Column } from '@material-table/core';
+import { localizationTableConfig, tableOptionConfig } from '@/util/tablesConfig';
+import { useRouter } from 'next/navigation';
 moment.locale('es');
 
 const MissingReportsTable: React.FC<{
     tableHeaders: string[],
     missingReportsWithDate: any,
-    refecthFns?:any
+    refecthFns?: any
 }> = ({
     tableHeaders,
     missingReportsWithDate,
     refecthFns
 }) => {
 
-    if (!missingReportsWithDate?.length) return (
-        <div className='w-full h-full flex items-center justify-center mt-16'>
-            <Image
-                src='/nodata.png'
-                alt='logo_login'
-                width={150}
-                height={150}
-                priority
-            />
-            <p className='text-sm font-semibold text-gray-600'>Sin datos que mostrar</p>
-        </div>
-      )
+        const router = useRouter()
+        const columns: Array<Column<any>> = [
+            {
+                title: "Evento cancelado",
+                field: "userEventTitle",
+                render: rowData => (
+                    <div>
+                        {rowData.userEventTitle} <br />
+                    </div>
+                )
+            },
+            {
+                title: "Especialista asignado",
+                field: "_asignTo.name",
+                render: rowData => (
+                    <div className="flex flex-col items-center gap-2">
+                        <Image
+                            src={rowData._asignTo.lastname}
+                            className="rounded-full"
+                            alt='logo_login'
+                            width={40}
+                            height={40}
+                            priority
+                        />
+                        <p
+                            color="blue-gray"
+                            className="font-normal text-clip text-gray-500 text-center"
+                        >
+                            {rowData._asignTo.name}
+                        </p>
+                    </div>
+                ),
+                headerStyle: {
+                    alignItems: 'center'
+                }
+            },
+            {
+                title: "Paciente",
+                field: "_asignTo.name",
+                render: rowData => (
+                    <p
+                        className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
+                        color="blue-gray"
+                        onClick={() => {
+                            if (!rowData.patient) return
+                            router.push(`/dashboard/patientHistory/${rowData.patient?._id}`, { scroll: false })
+                        }}
+                    >
+                        {`${rowData.patient.name} ${rowData.patient.lastname}`}
+                    </p>
+                )
+            },
+            {
+                title: "Fecha del reporte faltante",
+                field: "date",
+                render: rowData => (
+                    <p
+                        color="blue-gray"
+                        className="font-normal max-w-sm"
+                    >
+                        {rowData.date}
+                    </p>
+                )
+            },
+            {
+                title: "Agregar reporte",
+                field: "_asignTo.name",
+                render: rowData => (
+                    <AddReportModal
+                        eventId={rowData.userEventId}
+                        patient={rowData.patient}
+                        dateOfMissingReport={rowData.date}
+                        refecthFns={refecthFns}
+                    />
+                )
+            },
+        ]
+
+        if (!missingReportsWithDate?.length) return <NoDataToShow />
 
         return (
-            <div className='p-5 max-h-[700px] overflow-scroll scrollbar-hide'>
-                <h3 className='font-semibold text-gray-600 text-xl'>Reportes faltantes:</h3>
+            <div className='p-5'>
+                <h3 className='font-semibold text-gray-600 text-xl w-full'>Reportes faltantes:</h3>
                 <div className="h-full w-full overflow-scroll shadow-md rounded mt-8 scrollbar-hide">
-                <table className="w-full min-w-max table-auto text-left">
-                        <thead>
-                            <tr>
-                                {tableHeaders.map((head) => (
-                                    <th
-                                        key={head}
-                                        className="border-b border-blue-gray-100 bg-[#f8fafc] p-4"
-                                    >
-                                        <p
-                                            color="blue-gray"
-                                            className="font-normal leading-none opacity-70"
-                                        >
-                                            {head}
-                                        </p>
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {missingReportsWithDate?.map(({ 
-                                    userEventId, 
-                                    userEventTitle, 
-                                    date, 
-                                    hasReport, 
-                                    _asignTo,  
-                                    patient,
-                                }: any, index: any) => {
-                                const isLast = index === missingReportsWithDate?.length - 1;
-                                const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-
-                                return (
-                                    <tr key={userEventId} className="hover:bg-[#f8fafc]">
-                                        <td className={classes}>
-                                            <p
-                                                color="blue-gray"
-                                                className="font-normal max-w-sm"
-                                            >
-                                                {userEventTitle}
-                                            </p>
-                                        </td>
-                                        <td className={classes}>
-                                            <div className="flex flex-col items-center gap-2">
-                                                <Image
-                                                    src={_asignTo.lastname}
-                                                    className="rounded-full"
-                                                    alt='logo_login'
-                                                    width={40}
-                                                    height={40}
-                                                    priority
-                                                />
-                                                <p
-                                                    color="blue-gray"
-                                                    className="font-normal text-clip text-gray-500"
-                                                >
-                                                    {_asignTo.name}
-                                                </p>
-                                            </div>
-                                        </td>
-                                        <td className={classes}>
-                                            <p
-                                                color="blue-gray"
-                                                className="font-normal max-w-sm"
-                                            >
-                                                {patient?.name}
-                                            </p>
-                                        </td>
-                                        <td className={classes}>
-                                            <p
-                                                color="blue-gray"
-                                                className="font-normal"
-                                            >
-                                                {date}
-                                            </p>
-                                        </td>
-                                        <td className={classes}>
-                                            <AddReportModal
-                                                eventId={userEventId} 
-                                                patient={patient} 
-                                                dateOfMissingReport={date}
-                                                refecthFns={refecthFns}
-                                            />
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                    <MaterialTable
+                        columns={columns}
+                        data={missingReportsWithDate}
+                        localization={localizationTableConfig}
+                        options={tableOptionConfig}
+                    />
                 </div>
 
             </div>

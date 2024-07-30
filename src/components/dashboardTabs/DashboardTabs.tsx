@@ -1,11 +1,23 @@
 'use client'
-import PatientTable from '@/app/dashboard/adminPatients/_components/PatientTable';
-import { FC, useState } from 'react'
+import { FC, Suspense, useState } from 'react'
 import Link from "next/link"
+import dynamic from 'next/dynamic';
 import EventsTable from '../eventsTable/EventsTable';
 import { CalendarDaysIcon, ExclamationTriangleIcon, FolderIcon, UserIcon } from '@heroicons/react/24/outline';
-import MissingReportsTable from '../MissingReportsTable';
-import ReportsTable from '../ReportsTable';
+import AdmiPageSkeleton from '@/app/dashboard/adminPatients/_components/AdmiPageSkeleton';
+
+const MissingReportsTable = dynamic(() => import("../MissingReportsTable"),{
+    ssr: true,
+    loading: () => <AdmiPageSkeleton/>
+})
+const ReportsTable = dynamic(() => import("../ReportsTable"),{
+    ssr: true,
+    loading: () => <AdmiPageSkeleton/>
+})
+const PatientTable = dynamic(() => import("@/app/dashboard/adminPatients/_components/PatientTable"),{
+    ssr: true,
+    loading: () => <AdmiPageSkeleton/>
+})
 
 const DashboardTabs: FC<{
     userInfo: any,
@@ -61,19 +73,42 @@ const DashboardTabs: FC<{
 
     const TABLE_HEAD_PATIENT = ["Nombre paciente", "Fecha de nacimiento", "Diagnóstico", "Motivo de Ingreso", "Reportes"];
 
-    const TABLE_HEAD_EVENTS = ["Cita", "Hora", "Nombre paciente"];
-    const TABLE_HEAD_EVENTS_ADMIN = ["Cita", "Hora", "Nombre paciente", "Especialista", "Acciones"];
-
     const TABLE_HEAD_MISSING_REPORTS = ["Título Evento", "Especialista Asignado", "Paciente", "Fecha del reporte faltante", "Acción"];
 
     const [selectedCard, setSelectedCard] = useState<
         'patients' | 'events' | 'missingReports' | 'cancelEventsWithoutRecovery'>(userInfo[0]?.role !== 'admin' ? 'patients' : 'events')
 
     const ActiveCard = {
-        'patients': <PatientTable tableHeaders={TABLE_HEAD_PATIENT} patients={patientListActivatedOrDesactivated?.filter(Boolean)} />,
-        'events': <EventsTable tableHeaders={userInfo[0]?.role !== 'admin' ? TABLE_HEAD_EVENTS : TABLE_HEAD_EVENTS_ADMIN} events={eventForToday(userEvent)} refecthFns={refecthFns} />,
-        'missingReports': <MissingReportsTable tableHeaders={TABLE_HEAD_MISSING_REPORTS} missingReportsWithDate={missingReportsWithDate} refecthFns={refecthFns} />,
-        'cancelEventsWithoutRecovery': <ReportsTable reports={userReports} refecthFns={refecthFns} />
+        'patients': (
+            <Suspense>
+                <PatientTable
+                    tableHeaders={TABLE_HEAD_PATIENT}
+                    patients={patientListActivatedOrDesactivated?.filter(Boolean)}
+                />
+            </Suspense>
+        ),
+        'events': (
+            <Suspense>
+                <EventsTable
+                    events={eventForToday(userEvent)}
+                    userRole={userInfo[0]?.role}
+                />
+            </Suspense>
+        ),
+        'missingReports': (
+            <Suspense>
+                <MissingReportsTable
+                    tableHeaders={TABLE_HEAD_MISSING_REPORTS}
+                    missingReportsWithDate={missingReportsWithDate}
+                    refecthFns={refecthFns} /
+                >
+            </Suspense>
+        ),
+        'cancelEventsWithoutRecovery': (
+            <Suspense>
+                <ReportsTable reports={userReports} refecthFns={refecthFns} />
+            </Suspense>
+        )
     }
 
     return (
@@ -84,7 +119,7 @@ const DashboardTabs: FC<{
 
                         {/* MIS PACIENTES */}
                         {userInfo[0]?.role !== 'admin' && (
-                            <div onClick={() => setSelectedCard('patients')} className="relative overflow-hidden p-5 bg-amber-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer">
+                            <div onClick={() => setSelectedCard('patients')} className="relative overflow-hidden p-5 bg-amber-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer">
                                 <div className="flex items-center space-x-2 space-y-3">
 
                                     <div className="flex items-center justify-center w-12 h-12 rounded-full bg-amber-50 ">
@@ -110,7 +145,7 @@ const DashboardTabs: FC<{
                         )}
 
                         {/* CITAS PARA HOY */}
-                        <div onClick={() => setSelectedCard('events')} className="relative overflow-hidden p-5 bg-fuchsia-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer">
+                        <div onClick={() => setSelectedCard('events')} className="relative overflow-hidden p-5 bg-fuchsia-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer">
                             <div className="flex items-center space-x-2 space-y-3">
 
                                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-fuchsia-50 ">
@@ -135,7 +170,7 @@ const DashboardTabs: FC<{
                         {/* REPORTES FALTANTES */}
                         <div
                             onClick={() => setSelectedCard('missingReports')}
-                            className="relative overflow-hidden p-5 bg-orange-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer"
+                            className="relative overflow-hidden p-5 bg-orange-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer"
                         >
                             <div className="flex items-center space-x-2 space-y-3">
                                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-50 ">
@@ -161,7 +196,7 @@ const DashboardTabs: FC<{
                         {userInfo[0]?.role === 'admin' && (
                             <div
                                 onClick={() => setSelectedCard('cancelEventsWithoutRecovery')}
-                                className="relative overflow-hidden p-5 bg-red-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer"
+                                className="relative overflow-hidden p-5 bg-red-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer"
                             >
                                 <div className="flex items-center space-x-2 space-y-3">
                                     <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-50 ">
@@ -189,7 +224,7 @@ const DashboardTabs: FC<{
                         {/*VER CALENDARIO */}
                         <Link
                             href="/dashboard/scheduler">
-                            <div className="relative overflow-hidden p-5 bg-emerald-50 rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer">
+                            <div className="relative overflow-hidden p-5 bg-emerald-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer">
                                 <div className="flex items-center space-x-2 space-y-3">
 
                                     <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-50 ">

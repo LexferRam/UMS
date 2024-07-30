@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form"
 import { Alert } from "@mui/material"
 import { LoadingContext } from "@/context/LoadingProvider"
 import { useSnackbar } from "notistack"
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 export const AddReportModal: FC<{ 
     eventId: string, 
@@ -99,7 +100,7 @@ export const AddReportModal: FC<{
                     onClick={() => setOpen(true)}
                     className="flex gap-2 items-center cursor-pointer"
                 >
-                    <PlusIcon className="h-6 w-6 text-red-500 cursor-pointer font-extrabold" /> Agregar Reporte
+                    <AddCircleIcon className="h-6 w-6 text-green-500 cursor-pointer font-extrabold" /> Agregar Reporte
                 </div>
 
             <DialogContent className="sm:max-w-[450px]">

@@ -14,7 +14,7 @@ const useUserReports = ({ reportsInitData }: any) => {
             res.json()
         ),
         {
-            // keepPreviousData: true,
+            keepPreviousData: true,
             // refetchInterval: false,
             refetchOnWindowFocus: true,
             initialData: reportsInitData

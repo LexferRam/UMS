@@ -1,6 +1,5 @@
 import DashboardContainer from "@/components/DashboardContainer"
 import { getReportsResp, getUserEventsResp, getUserResp } from '@/services/DashboardServices'
-// import { getSession } from "@/util/authOptions"
 import { headers } from "next/headers"
 
 const AdminUserPage = async () => {

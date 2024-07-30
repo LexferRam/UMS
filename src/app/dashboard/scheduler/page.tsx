@@ -232,7 +232,7 @@ const Scheduler = () => {
         />
 
         {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
-          <div className='flex flex-col m-1 sm:flex-row gap-3'>
+          <div className='flex flex-col m-1 sm:flex-row gap-6 mb-6'>
 
             <div>
               <select

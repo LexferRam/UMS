@@ -5,11 +5,6 @@ import Link from "next/link"
 import { Button } from "../ui/button"
 import { signOut } from "next-auth/react"
 import Image from "next/image"
-
-
-import {
-    Navbar,
-} from "@material-tailwind/react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import { DrawerWithNavigation } from "./NavegationDrawer"
 import Typography from '@mui/material/Typography';
@@ -18,14 +13,14 @@ import { AppBar } from "@mui/material"
 
 export function MainNavContainer({
     userInfo,
-}: any){
+}: any) {
     const [open, setOpen] = useState(false)
 
     const openDrawer = () => setOpen(true);
 
     return (
         <>
-            <AppBar style={{ backgroundColor: 'white', position: 'static', color: 'black', width: '100%'}} className="z-30 px-6 py-4">
+            <AppBar style={{ backgroundColor: 'white', position: 'static', color: 'black', width: '100%' }} className="z-30 px-6 py-4">
                 <div className="flex items-center justify-between text-blue-gray-900">
 
                     <div className="flex items-center mr-2 sm:mr-10">
@@ -45,44 +40,23 @@ export function MainNavContainer({
                         </Link>
                         <div className="flex items-center gap-4 ml-6">
                             <div>
-                                {/* {isLoadingUserInfo ? (
-                                    <div className="flex flex-col gap-1">
-                                        <div
-                                            className="h-[15px] w-[100px] rounded bg-gray-300"
-                                        >
-                                            &nbsp;
-                                        </div>
-                                        <div
-                                            className="h-[15px] w-[100px] rounded bg-gray-300"
-                                        >
-                                            &nbsp;
-                                        </div>
-                                    </div>
-                                ) : ( */}
-                                    <>
-                                        <Typography variant="subtitle1">{userInfo?.name || ''}</Typography>
-                                        <Typography variant="body2" color="gray" className="font-normal text-gray-500">
-                                            {userInfo?.role === 'admin' ? 'Administrador' : 'Terapeuta'}
-                                        </Typography>
-                                    </>
-                                {/* )} */}
+                                <Typography variant="subtitle1">{userInfo?.name || ''}</Typography>
+                                <Typography variant="body2" color="gray" className="font-normal text-gray-500">
+                                    {userInfo?.role === 'admin' ? 'Administrador' : 'Terapeuta'}
+                                </Typography>
 
                             </div>
                         </div>
                     </div>
                     <div className="flex items-center gap-5">
 
-                        {/* {isLoadingUserInfo ? (
-                            <div className="w-[50px] h-[50px] rounded-full bg-gray-300 animate-pulse"></div>
-                        ) : ( */}
-                            <Image
-                                src={userInfo?.lastname || ''}
-                                alt=''
-                                height={50}
-                                width={50}
-                                className='hidden sm:block rounded-full cursor-pointer mr-2'
-                            />
-                         {/* )} */}
+                        <Image
+                            src={userInfo?.lastname || ''}
+                            alt=''
+                            height={50}
+                            width={50}
+                            className='hidden sm:block rounded-full cursor-pointer mr-2'
+                        />
 
                         <div>
                             <Button
@@ -99,7 +73,7 @@ export function MainNavContainer({
                     </div>
                 </div>
             </AppBar>
-            <DrawerWithNavigation open={open} setOpen={setOpen} userInfo={userInfo}/>
+            <DrawerWithNavigation open={open} setOpen={setOpen} userInfo={userInfo} />
         </>
     )
 }

@@ -226,7 +226,7 @@ export default function AddEventModal({ onEventAdded, open, setOpen, recoverEven
                 let users = await usersResp.map((user: any) => ({ value: user._id, label: user.name }))
                 let patients = await patientsResp.map((patient: any) => {
                     if (!patient.isActive) return
-                    return ({ value: patient._id, label: patient.name + patient.lastname })
+                    return ({ value: patient._id, label: patient.name + ' ' + patient.lastname })
                 })
 
                 setUsers(users)

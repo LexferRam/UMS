@@ -1,16 +1,17 @@
-'use client'
-
 import { FC } from "react";
 import moment from "moment";
-import { useUserInfo } from "@/hooks";
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import 'moment/locale/es'
 import Image from "next/image";
+import MaterialTable, { Column } from "@material-table/core";
+import { localizationTableConfig, tableOptionConfig } from "@/util/tablesConfig";
+import NoDataToShow from "../NoDataToShow";
+import { useRouter } from "next/navigation";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 moment.locale('es');
 
-const EventsTable: FC<{ tableHeaders: string[], events: any, refecthFns?: any }> = ({ tableHeaders, events, refecthFns }) => {
-
-    const [userInfo] = useUserInfo()
+const EventsTable: FC<{ events: any, userRole: any }> = ({ events, userRole }) => {
+    const router = useRouter()
 
     function hasObjectWithTodaysDate(reports: any) {
         const today = new Date().toLocaleString("es-VE").split(',')[0];
@@ -23,114 +24,145 @@ const EventsTable: FC<{ tableHeaders: string[], events: any, refecthFns?: any }>
 
     }
 
-    if (!events?.length) return (
-        <div className='w-full h-full flex items-center justify-center mt-16'>
-            <Image
-                src='/nodata.png'
-                alt='logo_login'
-                width={150}
-                height={150}
-                priority
-            />
-            <p className='text-sm font-semibold text-gray-600'>Sin datos que mostrar</p>
-        </div>
-      )
+    const columnsAdmin: Array<Column<any>> = [
+        {
+            title: "Evento",
+            field: "title",
+            render: rowData => (
+                <div>
+                    {rowData.title} <br />
+                </div>
+            )
+        },
+        {
+            title: "Hora",
+            field: "start",
+            render: rowData => (
+                <p
+                    color="blue-gray"
+                    className="font-normal max-w-sm"
+                >
+                    {moment(rowData.start).format('h:mm a')}
+                </p>
+            )
+        },
+        {
+            title: "Nombre del paciente",
+            field: "name",
+            render: rowData => (
+                <p
+                    className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
+                    color="blue-gray"
+                    onClick={() => {
+                        if (!rowData.patient) return
+                        router.push(`/dashboard/patientHistory/${rowData.patient?._id}`, { scroll: false })
+                    }}
+                >
+                    {`${rowData.patient.name} ${rowData.patient.lastname}`}
+                </p>
+            )
+        },
+        {
+            title: "Especialista",
+            field: "_asignTo.name",
+            render: rowData => (
+                <div className="flex flex-col items-center gap-2">
+                    <Image
+                        src={rowData._asignTo.lastname}
+                        className="rounded-full"
+                        alt='logo_login'
+                        width={40}
+                        height={40}
+                        priority
+                    />
+                    <p
+                        color="blue-gray"
+                        className="font-normal text-clip text-gray-500 text-center"
+                    >
+                        {rowData._asignTo.name}
+                    </p>
+                </div>
+            ),
+            headerStyle: {
+                alignItems: 'center'
+            }
+        }, {
+            title: "Reporte",
+            field: "",
+            render: rowData => (
+                <div className="flex flex-col items-center gap-2">
+                    {
+                        hasObjectWithTodaysDate(rowData.reports) ?
+                            <div className="flex items-center gap-2">
+                                <CheckCircleIcon className="h-6 w-6 text-green-500" />
+                                <span>Reporte Cargado</span>
+                            </div> :
+                            <div className="flex items-center gap-2">
+                                <CancelIcon className="h-6 w-6 text-red-500" />
+                                <span>Sin Reporte</span>
+                            </div>
+                    }
+                </div>
+            ),
+            headerStyle: {
+                textAlign: 'end'
+            }
+        }
+    ]
+
+    const columnsSpecialist: Array<Column<any>> = [
+        {
+            title: "Evento",
+            field: "title",
+            render: rowData => (
+                <div>
+                    {rowData.title} <br />
+                </div>
+            )
+        },
+        {
+            title: "Hora",
+            field: "start",
+            render: rowData => (
+                <p
+                    color="blue-gray"
+                    className="font-normal max-w-sm"
+                >
+                    {moment(rowData.start).format('h:mm a')}
+                </p>
+            )
+        },
+        {
+            title: "Nombre del paciente",
+            field: "name",
+            render: rowData => (
+                <p
+                    className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
+                    color="blue-gray"
+                    onClick={() => {
+                        if (!rowData.patient) return
+                        router.push(`/dashboard/patientHistory/${rowData.patient?._id}`, { scroll: false })
+                    }}
+                >
+                    {`${rowData.patient.name} ${rowData.patient.lastname}`}
+                </p>
+            )
+        }
+    ]
+
+    if (!events?.length) return <NoDataToShow />
 
     return (
-        <div className='p-5 max-h-[700px] overflow-scroll'>
-            <h3 className='font-semibold text-gray-600 text-xl'> Citas para hoy:</h3>
+        <div className='p-5'>
+            <h3 className='font-semibold text-gray-600 text-xl w-full'> Citas para hoy:</h3>
             <div className="h-full w-full overflow-scroll shadow-md rounded mt-8 scrollbar-hide">
-                <table className="w-full min-w-max table-auto text-left">
-                    <thead>
-                        <tr>
-                            {tableHeaders.map((head) => (
-                                <th
-                                    key={head}
-                                    className="border-b border-blue-gray-100 bg-[#f8fafc] p-4"
-                                >
-                                    <p
-                                        color="blue-gray"
-                                        className="font-normal leading-none opacity-70"
-                                    >
-                                        {head}
-                                    </p>
-                                </th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {events?.map(({ title, patient, _id, eventStatus, start, _asignTo, reports }: any, index: any) => {
-                            const isLast = index === events.length - 1;
-                            const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-
-                            return (
-                                <tr key={_id} className="hover:bg-[#f8fafc]">
-                                    <td className={classes}>
-                                        <p
-                                            color="blue-gray"
-                                            className="font-normal"
-                                        >
-                                            {title}
-                                        </p>
-                                    </td>
-                                    <td className={classes}>
-                                        <p
-                                            color="blue-gray"
-                                            className="font-normal"
-                                        >
-                                            {moment(start).format('h:mm a')}
-                                        </p>
-                                    </td>
-                                    <td className={classes}>
-                                        <p
-                                            color="blue-gray"
-                                            className="font-normal"
-                                        >
-                                            {patient.name +' '+ patient.lastname}
-                                        </p>
-                                    </td>
-                                    {userInfo[0]?.role === 'admin' ? (
-                                        <>
-                                            <td className={classes}>
-                                                <div className="flex flex-col items-center gap-2">
-                                                    <Image
-                                                        src={_asignTo.lastname}
-                                                        className="rounded-full"
-                                                        alt='logo_login'
-                                                        width={40}
-                                                        height={40}
-                                                        priority
-                                                    />
-                                                    <p
-                                                        color="blue-gray"
-                                                        className="font-normal text-clip text-gray-500"
-                                                    >
-                                                        {_asignTo.name}
-                                                    </p>
-                                                </div>
-                                            </td>
-                                            <td className={classes}>
-                                                {hasObjectWithTodaysDate(reports) ?
-                                                    <div className="flex items-center gap-2">
-                                                        <CheckIcon className="h-6 w-6 text-green-500" />
-                                                        <span>Reporte Cargado</span>
-                                                    </div> :
-                                                    <div className="flex items-center gap-2">
-                                                        <XMarkIcon className="h-6 w-6 text-red-500" />
-                                                        <span>Sin Reporte</span>
-                                                    </div>
-                                                }
-                                            </td>
-                                        </>
-                                    ) : (null)}
-
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                <MaterialTable
+                    columns={userRole === 'admin' ? columnsAdmin : columnsSpecialist}
+                    data={events}
+                    localization={localizationTableConfig}
+                    options={tableOptionConfig}
+                />
             </div>
-
         </div>
     )
 }

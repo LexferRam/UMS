@@ -35,8 +35,8 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
 
     const columns: Array<Column<IRecoverEvents>> = [
         {
-            title: "Evento cancelado",
-            field: "title",
+            title: "Título del evento cancelado",
+            field: "associatedEvent.title",
             render: rowData => (
                 <div>
                     {rowData.associatedEvent.title} <br />
@@ -45,7 +45,7 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
         },
         {
             title: "Fecha del evento cancelado",
-            field: "dateCancelDate",
+            field: "createdAt",
             render: rowData => (
                 <div>
                     <b>{moment(rowData.createdAt).format('dddd')}</b> ({moment(rowData.createdAt).format('L')})
@@ -54,7 +54,7 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
         },
         {
             title: "Especialista tratante",
-            field: "specialistName",
+            field: "associatedEvent._asignTo.name",
             render: rowData => {
                 return (
                     <>
@@ -80,7 +80,7 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
         },
         {
             title: "Paciente",
-            field: "patient",
+            field: "associatedEvent.patient.name",
             render: rowData => {
                 return (
                     <p
@@ -97,7 +97,7 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
         },
         {
             title: "Motivo de cancelación",
-            field: "cancelMotive",
+            field: "description",
             render: rowData => {
                 return (
                     <Tooltip title={rowData.description}>

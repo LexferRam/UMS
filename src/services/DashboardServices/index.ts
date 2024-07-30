@@ -7,7 +7,7 @@ export const getUserEventsResp = async (cookies: any) => {
                 headers: {
                     'Cookie': cookies
                 },
-                cache: 'no-store'
+                // cache: 'no-store' // SSR
                 // next: {
                 //   revalidate: 5000 // revalidate after 1 day ==>  ISR
                 // }
@@ -28,14 +28,14 @@ export const getReportsResp = async (cookies: any) => {
                 headers: {
                     'Cookie': cookies
                 },
-                cache: 'no-store'
+                // cache: 'no-store' // SSR
                 // next: {
                 //   revalidate: 5000 // revalidate after 1 day ==>  ISR
                 // }
             }
         )
         const reportsResponse = await reportsResp.json()
-        return reportsResponse
+        return reportsResponse.length
     } catch (error) {
         console.error(error)
     }
@@ -49,7 +49,7 @@ export const getUserResp = async (cookies: any) => {
                 headers: {
                     'Cookie': cookies
                 },
-                cache: 'no-store'
+                // cache: 'no-store' // SSR
                 // next: {
                 //   revalidate: 5000 // revalidate after 1 day ==>  ISR
                 // }

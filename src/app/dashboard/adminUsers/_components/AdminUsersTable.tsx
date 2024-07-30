@@ -1,5 +1,3 @@
-import { Button } from '@/components/ui/button';
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import MaterialTable, { Column } from '@material-table/core';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -117,7 +115,7 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
         },
         {
             title: "Especialidad",
-            field: "role;",
+            field: "speciality",
             render: rowData => (<>
                 <p
                     color="blue-gray"
@@ -135,7 +133,7 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
         },
         {
             title: "Role",
-            field: "role;",
+            field: "role",
             render: rowData => (<>
                 <p
                     color="blue-gray"
@@ -155,7 +153,7 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
             // width: 150
         },
         {
-            title: "Editar", 
+            title: "Editar",
             field: "isActive",
             render: rowData => {
                 return (
@@ -168,7 +166,7 @@ const AdminUsersTable: FC<AdminUsersTableProps> = ({
                 )
             },
             width: 90,
-          },
+        },
     ];
 
     const data: Array<IPerson> = users?.map(({
