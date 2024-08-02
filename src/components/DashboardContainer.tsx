@@ -8,8 +8,8 @@ import DashboardTabs from './dashboardTabs/DashboardTabs'
 
 const DashboardContainer = ({
   session,
-  userEventInitData,
-  reportsInitData,
+  // userEventInitData,
+  // reportsInitData,
 }: any) => {
 
   const {
@@ -17,14 +17,14 @@ const DashboardContainer = ({
     userEventError,
     userEvent,
     refetchUserEvent
-  } = useUserEvents({ userEventInitData })
+  } = useUserEvents()
 
   const {
     isLoadingReports,
     reportsError,
     reports,
     refetchReports
-  } = useUserReports({ reportsInitData })
+  } = useUserReports()
 
   if (userEventError || reportsError) return 'Error por favor recargue...'
 

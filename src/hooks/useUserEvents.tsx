@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 
-const useUserEvents = ({ userEventInitData }: any) => {
+const useUserEvents = () => {
 
     const {
         isLoading: isLoadingUserEvent,
@@ -17,7 +17,7 @@ const useUserEvents = ({ userEventInitData }: any) => {
             keepPreviousData: true,
             // refetchInterval: false,
             refetchOnWindowFocus: true,
-            initialData: userEventInitData
+            // initialData: userEventInitData
         })
 
     return {

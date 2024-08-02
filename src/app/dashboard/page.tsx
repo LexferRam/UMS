@@ -7,14 +7,14 @@ const AdminUserPage = async () => {
   const cookie = headersList.get('cookie') as any
 
   const session = await getUserResp(cookie)
-  const userEvent = await getUserEventsResp(cookie)
-  const reports = await getReportsResp(cookie)
+  // const userEvent = await getUserEventsResp(cookie)
+  // const reports = await getReportsResp(cookie)
 
   return (
     <DashboardContainer
       session={session}
-      reportsInitData={reports}
-      userEventInitData={userEvent}
+      // reportsInitData={reports}
+      // userEventInitData={userEvent}
     />
   )
 }
