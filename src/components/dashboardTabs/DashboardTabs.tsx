@@ -1,5 +1,5 @@
 'use client'
-import { FC, Suspense, useState } from 'react'
+import { FC, Suspense, useRef, useState } from 'react'
 import Link from "next/link"
 import dynamic from 'next/dynamic';
 import EventsTable from '../eventsTable/EventsTable';
@@ -26,6 +26,7 @@ const DashboardTabs: FC<{
     missingReportsWithDate: any,
     refecthFns: any
 }> = ({ userInfo, userReports, userEvent, missingReportsWithDate, refecthFns }) => {
+    const tableContainerRef = useRef(null) as any;
 
     function isDateWithinRange(today: any, startDate: any, endDate: any, event: any) {
         today = today.setHours(0, 0, 0, 0).toLocaleString("es-VE")
@@ -119,7 +120,12 @@ const DashboardTabs: FC<{
 
                         {/* MIS PACIENTES */}
                         {userInfo[0]?.role !== 'admin' && (
-                            <div onClick={() => setSelectedCard('patients')} className="relative overflow-hidden p-5 bg-amber-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer">
+                            <div onClick={() => {
+                                setSelectedCard('patients')
+                                tableContainerRef.current.scrollIntoView({ behavior: 'smooth' })
+                            }}
+                                className="relative overflow-hidden p-5 bg-amber-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer"
+                            >
                                 <div className="flex items-center space-x-2 space-y-3">
 
                                     <div className="flex items-center justify-center w-12 h-12 rounded-full bg-amber-50 ">
@@ -145,7 +151,13 @@ const DashboardTabs: FC<{
                         )}
 
                         {/* CITAS PARA HOY */}
-                        <div onClick={() => setSelectedCard('events')} className="relative overflow-hidden p-5 bg-fuchsia-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer">
+                        <div
+                            onClick={() => {
+                                setSelectedCard('events')
+                                tableContainerRef.current.scrollIntoView({ behavior: 'smooth' })
+                            }}
+                            className="relative overflow-hidden p-5 bg-fuchsia-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer"
+                        >
                             <div className="flex items-center space-x-2 space-y-3">
 
                                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-fuchsia-50 ">
@@ -169,7 +181,10 @@ const DashboardTabs: FC<{
 
                         {/* REPORTES FALTANTES */}
                         <div
-                            onClick={() => setSelectedCard('missingReports')}
+                            onClick={() => {
+                                setSelectedCard('missingReports')
+                                tableContainerRef.current.scrollIntoView({ behavior: 'smooth' })
+                            }}
                             className="relative overflow-hidden p-5 bg-orange-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer"
                         >
                             <div className="flex items-center space-x-2 space-y-3">
@@ -195,7 +210,10 @@ const DashboardTabs: FC<{
                         {/* CITAS CANCELADAS CON SIN RECUPERACIONES */}
                         {userInfo[0]?.role === 'admin' && (
                             <div
-                                onClick={() => setSelectedCard('cancelEventsWithoutRecovery')}
+                                onClick={() => {
+                                    setSelectedCard('cancelEventsWithoutRecovery')
+                                    tableContainerRef.current.scrollIntoView({ behavior: 'smooth' })
+                                }}
                                 className="relative overflow-hidden p-5 bg-red-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer"
                             >
                                 <div className="flex items-center space-x-2 space-y-3">
@@ -252,7 +270,9 @@ const DashboardTabs: FC<{
                     </div>
                 </div>
             </div>
-            {ActiveCard[selectedCard]}
+            <div ref={tableContainerRef}>
+                {ActiveCard[selectedCard]}
+            </div>
         </>
     )
 }
