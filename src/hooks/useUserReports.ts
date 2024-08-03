@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 
-const useUserReports = () => {
+const useUserReports = ({reportsInitData}: any) => {
 
     const {
         isLoading: isLoadingReports,
@@ -17,7 +17,7 @@ const useUserReports = () => {
             keepPreviousData: true,
             // refetchInterval: false,
             refetchOnWindowFocus: true,
-            // initialData: reportsInitData
+            initialData: reportsInitData
         })
 
     return {

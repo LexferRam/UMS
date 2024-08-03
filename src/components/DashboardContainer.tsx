@@ -1,15 +1,14 @@
 'use client'
 
 import React from 'react'
-
 import DashboardSkeleton from './DashboardSkeleton'
 import { useUserEvents, useUserReports } from '@/hooks'
 import DashboardTabs from './dashboardTabs/DashboardTabs'
 
 const DashboardContainer = ({
   session,
-  // userEventInitData,
-  // reportsInitData,
+  userEventInitData,
+  reportsInitData,
 }: any) => {
 
   const {
@@ -17,14 +16,14 @@ const DashboardContainer = ({
     userEventError,
     userEvent,
     refetchUserEvent
-  } = useUserEvents()
+  } = useUserEvents({ userEventInitData: JSON.parse(userEventInitData) })
 
   const {
     isLoadingReports,
     reportsError,
     reports,
     refetchReports
-  } = useUserReports()
+  } = useUserReports({ reportsInitData: JSON.parse(reportsInitData) })
 
   if (userEventError || reportsError) return 'Error por favor recargue...'
 
@@ -32,7 +31,7 @@ const DashboardContainer = ({
 
   return (
     <DashboardTabs
-      userInfo={session}
+      userInfo={JSON.parse(session)}
       userReports={reports}
       userEvent={userEvent?.events}
       missingReportsWithDate={userEvent?.arrDaysWithOutReports}

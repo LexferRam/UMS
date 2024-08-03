@@ -1,22 +1,17 @@
+import { getEvents, getReports, getUserSession } from "@/actions"
 import DashboardContainer from "@/components/DashboardContainer"
-import { getReportsResp, getUserEventsResp, getUserResp } from '@/services/DashboardServices'
-import { headers } from "next/headers"
 
-const AdminUserPage = async () => {
-  const headersList = headers()
-  const cookie = headersList.get('cookie') as any
+export default async function AdminUserPage(){
 
-  const session = await getUserResp(cookie)
-  // const userEvent = await getUserEventsResp(cookie)
-  // const reports = await getReportsResp(cookie)
+  const session = await getUserSession()
+  const userEvent = await getEvents()
+  const reports = await getReports()
 
   return (
     <DashboardContainer
-      session={session}
-      // reportsInitData={reports}
-      // userEventInitData={userEvent}
+      session={JSON.stringify(session)}
+      userEventInitData={JSON.stringify(userEvent)}
+      reportsInitData={JSON.stringify(reports)}
     />
   )
 }
-
-export default AdminUserPage
