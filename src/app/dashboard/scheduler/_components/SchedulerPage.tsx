@@ -219,7 +219,7 @@ const SchedulerPage = ({ userInfo, events }: any) => {
     }
   }
 
-  if (isLoadingSchedulerEvents || isLoadingDateUser) return <SchedulerSkeleton />
+  // if (isLoadingSchedulerEvents || isLoadingDateUser) return <SchedulerSkeleton />
   if (error) return 'Error cargando'
 
   return (

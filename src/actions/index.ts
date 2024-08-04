@@ -493,8 +493,8 @@ export async function getEventsForScheduler() {
     // 1. fecha final debe ser mayor a la fecha inicial de hace dos semans
     // 2.la fecha inicial puede ser menor o mayor al startOfWeek(de hace dos semans) pero siempre y cuando la fecha final sea mayor al endOfWeek(de dos semanas despues a partir de hoy)
 
-    const twoWeeksAgo = moment().subtract(2, 'weeks');
-    const fourWeeksFromNow = moment().add(2, 'weeks');
+    const twoWeeksAgo = moment().subtract(1, 'weeks');
+    const fourWeeksFromNow = moment().add(1, 'weeks');
 
     const startOfTwoWeeksAgo = twoWeeksAgo.startOf('isoWeek').toDate();
     const endOfFourWeeksFromNow = fourWeeksFromNow.endOf('isoWeek').toDate();
