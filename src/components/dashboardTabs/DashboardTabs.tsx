@@ -72,10 +72,6 @@ const DashboardTabs: FC<{
         return patient
     })
 
-    const TABLE_HEAD_PATIENT = ["Nombre paciente", "Fecha de nacimiento", "Diagnóstico", "Motivo de Ingreso", "Reportes"];
-
-    const TABLE_HEAD_MISSING_REPORTS = ["Título Evento", "Especialista Asignado", "Paciente", "Fecha del reporte faltante", "Acción"];
-
     const [selectedCard, setSelectedCard] = useState<
         'patients' | 'events' | 'missingReports' | 'cancelEventsWithoutRecovery'>(userInfo[0]?.role !== 'admin' ? 'patients' : 'events')
 
@@ -83,7 +79,6 @@ const DashboardTabs: FC<{
         'patients': (
             <Suspense>
                 <PatientTable
-                    tableHeaders={TABLE_HEAD_PATIENT}
                     patients={patientListActivatedOrDesactivated?.filter(Boolean)}
                 />
             </Suspense>
@@ -91,7 +86,7 @@ const DashboardTabs: FC<{
         'events': (
             <Suspense>
                 <EventsTable
-                    events={eventForToday(userEvent)}
+                    events={userEvent}
                     userRole={userInfo[0]?.role}
                 />
             </Suspense>
@@ -99,7 +94,6 @@ const DashboardTabs: FC<{
         'missingReports': (
             <Suspense>
                 <MissingReportsTable
-                    tableHeaders={TABLE_HEAD_MISSING_REPORTS}
                     missingReportsWithDate={missingReportsWithDate}
                     refecthFns={refecthFns} /
                 >

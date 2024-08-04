@@ -6,7 +6,6 @@ import Report from "@/models/report";
 import User from "@/models/user";
 import { authOptions } from "@/util/authOptions";
 import NextAuth, { getServerSession } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
 
 function calculateMondays(startDate: any, today: any, dayWeek: number) {
     let mondays: any = [];
@@ -23,6 +22,43 @@ function calculateMondays(startDate: any, today: any, dayWeek: number) {
 }
 
 const weekdays = ["mo", "tu", "we", "th", "fr", "sa", "su"];
+
+function isDateWithinRange(today: any, startDate: any, endDate: any, event: any) {
+    today = today.setHours(0, 0, 0, 0).toLocaleString("es-VE")
+    startDate = new Date(startDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
+    endDate = new Date(endDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
+    return today >= startDate && today <= endDate;
+}
+
+const eventForToday = (eventsArray: any) => {
+    let daysWeek: any = {
+        mo: 1,
+        tu: 2,
+        we: 3,
+        th: 4,
+        fr: 5,
+        sa: 6,
+        su: 7
+    }
+
+    let eventsForTodayArray: any[] = []
+
+    eventsArray?.map((event: any) => {
+        const today = new Date();
+        if (event.byweekday.length > 0) {
+            event.byweekday.forEach((dayWeek: any) => {
+                if (daysWeek[dayWeek] === today.getDay()) {
+                    isDateWithinRange(today, event.start, event.end, event) && eventsForTodayArray.push(event)
+                }
+            })
+        }
+        if (event.byweekday.length === 0) {
+            isDateWithinRange(today, event.start, event.end, event) && eventsForTodayArray.push(event)
+        }
+    })
+
+    return eventsForTodayArray
+}
 
 export async function getEvents() {
 
@@ -163,7 +199,7 @@ export async function getEvents() {
                     }
                 })
 
-            return {arrDaysWithOutReports, events: updatedUser[0]?.events}
+            return {arrDaysWithOutReports, events: eventForToday(updatedUser[0]?.events) }
         }
 
         await connectMongoDB()
@@ -280,7 +316,7 @@ export async function getEvents() {
                 }
             })
     
-            return ({arrDaysWithOutReports, events})
+            return ({arrDaysWithOutReports, events: eventForToday(events) })
 
     } catch (error) {
         console.log(error)

@@ -6,7 +6,6 @@ import PatientTable from './_components/PatientTable';
 import { useQuery } from 'react-query';
 
 const AdminPatientsPage = () => {
-  const TABLE_HEAD = ["Nombre y apellido", "Fecha de nacimiento", "Diagnóstico", "Motivo de consulta", "Estatus", "Acciones"];
 
   const { isLoading, error, data: patientList = [], refetch } = useQuery(['patientList'], async ({ signal }) =>
     fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient`,{ signal }).then(res =>
@@ -28,7 +27,7 @@ const AdminPatientsPage = () => {
         refetchOnWindowFocus: false,
     })
 
-  if (userInfoError) return 'Error cargando la información'
+  if (userInfoError) return 'Error por favor recargue la página...'
 
   if (isLoadingUserInfo || isLoading) return <AdmiPageSkeleton />
 
@@ -42,7 +41,6 @@ const AdminPatientsPage = () => {
   return (
     <Suspense fallback={<AdmiPageSkeleton />}>
       <PatientTable
-        tableHeaders={TABLE_HEAD}
         patients={
           userInfo[0]?.role === 'admin' ?
             patientList :

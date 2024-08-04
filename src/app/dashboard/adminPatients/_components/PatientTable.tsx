@@ -29,10 +29,9 @@ interface IPerson {
 }
 
 const PatientTable: FC<{
-  tableHeaders: string[],
   patients: any,
   refetch?: any
-}> = ({ tableHeaders, patients, refetch }) => {
+}> = ({ patients, refetch }) => {
 
   const router = useRouter()
   const [userInfo] = useUserInfo()

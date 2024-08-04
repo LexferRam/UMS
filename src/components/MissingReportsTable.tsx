@@ -10,11 +10,9 @@ import { useRouter } from 'next/navigation';
 moment.locale('es');
 
 const MissingReportsTable: React.FC<{
-    tableHeaders: string[],
     missingReportsWithDate: any,
     refecthFns?: any
 }> = ({
-    tableHeaders,
     missingReportsWithDate,
     refecthFns
 }) => {
