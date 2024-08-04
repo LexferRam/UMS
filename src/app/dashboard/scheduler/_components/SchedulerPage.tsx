@@ -124,10 +124,6 @@ const SchedulerPage = ({ userInfo, events }: any) => {
     }
   })
 
-  console.log(JSON.parse(events))
-  console.log(formattedEventsQuery)
-
-
   const onEventAdded = async (e: any) => {
     try {
       setLoading(true)
