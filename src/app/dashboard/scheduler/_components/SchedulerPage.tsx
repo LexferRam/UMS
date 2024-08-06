@@ -56,7 +56,7 @@ const SchedulerPage = ({ userInfo, events }: any) => {
     ),
     {
       keepPreviousData: true,
-      refetchOnWindowFocus: true,
+      // refetchOnWindowFocus: true,
       initialData: JSON.parse(events)
     })
 
