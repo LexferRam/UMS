@@ -348,6 +348,7 @@ export async function POST(req: NextRequest) {
         const { selectedUser } = await req.json()
 
         const session: any = await getServerSession(nextAuth(authOptions))
+        await connectMongoDB()
         const userFound: any = await User.find({ email: session?.user?.email })
         let userRole = userFound[0].role;
 
@@ -409,8 +410,8 @@ export async function POST(req: NextRequest) {
 
         // ? PARA EL USUARIO ADMIN
         let events
-        await connectMongoDB()
         if (selectedUser === '') {
+            await connectMongoDB()
             events = await Event
                 .find()
                 .populate({
@@ -422,6 +423,7 @@ export async function POST(req: NextRequest) {
                 .populate({ path: "_asignTo", model: User })
                 .populate({ path: "reports", model: Report })
         } else {
+            await connectMongoDB()
             events = await Event
                 .find({ _asignTo: selectedUser })
                 .populate({
@@ -436,6 +438,7 @@ export async function POST(req: NextRequest) {
 
         // ?: agregar especialistas asignados a cada paciente
         let patientsIds = events.map((event: any) => event.patient._id.toString())
+        await connectMongoDB()
         const specialistList = await User.find().populate({path: 'events', model: Event})
 
         let patientListWithSpecialistList = patientsIds.map((patientId: any) => {
