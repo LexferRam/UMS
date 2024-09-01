@@ -269,8 +269,8 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                                                         </span>
 
                                                         <ChipWithAvatar
-                                                            name={therapistList?.filter((therapist: any) => therapist._id === associatedEvent._asignTo)[0].name}
-                                                            profilePicture={therapistList?.filter((therapist: any) => therapist._id === associatedEvent._asignTo)[0].lastname}
+                                                            name={therapistList?.filter((therapist: any) => therapist?._id === associatedEvent?._asignTo)[0]?.name}
+                                                            profilePicture={therapistList?.filter((therapist: any) => therapist._id === associatedEvent?._asignTo)[0]?.lastname}
                                                             therapistSelected={therapistList.filter((therapist: any) => therapist._id === therapistSelected)[0]?.name}
                                                         />
                                                     </>

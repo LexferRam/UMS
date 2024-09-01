@@ -19,7 +19,7 @@ const MyPatientsTab: FC<{
             >
                 <div className="flex items-center space-x-2 space-y-3">
 
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-amber-50 ">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-amber-50 min-h-[90px]">
                         <UserIcon className="h-9 w-9 text-amber-400" strokeWidth={2} />
                     </div>
 

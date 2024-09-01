@@ -9,7 +9,7 @@ const ViewCalendarTab = () => {
             <div className="relative overflow-hidden p-5 bg-emerald-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer">
                 <div className="flex items-center space-x-2 space-y-3 ">
 
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-50 ">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-50 min-h-[90px]">
                         <CalendarDaysIcon className="h-9 w-9 text-emerald-400" strokeWidth={2} />
                     </div>
 
@@ -17,7 +17,7 @@ const ViewCalendarTab = () => {
                         <div className="text-esmerald-800 text-center font-semibold">
                             Ver Calendario
                         </div>
-                        <div className="text-2xl font-bold text-esmerald-900 h-[55px]"></div>
+                        <div className="text-2xl font-bold text-esmerald-900"></div>
                     </div>
 
                     <div>

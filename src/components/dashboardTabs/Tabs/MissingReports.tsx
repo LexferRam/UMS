@@ -19,7 +19,7 @@ const MissingReports: FC<{
                 className="relative overflow-hidden p-5 bg-orange-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer"
             >
                 <div className="flex items-center space-x-2 space-y-3">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-50 ">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-50 min-h-[90px]">
                         <ExclamationTriangleIcon className="h-9 w-9 text-orange-400" strokeWidth={2} />
                     </div>
                     <div className='flex flex-col items-center'>
