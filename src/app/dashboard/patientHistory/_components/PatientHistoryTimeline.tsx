@@ -41,7 +41,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
     const [reportId, setReportId] = useState('')
 
     const { isLoading, error, data: patientInfo = [], refetch } = useQuery(['patientInfo', [patientId]], async ({ signal }) =>
-        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports/reportId?patientId=${patientId}`,{ signal }).then(res =>
+        fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/reports/reportId?patientId=${patientId}`, { signal }).then(res =>
             res.json()
         )
     )
@@ -82,7 +82,7 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                 })
             })
 
-            if(resp.status ===403){
+            if (resp.status === 403) {
                 setLoading(false)
                 enqueueSnackbar('El reporte no puede ser eliminado porque el evento cancelado tiene citas de recuperación asociadas', {
                     variant: 'warning',
@@ -211,23 +211,21 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                                 patientInfo[0]?.reports :
                                 patientInfo[0]?.reports.filter((item: any) => item.createdBy._id === therapistSelected)
                         )?.map(({ createdBy, description, _id, createdAt, isForEventCancel, associatedEvent, ...rest }: any, index: number) => {
-
                             return (
                                 <TimelineItem key={_id}>
-    
+
                                     {index > 0 && (
                                         <TimelineConnector  >
                                             <span className="w-0.5 h-full bg-gray-200"></span>
                                         </TimelineConnector>
                                     )}
-    
+
                                     <TimelineHeader>
                                         <TimelineIcon className="p-0">
                                             <Avatar src={createdBy?.lastname} alt={createdBy?.name} />
                                         </TimelineIcon>
                                         <div className="flex flex-col">
                                             <div color="blue-gray">
-                                                {/* !TODO: validar solo para admin */}
                                                 {(userInfo[0]?.role === 'admin') ? (
                                                     <Tooltip title="Borrar reporte">
                                                         <IconButton onClick={() => {
@@ -253,30 +251,41 @@ const PatientHistoryTimeline: FC<{ patientId: string | string[] }> = ({
                                                         backgroundColor: EVENTS_TYPE_COLORS[associatedEvent?.eventType]
                                                     }}
                                                 >
-                                                    {associatedEvent?.eventType}
+                                                    {associatedEvent?.eventType === 'RECUPERACION' ?
+                                                        associatedEvent.title :
+                                                        associatedEvent?.eventType
+                                                    }
                                                 </span>
-    
+
                                                 {isForEventCancel && (
-                                                    <span
-                                                        className="ml-2 inline-block rounded-full px-3 py-1 text-[10px] font-light text-white mr-2 mb-2"
-                                                        style={{
-                                                            backgroundColor: '#e64451'
-                                                        }}
-                                                    >
-                                                        Cita cancelada
-                                                    </span>
+                                                    <>
+                                                        <span
+                                                            className="ml-2 inline-block rounded-full px-3 py-1 text-[10px] font-light text-white mr-2 mb-2"
+                                                            style={{
+                                                                backgroundColor: '#e64451'
+                                                            }}
+                                                        >
+                                                            Cita cancelada
+                                                        </span>
+
+                                                        <ChipWithAvatar
+                                                            name={therapistList?.filter((therapist: any) => therapist._id === associatedEvent._asignTo)[0].name}
+                                                            profilePicture={therapistList?.filter((therapist: any) => therapist._id === associatedEvent._asignTo)[0].lastname}
+                                                            therapistSelected={therapistList.filter((therapist: any) => therapist._id === therapistSelected)[0]?.name}
+                                                        />
+                                                    </>
                                                 )}
-    
+
                                             </p>
                                         </div>
                                     </TimelineHeader>
-    
+
                                     <TimelineBody className="pb-8">
                                         <p color="gary" className="font-normal text-gray-600 italic ml-4">
                                             {description}
                                         </p>
                                     </TimelineBody>
-    
+
                                 </TimelineItem>
                             )
                         })}

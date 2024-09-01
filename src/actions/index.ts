@@ -153,7 +153,8 @@ export async function getEvents() {
                                 _asignTo: userEvent._asignTo,
                                 patient: userEvent.patient,
                                 report: {},
-                                byweekday: userEvent.byweekday
+                                byweekday: userEvent.byweekday,
+                                eventType: userEvent.eventType
                             })
                         })
                     } else {
@@ -168,7 +169,8 @@ export async function getEvents() {
                                 _asignTo: userEvent._asignTo,
                                 patient: userEvent.patient,
                                 report: {},
-                                byweekday: userEvent.byweekday
+                                byweekday: userEvent.byweekday,
+                                eventType: userEvent.eventType
                             })
                         })
                     }
@@ -192,7 +194,8 @@ export async function getEvents() {
                                 _asignTo: userEvent._asignTo,
                                 patient: userEvent.patient,
                                 report: userEvent.reports,
-                                byweekday: userEvent.byweekday
+                                byweekday: userEvent.byweekday,
+                                eventType: userEvent.eventType
                             })
                         })
 
@@ -270,7 +273,8 @@ export async function getEvents() {
                             _asignTo: userEvent._asignTo,
                             patient: userEvent.patient,
                             report: {},
-                            byweekday: userEvent.byweekday
+                            byweekday: userEvent.byweekday,
+                            eventType: userEvent.eventType
                         })
                     })
                 } else {
@@ -285,7 +289,8 @@ export async function getEvents() {
                             _asignTo: userEvent._asignTo,
                             patient: userEvent.patient,
                             report: {},
-                            byweekday: userEvent.byweekday
+                            byweekday: userEvent.byweekday,
+                            eventType: userEvent.eventType
                         })
                     })
                 }
@@ -309,7 +314,8 @@ export async function getEvents() {
                             _asignTo: userEvent._asignTo,
                             patient: userEvent.patient,
                             report: userEvent.reports,
-                            byweekday: userEvent.byweekday
+                            byweekday: userEvent.byweekday,
+                            eventType: userEvent.eventType
                         })
                     })
 

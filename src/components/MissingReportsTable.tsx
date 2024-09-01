@@ -7,6 +7,7 @@ import NoDataToShow from './NoDataToShow';
 import MaterialTable, { Column } from '@material-table/core';
 import { localizationTableConfig, tableOptionConfig } from '@/util/tablesConfig';
 import { useRouter } from 'next/navigation';
+import EventTypeChip from './EventTypeChip';
 moment.locale('es');
 
 const MissingReportsTable: React.FC<{
@@ -22,11 +23,14 @@ const MissingReportsTable: React.FC<{
             {
                 title: "Evento cancelado",
                 field: "userEventTitle",
-                render: rowData => (
-                    <div>
-                        {rowData.userEventTitle} <br />
-                    </div>
-                )
+                render: rowData => {
+                    console.log(rowData)
+                    return(
+                    <>
+                        <EventTypeChip eventType={rowData?.eventType} /> <br />
+                        {rowData.userEventTitle} 
+                    </>
+                )}
             },
             {
                 title: "Especialista asignado",

@@ -25,7 +25,7 @@ const DashboardContainer = ({
     refetchReports
   } = useUserReports({ reportsInitData: JSON.parse(reportsInitData) })
 
-  if (userEventError || reportsError) return 'Error por favor recargue...'
+  if (userEventError || reportsError) return 'Error, por favor recargue...'
 
   if (isLoadingUserEvent || isLoadingReports) return <DashboardSkeleton />
 

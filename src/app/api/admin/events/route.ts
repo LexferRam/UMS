@@ -156,7 +156,8 @@ export async function GET(req: NextRequest, res: any) {
                                     _asignTo: userEvent._asignTo,
                                     patient: userEvent.patient,
                                     report: {},
-                                    byweekday: userEvent.byweekday
+                                    byweekday: userEvent.byweekday,
+                                    eventType: userEvent.eventType
                                 })
                             })
                         } else {
@@ -171,7 +172,8 @@ export async function GET(req: NextRequest, res: any) {
                                     _asignTo: userEvent._asignTo,
                                     patient: userEvent.patient,
                                     report: {},
-                                    byweekday: userEvent.byweekday
+                                    byweekday: userEvent.byweekday,
+                                    eventType: userEvent.eventType
                                 })
                             })
                         }
@@ -195,7 +197,8 @@ export async function GET(req: NextRequest, res: any) {
                                     _asignTo: userEvent._asignTo,
                                     patient: userEvent.patient,
                                     report: userEvent.reports,
-                                    byweekday: userEvent.byweekday
+                                    byweekday: userEvent.byweekday,
+                                    eventType: userEvent.eventType
                                 })
                             })
         
@@ -258,6 +261,8 @@ export async function GET(req: NextRequest, res: any) {
                 })
     
                 // TODO: Se calculan las fechas que deberian tener reportes en los eventos recurrentes
+
+                console.log(userEvent)
     
                 //? Evento SIN reporte y ser recurrente (byweekday > 0) y NO ser recurrente (byweekday = 0)
                 if (!userEvent.reports.length) {
@@ -273,7 +278,8 @@ export async function GET(req: NextRequest, res: any) {
                                 _asignTo: userEvent._asignTo,
                                 patient: userEvent.patient,
                                 report: {},
-                                byweekday: userEvent.byweekday
+                                byweekday: userEvent.byweekday,
+                                eventType: userEvent.eventType
                             })
                         })
                     } else {
@@ -288,7 +294,8 @@ export async function GET(req: NextRequest, res: any) {
                                 _asignTo: userEvent._asignTo,
                                 patient: userEvent.patient,
                                 report: {},
-                                byweekday: userEvent.byweekday
+                                byweekday: userEvent.byweekday,
+                                eventType: userEvent.eventType
                             })
                         })
                     }
@@ -312,7 +319,8 @@ export async function GET(req: NextRequest, res: any) {
                                 _asignTo: userEvent._asignTo,
                                 patient: userEvent.patient,
                                 report: userEvent.reports,
-                                byweekday: userEvent.byweekday
+                                byweekday: userEvent.byweekday,
+                                eventType: userEvent.eventType
                             })
                         })
     

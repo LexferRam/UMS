@@ -8,6 +8,7 @@ import NoDataToShow from "../NoDataToShow";
 import { useRouter } from "next/navigation";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import EventTypeChip from "../EventTypeChip";
 moment.locale('es');
 
 const EventsTable: FC<{ events: any, userRole: any }> = ({ events, userRole }) => {
@@ -30,9 +31,10 @@ const EventsTable: FC<{ events: any, userRole: any }> = ({ events, userRole }) =
             field: "title",
             render: rowData => (
                 <div>
-                    {rowData.title} <br />
+                    <EventTypeChip eventType={rowData?.eventType} /> <br />
+                    {rowData.title} 
                 </div>
-            )
+            ),
         },
         {
             title: "Hora",
@@ -116,7 +118,8 @@ const EventsTable: FC<{ events: any, userRole: any }> = ({ events, userRole }) =
             field: "title",
             render: rowData => (
                 <div>
-                    {rowData.title} <br />
+                    <EventTypeChip eventType={rowData?.eventType} /> <br />
+                    {rowData.title} 
                 </div>
             )
         },

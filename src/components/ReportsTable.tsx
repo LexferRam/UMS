@@ -15,9 +15,10 @@ import { LoadingContext } from "@/context/LoadingProvider";
 import { enqueueSnackbar } from "notistack";
 import AddRecoverEvent from "@/app/dashboard/scheduler/_components/AddRecoverEvent";
 import EventIcon from '@mui/icons-material/Event';
+import EventTypeChip from "./EventTypeChip";
 moment.locale('es');
 
-const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ reports, refecthFns }) => {
+const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any, userRole: string }> = ({ reports, refecthFns, userRole }) => {
     const [openModal, setOpenModal] = useState<Boolean>(false)
     const [currentRowData, setCurrentRowData] = useState()
     const router = useRouter()
@@ -33,13 +34,14 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
         );
       });
 
-    const columns: Array<Column<IRecoverEvents>> = [
+    const columnsAdmin: Array<Column<IRecoverEvents>> = [
         {
             title: "Título del evento cancelado",
             field: "associatedEvent.title",
             render: rowData => (
                 <div>
-                    {rowData.associatedEvent.title} <br />
+                    <EventTypeChip eventType={rowData.associatedEvent?.eventType} /><br />
+                    {rowData.associatedEvent.title} 
                 </div>
             )
         },
@@ -182,6 +184,82 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
         }
     ];
 
+    const columns: Array<Column<IRecoverEvents>> = [
+        {
+            title: "Título del evento cancelado",
+            field: "associatedEvent.title",
+            render: rowData => (
+                <div>
+                    <EventTypeChip eventType={rowData.associatedEvent?.eventType} /><br />
+                    {rowData.associatedEvent.title}
+                </div>
+            )
+        },
+        {
+            title: "Fecha del evento cancelado",
+            field: "createdAt",
+            render: rowData => (
+                <div>
+                    <b>{moment(rowData.createdAt).format('dddd')}</b> ({moment(rowData.createdAt).format('L')})
+                </div>
+            )
+        },
+        {
+            title: "Especialista tratante",
+            field: "associatedEvent._asignTo.name",
+            render: rowData => {
+                return (
+                    <>
+                        <div className="flex flex-col items-center gap-2">
+                            <Image
+                                src={rowData.associatedEvent._asignTo?.lastname}
+                                className="rounded-full"
+                                alt='logo_login'
+                                width={40}
+                                height={40}
+                                priority
+                            />
+                            <p
+                                color="blue-gray"
+                                className="font-normal text-clip text-gray-500 text-center"
+                            >
+                                {rowData.associatedEvent._asignTo.name}
+                            </p>
+                        </div>
+                    </>
+                )
+            }
+        },
+        {
+            title: "Paciente",
+            field: "associatedEvent.patient.name",
+            render: rowData => {
+                return (
+                    <p
+                        className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
+                        onClick={() => {
+                            if (!rowData.associatedEvent.patient) return
+                            router.push(`/dashboard/patientHistory/${rowData.associatedEvent.patient?._id}`, { scroll: false })
+                        }}
+                    >
+                        {`${rowData.associatedEvent.patient.name} ${rowData.associatedEvent.patient.lastname}`}
+                    </p>
+                )
+            }
+        },
+        {
+            title: "Motivo de cancelación",
+            field: "description",
+            render: rowData => {
+                return (
+                    <Tooltip title={rowData.description}>
+                        <MyTooltipComponent title={rowData.description} />
+                    </Tooltip>
+                )
+            }
+        }       
+    ];
+
     if (!reports?.length) return <NoDataToShow />
 
     return (
@@ -196,7 +274,7 @@ const ReportsTable: FC<{ reports: IRecoverEvents[], refecthFns: any }> = ({ repo
             <h3 className='font-semibold text-gray-600 text-xl w-full'>Citas canceladas sin recuperaciones:</h3>
             <div className="h-full w-full overflow-scroll shadow-md rounded mt-8 scrollbar-hide">
                 <MaterialTable
-                    columns={columns}
+                    columns={userRole === 'admin' ? columnsAdmin : columns}
                     data={reports}
                     localization={localizationTableConfig}
                     options={tableOptionConfig}

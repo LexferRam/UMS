@@ -88,3 +88,7 @@
 .fc-day-header{
   display: block !important;
 }
+
+.MuiTableRow-root:hover { 
+  background: #efefef !important 
+}

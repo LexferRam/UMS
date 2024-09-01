@@ -1,7 +1,7 @@
 'use client'
 
-import { FC } from 'react'
-import { DocumentMagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { FC, useContext } from 'react'
+import { CameraIcon, DocumentMagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { AddPatientModal } from './AddPatientModal'
 import { useUserInfo } from '@/hooks'
@@ -12,6 +12,9 @@ import Image from 'next/image'
 import { calculateAge, calculateAgeWithMonths } from '@/util/dateOfBirth'
 import MaterialTable, { Column } from '@material-table/core';
 import { localizationTableConfig, tableOptionConfig } from '@/util/tablesConfig'
+import { Tooltip } from '@mui/material'
+import { LoadingContext } from '@/context/LoadingProvider'
+import { enqueueSnackbar } from 'notistack'
 moment.locale('es');
 
 interface IPerson {
@@ -22,10 +25,11 @@ interface IPerson {
   diagnosis: string;
   historyDescription: string;
   isActive: boolean;
-  reports: any,
-  specialistAssigned?: any
-  readySpecialistList?: any
-  desactivatedForSpecialistList?: any
+  reports: any;
+  specialistAssigned?: any;
+  readySpecialistList?: any;
+  desactivatedForSpecialistList?: any;
+  canTakePhoto?: boolean
 }
 
 const PatientTable: FC<{
@@ -35,6 +39,64 @@ const PatientTable: FC<{
 
   const router = useRouter()
   const [userInfo] = useUserInfo()
+  const { setLoading } = useContext(LoadingContext) as any
+
+  const updatePatient = async (data: any) => {
+    try {
+      setLoading(true)
+      let respPatients = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient/${data._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: data._id,
+          canTakePhoto: data.canTakePhoto
+        })
+      })
+
+      if (respPatients.ok) {
+        await respPatients.json()
+        await refetch()
+        // setOpen(false)
+        setLoading(false)
+        enqueueSnackbar('Paciente actualizado exitosamente!', {
+          variant: 'success',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          },
+          autoHideDuration: 5000,
+          key: 'error-delete-event'
+        })
+        return
+      }else{
+        setLoading(false)
+        enqueueSnackbar('No autorizado', {
+          variant: 'error',
+          anchorOrigin: {
+            vertical: 'top',
+            horizontal: 'right',
+          },
+          autoHideDuration: 5000,
+          key: 'error-delete-event'
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
+      enqueueSnackbar('Error actualizando paciente', {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right',
+        },
+        autoHideDuration: 5000,
+        key: 'error-delete-event'
+      })
+    }
+
+  }
 
   if (!patients?.length) return (
     <div className='p-5 max-h-[700px] overflow-x-scroll overflow-y-visible sm:overflow-visible scrollbar-hide'>
@@ -60,6 +122,32 @@ const PatientTable: FC<{
       title: "Nombre",
       field: "name",
       render: rowData => (<>{rowData.name + ' ' + rowData.lastname}</>)
+    },
+    {
+      title: "Foto",
+      field: "canTakePhoto",
+      render: rowData => {
+        console.log(rowData)
+        return (
+          <>{
+            rowData.canTakePhoto ? (
+              <Tooltip title="Se le puede tomar foto">
+                <CameraIcon
+                  onClick={() => updatePatient({ ...rowData, canTakePhoto: false })}
+                  className="h-5 w-5 cursor-pointer text-green-500"
+                />
+              </Tooltip>
+            ) : (
+              <Tooltip title="No se le puede tomar foto">
+                <CameraIcon
+                  onClick={() => updatePatient({ ...rowData, canTakePhoto: true })}
+                  className="h-5 w-5 cursor-pointer text-red-500"
+                />
+              </Tooltip>
+            )}
+          </>)
+      },
+      width: 90,
     },
     {
       title: "Edad",
@@ -151,7 +239,8 @@ const PatientTable: FC<{
     reports,
     specialistAssigned,
     readySpecialistList,
-    desactivatedForSpecialistList
+    desactivatedForSpecialistList,
+    canTakePhoto
   }: any) => ({
     _id: _id,
     name: name,
@@ -163,7 +252,8 @@ const PatientTable: FC<{
     reports: reports,
     specialistAssigned: specialistAssigned,
     readySpecialistList: readySpecialistList,
-    desactivatedForSpecialistList: desactivatedForSpecialistList
+    desactivatedForSpecialistList: desactivatedForSpecialistList,
+    canTakePhoto
   }))
 
   const TableMUI = () => (

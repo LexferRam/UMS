@@ -61,6 +61,10 @@ export async function GET(req: NextRequest) {
             model: User,
         })
 
+        // patients.map(async(item: any) => {
+        //     await Patient.findByIdAndUpdate({_id: item._id},{$set: {"canTakePhoto": false}})
+        // })
+
         const specialistList = await User.find()
       
 

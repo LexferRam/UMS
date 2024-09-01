@@ -26,6 +26,11 @@ const patientSchema = new Schema({
         type: Boolean,
         default: true
     },
+    canTakePhoto:{
+        type: Boolean,
+        default: false,
+        required: false
+    },
     readySpecialistList: [{ type: Schema.Types.ObjectId, ref: 'Specialist' }],
     desactivatedForSpecialistList: [{ type: Schema.Types.ObjectId, ref: 'Specialist' }],
 },

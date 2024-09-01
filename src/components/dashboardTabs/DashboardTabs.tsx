@@ -1,22 +1,22 @@
 'use client'
 import { FC, Suspense, useRef, useState } from 'react'
-import Link from "next/link"
 import dynamic from 'next/dynamic';
 import EventsTable from '../eventsTable/EventsTable';
-import { CalendarDaysIcon, ExclamationTriangleIcon, FolderIcon, UserIcon } from '@heroicons/react/24/outline';
 import AdmiPageSkeleton from '@/app/dashboard/adminPatients/_components/AdmiPageSkeleton';
+import { EventsForTodayTab, EventsWithoutRecoryTab, MissingReports, MyPatientsTab } from './Tabs';
+import ViewCalendarTab from './Tabs/ViewCalendarTab';
 
-const MissingReportsTable = dynamic(() => import("../MissingReportsTable"),{
+const MissingReportsTable = dynamic(() => import("../MissingReportsTable"), {
     ssr: true,
-    loading: () => <AdmiPageSkeleton/>
+    loading: () => <AdmiPageSkeleton />
 })
-const ReportsTable = dynamic(() => import("../ReportsTable"),{
+const ReportsTable = dynamic(() => import("../ReportsTable"), {
     ssr: true,
-    loading: () => <AdmiPageSkeleton/>
+    loading: () => <AdmiPageSkeleton />
 })
-const PatientTable = dynamic(() => import("@/app/dashboard/adminPatients/_components/PatientTable"),{
+const PatientTable = dynamic(() => import("@/app/dashboard/adminPatients/_components/PatientTable"), {
     ssr: true,
-    loading: () => <AdmiPageSkeleton/>
+    loading: () => <AdmiPageSkeleton />
 })
 
 const DashboardTabs: FC<{
@@ -95,172 +95,72 @@ const DashboardTabs: FC<{
             <Suspense>
                 <MissingReportsTable
                     missingReportsWithDate={missingReportsWithDate}
-                    refecthFns={refecthFns} /
-                >
+                    refecthFns={refecthFns}
+                />
             </Suspense>
         ),
         'cancelEventsWithoutRecovery': (
             <Suspense>
-                <ReportsTable reports={userReports} refecthFns={refecthFns} />
+                <ReportsTable reports={userReports} refecthFns={refecthFns} userRole={userInfo[0]?.role} />
             </Suspense>
         )
     }
 
+    const tabsArray = [
+        {
+            order: userInfo[0]?.role === 'admin' ? 1 : 2,
+            roles:["specialist", "admin"],
+            tab: <ViewCalendarTab />
+        },
+        {
+            order: userInfo[0]?.role === 'admin' ? 2 : 4,
+            roles:["specialist", "admin"],
+            tab: <EventsWithoutRecoryTab
+                setSelectedCard={setSelectedCard}
+                tableContainerRef={tableContainerRef}
+                userReports={userReports}
+            />
+        },
+        {
+            order: userInfo[0]?.role === 'admin' ? 3 : 3,
+            roles:["specialist", "admin"],
+            tab: <EventsForTodayTab
+                setSelectedCard={setSelectedCard}
+                tableContainerRef={tableContainerRef}
+                eventForToday={eventForToday}
+                userEvent={userEvent}
+            />
+        },
+        {
+            order: userInfo[0]?.role === 'admin' ? 4 : 5,
+            roles:["specialist", "admin"],
+            tab: <MissingReports
+                setSelectedCard={setSelectedCard}
+                tableContainerRef={tableContainerRef}
+                missingReportsWithDate={missingReportsWithDate}
+            />
+        },
+        {
+            order: 1,
+            roles:["specialist"],
+            tab: <MyPatientsTab
+                setSelectedCard={setSelectedCard}
+                tableContainerRef={tableContainerRef}
+                patientListActivatedOrDesactivated={patientListActivatedOrDesactivated}
+            />
+        },
+    ]
+
     return (
         <>
-            <div className="flex items-start mb-4">
-                <div className="container max-w-6xl px-5 my-4">
-                    <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-
-                        {/* MIS PACIENTES */}
-                        {userInfo[0]?.role !== 'admin' && (
-                            <div onClick={() => {
-                                setSelectedCard('patients')
-                                tableContainerRef.current.scrollIntoView({ behavior: 'smooth' })
-                            }}
-                                className="relative overflow-hidden p-5 bg-amber-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer"
-                            >
-                                <div className="flex items-center space-x-2 space-y-3">
-
-                                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-amber-50 ">
-                                        <UserIcon className="h-9 w-9 text-amber-400" strokeWidth={2} />
-                                    </div>
-
-                                    <div className='flex flex-col items-center'>
-                                        <div className="text-amber-800 text-center font-semibold">Mis Pacientes</div>
-                                        <div className="text-2xl font-bold text-amber-900">
-                                            {patientListActivatedOrDesactivated?.filter(Boolean).length}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <div className='absolute -top-1/4 -right-12 w-[100px] h-[100px] bg-amber-200 rounded-full opacity-40' />
-                                        <div className='absolute -bottom-1/4 -right-16 w-[100px] h-[100px] bg-amber-200 rounded-full opacity-40' />
-                                        <div className='absolute -bottom-1/4 -left-16 w-[100px] h-[100px] bg-amber-200 rounded-full opacity-40' />
-                                        <div className='absolute -top-1/4 -left-16 w-[100px] h-[100px] bg-amber-200 rounded-full opacity-40' />
-                                    </div>
-
-                                </div>
-                            </div>
-                        )}
-
-                        {/* CITAS PARA HOY */}
-                        <div
-                            onClick={() => {
-                                setSelectedCard('events')
-                                tableContainerRef.current.scrollIntoView({ behavior: 'smooth' })
-                            }}
-                            className="relative overflow-hidden p-5 bg-fuchsia-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer"
-                        >
-                            <div className="flex items-center space-x-2 space-y-3">
-
-                                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-fuchsia-50 ">
-                                    <FolderIcon className="h-9 w-9 text-fuchsia-400" strokeWidth={2} />
-                                </div>
-
-                                <div className='flex flex-col items-center'>
-                                    <div className="text-fuchsia-800 text-center font-semibold">Citas para hoy</div>
-                                    <div className="text-2xl font-bold text-fuchsia-900">{eventForToday(userEvent)?.length}</div>
-                                </div>
-
-                                <div>
-                                    <div className='absolute -top-1/4 -right-12 w-[100px] h-[100px] bg-fuchsia-200 rounded-full opacity-40' />
-                                    <div className='absolute -bottom-1/4 -right-16 w-[100px] h-[100px] bg-fuchsia-200 rounded-full opacity-40' />
-                                    <div className='absolute -bottom-1/4 -left-16 w-[100px] h-[100px] bg-fuchsia-200 rounded-full opacity-40' />
-                                    <div className='absolute -top-1/4 -left-16 w-[100px] h-[100px] bg-fuchsia-200 rounded-full opacity-40' />
-                                </div>
-
-                            </div>
-                        </div>
-
-                        {/* REPORTES FALTANTES */}
-                        <div
-                            onClick={() => {
-                                setSelectedCard('missingReports')
-                                tableContainerRef.current.scrollIntoView({ behavior: 'smooth' })
-                            }}
-                            className="relative overflow-hidden p-5 bg-orange-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer"
-                        >
-                            <div className="flex items-center space-x-2 space-y-3">
-                                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-50 ">
-                                    <ExclamationTriangleIcon className="h-9 w-9 text-orange-400" strokeWidth={2} />
-                                </div>
-                                <div className='flex flex-col items-center'>
-                                    <div className="text-orange-800 text-center font-semibold">Reportes faltantes</div>
-                                    <div className="text-2xl font-bold text-orange-900">{missingReportsWithDate?.length}</div>
-                                </div>
-                                <div>
-                                    <div className='absolute -top-1/4 -right-12 w-[100px] h-[100px] bg-orange-200 rounded-full opacity-40' />
-                                    <div className='absolute -bottom-1/4 -right-16 w-[100px] h-[100px] bg-orange-200 rounded-full opacity-40' />
-                                    <div className='absolute -bottom-1/4 -left-16 w-[100px] h-[100px] bg-orange-200 rounded-full opacity-40' />
-                                    <div className='absolute -top-1/4 -left-16 w-[100px] h-[100px] bg-orange-200 rounded-full opacity-40' />
-                                </div>
-                            </div>
-
-
-
-                        </div>
-
-                        {/* CITAS CANCELADAS CON SIN RECUPERACIONES */}
-                        {userInfo[0]?.role === 'admin' && (
-                            <div
-                                onClick={() => {
-                                    setSelectedCard('cancelEventsWithoutRecovery')
-                                    tableContainerRef.current.scrollIntoView({ behavior: 'smooth' })
-                                }}
-                                className="relative overflow-hidden p-5 bg-red-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer"
-                            >
-                                <div className="flex items-center space-x-2 space-y-3">
-                                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-50 ">
-                                        <ExclamationTriangleIcon className="h-9 w-9 text-red-400" strokeWidth={2} />
-                                    </div>
-                                    <div className='flex flex-col items-center'>
-                                        <div className="text-red-800 text-center font-semibold max-w-[150px]">Citas canceladas sin recuperaciones</div>
-                                        <div className="text-2xl font-bold text-red-900">
-                                            {userReports?.length}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className='absolute -top-1/4 -right-12 w-[100px] h-[100px] bg-red-200 rounded-full opacity-40' />
-                                        <div className='absolute -bottom-1/4 -right-16 w-[100px] h-[100px] bg-red-200 rounded-full opacity-40' />
-                                        <div className='absolute -bottom-1/4 -left-16 w-[100px] h-[100px] bg-red-200 rounded-full opacity-40' />
-                                        <div className='absolute -top-1/4 -left-16 w-[100px] h-[100px] bg-red-200 rounded-full opacity-40' />
-                                    </div>
-                                </div>
-
-
-
-                            </div>
-                        )}
-
-                        {/*VER CALENDARIO */}
-                        <Link
-                            href="/dashboard/scheduler">
-                            <div className="relative overflow-hidden p-5 bg-emerald-50 rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer">
-                                <div className="flex items-center space-x-2 space-y-3">
-
-                                    <div className="flex items-center justify-center w-12 h-12 rounded-full bg-emerald-50 ">
-                                        <CalendarDaysIcon className="h-9 w-9 text-emerald-400" strokeWidth={2} />
-                                    </div>
-
-                                    <div className='flex flex-col items-center'>
-                                        <div className="text-esmerald-800 text-center font-semibold">
-                                            Ver Calendario
-                                        </div>
-                                        <div className="text-2xl font-bold text-esmerald-900 h-[56px]"></div>
-                                    </div>
-
-                                    <div>
-                                        <div className='absolute -top-1/4 -right-12 w-[100px] h-[100px] bg-emerald-200 rounded-full opacity-40' />
-                                        <div className='absolute -bottom-1/4 -right-16 w-[100px] h-[100px] bg-emerald-200 rounded-full opacity-40' />
-                                        <div className='absolute -bottom-1/4 -left-16 w-[100px] h-[100px] bg-emerald-200 rounded-full opacity-40' />
-                                        <div className='absolute -top-1/4 -left-16 w-[100px] h-[100px] bg-emerald-200 rounded-full opacity-40' />
-                                    </div>
-
-                                </div>
-                            </div>
-                        </Link>
-
+            <div className="flex items-center mb-4">
+                <div className="container px-5 my-4">
+                    <div className={userInfo[0]?.role !== 'admin' ? "grid gap-7 sm:grid-cols-2 lg:grid-cols-5" : "grid gap-7 sm:grid-cols-2 lg:grid-cols-4"}>
+                        {
+                            tabsArray.filter((tab: any) => tab.roles.includes(userInfo[0]?.role)).sort((a,b) => a.order - b.order).map(tabComponent => (
+                                tabComponent.tab
+                            ))
+                        }
                     </div>
                 </div>
             </div>
