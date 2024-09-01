@@ -113,7 +113,7 @@ const DashboardTabs: FC<{
             tab: <ViewCalendarTab />
         },
         {
-            order: userInfo[0]?.role === 'admin' ? 2 : 4,
+            order: userInfo[0]?.role === 'admin' ? 3 : 4,
             roles:["specialist", "admin"],
             tab: <EventsWithoutRecoryTab
                 setSelectedCard={setSelectedCard}
@@ -122,7 +122,7 @@ const DashboardTabs: FC<{
             />
         },
         {
-            order: userInfo[0]?.role === 'admin' ? 3 : 3,
+            order: userInfo[0]?.role === 'admin' ? 2 : 3,
             roles:["specialist", "admin"],
             tab: <EventsForTodayTab
                 setSelectedCard={setSelectedCard}
