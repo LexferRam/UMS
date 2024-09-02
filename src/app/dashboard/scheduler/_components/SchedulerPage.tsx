@@ -20,6 +20,9 @@ import { LoadingContext } from '@/context/LoadingProvider'
 import { useSnackbar } from 'notistack'
 
 import dynamic from 'next/dynamic'
+import { Autocomplete, TextField } from '@mui/material'
+import Image from 'next/image'
+import { SPECIALITIES_VALUES_DICTIONARY, specilities } from '../../adminUsers/constants'
 const EventDetailsModal = dynamic(() => import('../_components/EventDetailsModal'))
 const AddEventModal = dynamic(() => import('../_components/AddEventModal'))
 
@@ -29,6 +32,7 @@ const SchedulerPage = ({ userInfo, events }: any) => {
 
   const calendarRef: any = useRef(null)
   const [open, setOpen] = useState(false)
+  const [selectSearchOpt, setSelectSearchOpt] = useState({ name: 'Todas las citas', speciality: 'Todas las citas' })
   const [openDetails, setOpenDetails] = useState(false)
   const [selectedUser, setSelectedUser] = useState('')
   const { width } = useWindowDimensions();
@@ -218,20 +222,28 @@ const SchedulerPage = ({ userInfo, events }: any) => {
   // if (isLoadingSchedulerEvents || isLoadingDateUser) return <SchedulerSkeleton />
   if (error) return 'Error cargando'
 
+  const options = dataUser.map((option: any) => {
+    const specialityGroup = option.speciality.length === 0 ? 'Administradores' : option.speciality.trim()
+    return {
+      specialityGroup: specialityGroup,
+      ...option,
+    };
+  });
+
   return (
-      <div className='flex flex-col w-full lg:shadow-xl rounded sm:py-8 sm:px-4 scrollbar-hide'>
-        <EventDetailsModal
-          open={openDetails}
-          setOpen={setOpenDetails}
-          eventDetails={currentEvent}
-          selectedDate={selectedDate}
-          refetchEvents={refetchEvents}
-        />
+    <div className='flex flex-col w-full lg:shadow-xl rounded sm:py-8 sm:px-4 scrollbar-hide'>
+      <EventDetailsModal
+        open={openDetails}
+        setOpen={setOpenDetails}
+        eventDetails={currentEvent}
+        selectedDate={selectedDate}
+        refetchEvents={refetchEvents}
+      />
 
-        {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
-          <div className='flex flex-col m-1 sm:flex-row gap-6 mb-6'>
+      {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
+        <div className='flex flex-col m-1 sm:flex-row gap-6 mb-6'>
 
-            <div>
+          {/* <div>
               <select
                 className='sm:w-[250px]'
                 onChange={(e) => {
@@ -246,106 +258,142 @@ const SchedulerPage = ({ userInfo, events }: any) => {
                   )
                 })}
               </select>
-            </div>
+            </div> */}
 
-            <AddEventModal
-              open={open}
-              setOpen={setOpen}
-              onEventAdded={(e: any) => onEventAdded(e)}
+          <div>
+            <Autocomplete
+              value={selectSearchOpt}
+              onChange={(event: any, newValue: any) => {
+                setSelectSearchOpt(newValue)
+                const foundItem: any = dataUser.filter((item: any) => item?.name === newValue?.name)
+                foundItem.length ? setSelectedUser(foundItem[0]._id) : setSelectedUser('')
+              }}
+              options={[...options.sort((a: any, b: any) => b.specialityGroup.localeCompare(a.specialityGroup)), { name: "Todas las citas", speciality: 'Todas las citas', specialityGroup: 'Todas las citas' }]}
+              groupBy={(option: any) => option?.speciality.length === 0 ? 'Administrador' : SPECIALITIES_VALUES_DICTIONARY[option?.speciality] }
+              getOptionLabel={(option: any) => option.name}
+              className='sm:w-[300px]'
+              renderInput={(params) => <TextField {...params} label="Filtro por especialista" />}
+              renderOption={(props: any, option: any) => {
+                const { key, ...optionProps } = props;
+                return (
+                  <li key={key} {...optionProps}>
+                    <div className='flex gap-1'>
+                      <Image
+                        src={option.lastname || '/icon-512x512.png'}
+                        className="rounded-full mr-2"
+                        alt='logo_login'
+                        width={25}
+                        height={25}
+                        priority
+                      />
+                      <p >
+                        {option.name}
+                      </p>
+                    </div>
+                  </li>
+                );
+              }}
             />
-
           </div>
-        ) : null}
 
-        <FullCalendar
-          ref={calendarRef}
-          viewClassNames='h-[100vh]'
-          events={formattedEventsQuery}
-          plugins={[dayGridPlugin, interactionPlugin, rrulePlugin, resourceTimeGridPlugin]}
-          initialView={width as any < 500 ? "resourceTimeGridDay" : "resourceTimeGridWeek"} //dayGridWeek 
-          locale={esLocale}
-          selectable
-          headerToolbar={{
-            left: 'prev,next,today',
-            center: (width as any < 500) ? '' : 'title',
-            right: "timeGridDay,timeGridWeek,dayGridMonth"
-          }}
-          displayEventTime={false}
-          eventTimeFormat={
-            {
-              hour12: true, // Use 12-hour format
-              hour: 'numeric', // Display hours with 1 or 2 digits
-              minute: '2-digit', // Display minutes with 2 digits
-            }
+          <AddEventModal
+            open={open}
+            setOpen={setOpen}
+            onEventAdded={(e: any) => onEventAdded(e)}
+          />
+
+        </div>
+      ) : null}
+
+      <FullCalendar
+        ref={calendarRef}
+        viewClassNames='h-[100vh]'
+        events={formattedEventsQuery}
+        plugins={[dayGridPlugin, interactionPlugin, rrulePlugin, resourceTimeGridPlugin]}
+        initialView={width as any < 500 ? "resourceTimeGridDay" : "resourceTimeGridWeek"} //dayGridWeek 
+        locale={esLocale}
+        selectable
+        headerToolbar={{
+          left: 'prev,next,today',
+          center: (width as any < 500) ? '' : 'title',
+          right: "timeGridDay,timeGridWeek,dayGridMonth"
+        }}
+        displayEventTime={false}
+        eventTimeFormat={
+          {
+            hour12: true, // Use 12-hour format
+            hour: 'numeric', // Display hours with 1 or 2 digits
+            minute: '2-digit', // Display minutes with 2 digits
           }
-          eventClick={function (info: any) {
-            let eventId = info.event._def.extendedProps._id
-            let selectedEvent = formattedEventsQuery.filter((event: any) => event._id === eventId)
+        }
+        eventClick={function (info: any) {
+          let eventId = info.event._def.extendedProps._id
+          let selectedEvent = formattedEventsQuery.filter((event: any) => event._id === eventId)
 
-            setSelectedDate({
-              eventId: info.event._def.extendedProps._id,
-              date: info.event._instance?.range.start.toLocaleString("es-VE").split(',')[0],
-              patient: info.event._def.extendedProps.patient
-            })
+          setSelectedDate({
+            eventId: info.event._def.extendedProps._id,
+            date: info.event._instance?.range.start.toLocaleString("es-VE").split(',')[0],
+            patient: info.event._def.extendedProps.patient
+          })
 
-            setCurrentEvent(selectedEvent[0])
-            setOpenDetails(true)
-          }}
-          resources={[
-            { id: 'a', title: ' ' }
-          ]}
-          timeZone='local'
-          slotLabelFormat={{ hour: 'numeric', hour12: true }}
-          slotMinTime='07:00:00'
-          slotMaxTime='19:00:00'
-          allDaySlot={false}
-          views={{
-            resourceTimeGridDay: {
-              type: 'resourceTimeGrid',
-              duration: { days: 1 },
-              buttonText: 'Día'
-            },
-            resourceTimeGridWeek: {
-              type: 'resourceTimeGrid',
-              duration: { week: 1 },
-              buttonText: 'Semana'
-            }
-          }}
-          hiddenDays={[0]}
-          eventContent={(eventInfo) => {
-            const { event } = eventInfo;
+          setCurrentEvent(selectedEvent[0])
+          setOpenDetails(true)
+        }}
+        resources={[
+          { id: 'a', title: ' ' }
+        ]}
+        timeZone='local'
+        slotLabelFormat={{ hour: 'numeric', hour12: true }}
+        slotMinTime='07:00:00'
+        slotMaxTime='19:00:00'
+        allDaySlot={false}
+        views={{
+          resourceTimeGridDay: {
+            type: 'resourceTimeGrid',
+            duration: { days: 1 },
+            buttonText: 'Día'
+          },
+          resourceTimeGridWeek: {
+            type: 'resourceTimeGrid',
+            duration: { week: 1 },
+            buttonText: 'Semana'
+          }
+        }}
+        hiddenDays={[0]}
+        eventContent={(eventInfo) => {
+          const { event } = eventInfo;
 
-            let eventType = event._def.extendedProps.eventType;
-            let asingColor = event._def.extendedProps._asignTo.asignColor
-            let bgColor = EVENTS_TYPE_COLORS[eventType]
+          let eventType = event._def.extendedProps.eventType;
+          let asingColor = event._def.extendedProps._asignTo.asignColor
+          let bgColor = EVENTS_TYPE_COLORS[eventType]
 
-            return (
-              <div
-                className={`text-white w-full h-full m-0 p-0 text-xs cursor-pointer`}
-                style={{
-                  borderLeft: `${userInfo[0]?.role === 'admin' ? '10px' : '0px'} ${asingColor} solid`,
-                  overflow: 'hidden',
-                  backgroundColor: `${(
-                    event._def.extendedProps?.reports?.filter((repor: any) => repor?.isForEventCancel &&
-                      new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
-                    ).length > 0
-                  ) ?
-                    'red' :
-                    (userInfo[0].role === 'admin' ? (
-                      eventType === 'SESION' ? asingColor : bgColor)
-                      : eventType === 'SESION' ? '#3688d8' : bgColor)
-                    }`,
-                  borderRadius: '5px'
-                }}
-              >
-                <p>{eventInfo.timeText}</p>
-                <p>{event._def.title}</p>
-              </div>
-            );
-          }}
-          nowIndicator
-        />
-      </div>
+          return (
+            <div
+              className={`text-white w-full h-full m-0 p-0 text-xs cursor-pointer`}
+              style={{
+                borderLeft: `${userInfo[0]?.role === 'admin' ? '10px' : '0px'} ${asingColor} solid`,
+                overflow: 'hidden',
+                backgroundColor: `${(
+                  event._def.extendedProps?.reports?.filter((repor: any) => repor?.isForEventCancel &&
+                    new Date(repor.createdAt).toLocaleString("es-VE").split(',')[0] === event._instance?.range.start.toLocaleString("es-VE").split(',')[0]
+                  ).length > 0
+                ) ?
+                  'red' :
+                  (userInfo[0].role === 'admin' ? (
+                    eventType === 'SESION' ? asingColor : bgColor)
+                    : eventType === 'SESION' ? '#3688d8' : bgColor)
+                  }`,
+                borderRadius: '5px'
+              }}
+            >
+              <p>{eventInfo.timeText}</p>
+              <p>{event._def.title}</p>
+            </div>
+          );
+        }}
+        nowIndicator
+      />
+    </div>
   )
 }
 
