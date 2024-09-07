@@ -9,7 +9,7 @@ import {
 import moment from 'moment'
 moment.locale('es');
 import { calculateAge, calculateAgeWithMonths } from '@/util/dateOfBirth';
-import { PencilSquareIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { CameraIcon, PencilSquareIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ArrowLeftIcon } from "@heroicons/react/24/outline"
 import EditEventModal from './EditEventModal';
 import { useUserInfo } from '@/hooks';
@@ -23,7 +23,7 @@ import { ModalContext } from '@/context/NotificationDialogProvider';
 import NotificationDialog from './NotificationDialog';
 import { LoadingContext } from '@/context/LoadingProvider';
 import { useSnackbar } from 'notistack';
-import { Alert } from '@mui/material';
+import { Alert, Tooltip } from '@mui/material';
 import { weekDays } from '@/util/weekDays';
 
 interface IEventDetailsModal {
@@ -41,6 +41,7 @@ const EventDetailsModal = ({
     refetchEvents,
     selectedDate
 }: IEventDetailsModal) => {
+    console.log(eventDetails)
 
     const router = useRouter()
     const [editEvent, setEditEvent] = useState(false)
@@ -179,8 +180,21 @@ const EventDetailsModal = ({
                                 )}
                             </div>
 
-                            <div className='flex flex-col sm:flex-row mt-1'>
+                            <div className='flex flex-col items-center sm:flex-row mt-1'>
                                 <b className='mr-2'>Paciente: </b>
+                                {eventDetails?.patient?.canTakePhoto ? (
+                                    <Tooltip title="Se le puede tomar foto">
+                                        <CameraIcon
+                                            className="h-4 w-4 mx-2 text-green-500"
+                                        />
+                                    </Tooltip>
+                                ) : (
+                                    <Tooltip title="No se le puede tomar foto">
+                                        <CameraIcon
+                                            className="h-5 w-5 mx-2 text-red-500"
+                                        />
+                                    </Tooltip>
+                                )}
                                 <p
                                     className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
                                     onClick={() => {
