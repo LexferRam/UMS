@@ -24,7 +24,6 @@ const MissingReportsTable: React.FC<{
                 title: "Evento cancelado",
                 field: "userEventTitle",
                 render: rowData => {
-                    console.log(rowData)
                     return(
                     <>
                         <EventTypeChip eventType={rowData?.eventType} /> <br />

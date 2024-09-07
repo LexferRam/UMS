@@ -7,7 +7,6 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import moment from 'moment'
-moment.locale('es');
 import { calculateAge, calculateAgeWithMonths } from '@/util/dateOfBirth';
 import { CameraIcon, PencilSquareIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ArrowLeftIcon } from "@heroicons/react/24/outline"
@@ -25,6 +24,7 @@ import { LoadingContext } from '@/context/LoadingProvider';
 import { useSnackbar } from 'notistack';
 import { Alert, Tooltip } from '@mui/material';
 import { weekDays } from '@/util/weekDays';
+moment.locale('es');
 
 interface IEventDetailsModal {
     open: boolean
@@ -281,30 +281,38 @@ const EventDetailsModal = ({
                                                     {specialist.name}
                                                 </p>
 
-                                                {eventsBySpecialist.map((event: any) => (
-                                                    <>
-                                                        <p
-                                                            color="blue-gray"
-                                                            className="font-medium text-clip text-sm text-gray-500"
-                                                        >
-                                                            {event.byweekday.map((day: any) => {
+                                                {eventsBySpecialist.map((event: any) => {
+                                                    return (
+                                                        <div className='flex flex-col items-center hover:bg-[#efefef] p-2 rounded-sm'>
+                                                            <p
+                                                                color="blue-gray"
+                                                                className="font-medium text-clip text-center text-sm text-gray-500 max-w-[120px]"
+                                                            >
+                                                                {event.byweekday.map((day: any) => {
 
-                                                                const isLast = event.byweekday.findIndex((ele: any) => ele === day) === event.byweekday.length - 1;
-                                                                
-                                                                return (`${weekDays[day]} ${!isLast ? '-' : ''} `)
-                                                            })}
-                                                        </p>
+                                                                    const isLast = event.byweekday.findIndex((ele: any) => ele === day) === event.byweekday.length - 1;
 
-                                                        <p
-                                                            color="blue-gray"
-                                                            className="font-light text-clip text-sm text-gray-500"
-                                                        >
+                                                                    return (`${weekDays[day]} ${!isLast ? '-' : ''} `)
+                                                                })}
+                                                            </p>
+                                                            <span className='text-xs text-gray-500'>
+                                                                {moment(event.start).format('DD/MM/YYYY')}
+                                                            </span>
+                                                            <span className='text-xs text-gray-500'>
+                                                                {moment(event.end).format('DD/MM/YYYY')}
+                                                            </span>
 
-                                                            ({moment(new Date(event?.start)).format('LT')}-
-                                                            {moment(new Date(event?.end)).format('LT')})
-                                                        </p>
-                                                    </>
-                                                ))}
+                                                            <p
+                                                                color="blue-gray"
+                                                                className="font-light text-clip text-sm text-gray-500"
+                                                            >
+
+                                                                ({moment(new Date(event?.start)).format('h:mm a')} - 
+                                                                {moment(new Date(event?.end)).format('h:mm a')})
+                                                            </p>
+                                                        </div>
+                                                    )
+                                                })}
                                             </div>
                                         )
                                     })}
