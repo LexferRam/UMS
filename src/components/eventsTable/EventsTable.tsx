@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import EventTypeChip from "../EventTypeChip";
+import { isToday } from "@/util/dates";
+import { Tooltip } from "@mui/material";
 moment.locale('es');
 
 const EventsTable: FC<{ events: any, userRole: any }> = ({ events, userRole }) => {
@@ -29,12 +31,31 @@ const EventsTable: FC<{ events: any, userRole: any }> = ({ events, userRole }) =
         {
             title: "Evento",
             field: "title",
-            render: rowData => (
-                <div>
-                    <EventTypeChip eventType={rowData?.eventType} /> <br />
-                    {rowData.title} 
-                </div>
-            ),
+            render: rowData => {
+
+                let cancelReport = rowData?.reports.filter((report: any) => isToday(report?.createdAt) && report?.isForEventCancel)
+
+                return (
+                    <div className="flex flex-col items-center">
+                        <EventTypeChip eventType={rowData?.eventType} />
+                        {cancelReport.length ? (
+                            <Tooltip title={cancelReport[0]?.description}>
+                                <span
+                                    className="ml-2 inline-block rounded-full px-3 py-1 text-[10px] font-light text-white mr-2 mb-2"
+                                    style={{
+                                        backgroundColor: '#e64451'
+                                    }}
+                                >
+                                    Cita cancelada
+                                </span>
+                            </Tooltip>
+                        ) : null}
+                        <p className="text-center">
+                            {rowData.title}
+                        </p>
+                    </div>
+                )
+            },
         },
         {
             title: "Hora",
@@ -119,7 +140,7 @@ const EventsTable: FC<{ events: any, userRole: any }> = ({ events, userRole }) =
             render: rowData => (
                 <div>
                     <EventTypeChip eventType={rowData?.eventType} /> <br />
-                    {rowData.title} 
+                    {rowData.title}
                 </div>
             )
         },

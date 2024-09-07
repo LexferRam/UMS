@@ -41,7 +41,6 @@ const EventDetailsModal = ({
     refetchEvents,
     selectedDate
 }: IEventDetailsModal) => {
-    console.log(eventDetails)
 
     const router = useRouter()
     const [editEvent, setEditEvent] = useState(false)

@@ -149,3 +149,10 @@ export function formatDateToDDMMYYYY(dateString: string): string {
 
   return `${day}/${month}/${year}`;
 }
+
+export function isToday(dateString: string) {
+  const date = new Date(dateString);
+  const today = new Date();
+
+  return date.toDateString() === today.toDateString();
+}
