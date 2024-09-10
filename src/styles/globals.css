@@ -92,3 +92,8 @@
 .MuiTableRow-root:hover { 
   background: #efefef !important 
 }
+
+.backdrop-blur-sm{
+  --tw-backdrop-blur: '' !important;
+  backdrop-filter: '' !important
+}

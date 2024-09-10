@@ -12,6 +12,11 @@ import rrulePlugin from '@fullcalendar/rrule'
 import 'tippy.js/dist/tippy.css';
 import { useQuery } from 'react-query'
 import SchedulerSkeleton from '../_components/SchedulerSkeleton'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import { getHoursBetweenToTimes } from '@/util/hours'
@@ -20,13 +25,16 @@ import { LoadingContext } from '@/context/LoadingProvider'
 import { useSnackbar } from 'notistack'
 
 import dynamic from 'next/dynamic'
-import { Autocomplete, TextField } from '@mui/material'
+import { Autocomplete, IconButton, TextField } from '@mui/material'
 import Image from 'next/image'
 import { SPECIALITIES_VALUES_DICTIONARY, specilities } from '../../adminUsers/constants'
+import dayjs from 'dayjs'
 const EventDetailsModal = dynamic(() => import('../_components/EventDetailsModal'))
 const AddEventModal = dynamic(() => import('../_components/AddEventModal'))
+import es from 'dayjs/locale/es';
 
 moment.locale('es');
+dayjs.locale(es);
 
 const SchedulerPage = ({ userInfo, events }: any) => {
 
@@ -118,6 +126,12 @@ const SchedulerPage = ({ userInfo, events }: any) => {
       return ({
         ...event,
         color: userInfo[0].role === 'admin' ? (event?.eventType === 'SESION' ? event?._asignTo.asignColor : EVENTS_TYPE_COLORS[event?.eventType]) : '#3688d8',
+        // rrule: {
+        //   freq: event?.freq || 'daily', // monthly  yearly  daily  weekly
+        //   byweekday: event?.byweekday,
+        //   dtstart: new Date(event?.start).toISOString(),//moment(event?.start).toDate(),// event?.start,
+        //   until: new Date(event?.end).toISOString()//moment(event?.end).toDate() //event?.end
+        // },
         allDay: calendarRef?.current?.props?.initialView === 'resourceTimeGridWeek' || calendarRef?.current?.props?.initialView === 'resourceTimeGridDay' ? false : true,
         // title: event?.title,
         // TODO: add this dinamically
@@ -260,7 +274,8 @@ const SchedulerPage = ({ userInfo, events }: any) => {
               </select>
             </div> */}
 
-          <div>
+          <div className='flex items-center flex-wrap gap-4 md:gap-4'>
+
             <Autocomplete
               value={selectSearchOpt}
               onChange={(event: any, newValue: any) => {
@@ -269,9 +284,9 @@ const SchedulerPage = ({ userInfo, events }: any) => {
                 foundItem.length ? setSelectedUser(foundItem[0]._id) : setSelectedUser('')
               }}
               options={[...options.sort((a: any, b: any) => b.specialityGroup.localeCompare(a.specialityGroup)), { name: "Todas las citas", speciality: 'Todas las citas', specialityGroup: 'Todas las citas' }]}
-              groupBy={(option: any) => option?.speciality.length === 0 ? 'Administrador' : SPECIALITIES_VALUES_DICTIONARY[option?.speciality] }
+              groupBy={(option: any) => option?.speciality.length === 0 ? 'Administrador' : SPECIALITIES_VALUES_DICTIONARY[option?.speciality]}
               getOptionLabel={(option: any) => option.name}
-              className='sm:w-[300px]'
+              className='w-full sm:w-[300px] md:ml-2'
               renderInput={(params) => <TextField {...params} label="Filtro por especialista" />}
               renderOption={(props: any, option: any) => {
                 const { key, ...optionProps } = props;
@@ -294,6 +309,15 @@ const SchedulerPage = ({ userInfo, events }: any) => {
                 );
               }}
             />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  defaultValue={dayjs(new Date())}
+                  views={['year', 'month', 'day']}
+                  className='w-full mb-4 md:mb-0'
+                />
+              </DemoContainer>
+            </LocalizationProvider>
           </div>
 
           <AddEventModal

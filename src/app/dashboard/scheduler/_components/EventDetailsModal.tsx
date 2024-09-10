@@ -1,10 +1,7 @@
 import React, { useContext, useState } from 'react'
 import {
-    Dialog,
-    DialogContent,
     DialogFooter,
     DialogHeader,
-    DialogTitle,
 } from "@/components/ui/dialog"
 import moment from 'moment'
 import { calculateAge, calculateAgeWithMonths } from '@/util/dateOfBirth';
@@ -14,7 +11,6 @@ import EditEventModal from './EditEventModal';
 import { useUserInfo } from '@/hooks';
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
-import { ScrollArea } from '@/components/ui/ScrollArea';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { EVENTS_TYPE_COLORS } from '@/util/eventsType';
@@ -22,8 +18,10 @@ import { ModalContext } from '@/context/NotificationDialogProvider';
 import NotificationDialog from './NotificationDialog';
 import { LoadingContext } from '@/context/LoadingProvider';
 import { useSnackbar } from 'notistack';
-import { Alert, Tooltip } from '@mui/material';
+import { Alert, Dialog, DialogContent, DialogProps, IconButton, Paper, PaperProps, Tooltip } from '@mui/material';
 import { weekDays } from '@/util/weekDays';
+import Draggable from 'react-draggable';
+import CloseIcon from '@mui/icons-material/Close';
 moment.locale('es');
 
 interface IEventDetailsModal {
@@ -32,6 +30,17 @@ interface IEventDetailsModal {
     eventDetails: any,
     refetchEvents: any,
     selectedDate: any
+}
+
+function PaperComponent(props: PaperProps) {
+    return (
+        <Draggable
+            handle="#draggable-dialog-title"
+            cancel={'[class*="MuiDialogContent-root"]'}
+        >
+            <Paper {...props} />
+        </Draggable>
+    );
 }
 
 const EventDetailsModal = ({
@@ -45,6 +54,7 @@ const EventDetailsModal = ({
     const router = useRouter()
     const [editEvent, setEditEvent] = useState(false)
     const [cancelEvent, setCancelEvent] = useState(false)
+    const [scroll, setScroll] = useState<DialogProps['scroll']>('paper');
     const [userInfo] = useUserInfo()
     let patientID = selectedDate?.patient?._id
 
@@ -81,7 +91,7 @@ const EventDetailsModal = ({
                 }
             })
 
-            if(!respDeleteEvent.ok) throw new Error('Error eliminando cita')
+            if (!respDeleteEvent.ok) throw new Error('Error eliminando cita')
 
             await refetchEvents()
             setLoading(false)
@@ -115,218 +125,243 @@ const EventDetailsModal = ({
             <NotificationDialog handleDeleteAction={deleteEvent} />
             <Dialog
                 open={open}
-                onOpenChange={() => {
+                scroll={scroll}
+                onClose={() => {
                     setOpen(!open)
                     setEditEvent(false)
                     setCancelEvent(false)
                     setShowMore(false)
                 }}
+                PaperComponent={PaperComponent}
+                aria-labelledby="draggable-dialog-title"
             >
-                <DialogContent className="sm:max-w-[500px]" >
-
-                    <ScrollArea className='max-h-[100vh] sm:max-h-[600px]'>
-                        {/* // ! DIALOG HEADER  */}
-                        <DialogHeader className='flex flex-row gap-4 items-center justify-center mb-4'>
-                            <div>
-                                <DialogTitle>
-                                    {!editEvent ? eventDetails?.title : null}
-                                    <span
-                                        className="ml-2 inline-block rounded-full px-3 py-1 text-[10px] font-light text-white mr-2 mb-1"
-                                        style={{
-                                            backgroundColor: EVENTS_TYPE_COLORS[eventDetails?.eventType]
-                                        }}
-                                    >
-                                        {eventDetails?.eventType}
-                                    </span>
-                                </DialogTitle>
-                                <hr className='w-full' />
+                {/* // ! DIALOG HEADER  */}
+                <span style={{ cursor: 'move' }} id="draggable-dialog-title" className='flex flex-row items-center justify-center'>
+                    <div className='pt-4'>
+                        <span>
+                            {!editEvent ? eventDetails?.title : null}
+                            <span
+                                className="ml-2 inline-block rounded-full px-3 text-[10px] font-light text-white mr-2 mb-1"
+                                style={{
+                                    backgroundColor: EVENTS_TYPE_COLORS[eventDetails?.eventType]
+                                }}
+                            >
+                                {eventDetails?.eventType}
+                            </span>
+                            <hr className='w-full' />
+                            <div className='font-medium text-clip text-center text-sm text-gray-500'>
+                                {selectedDate?.date}
+                                ({moment(eventDetails?.rrule?.dtstart ? eventDetails?.rrule?.dtstart : eventDetails?.start).format('h:mm a')} -
+                                {moment(eventDetails?.rrule?.until ? eventDetails?.rrule?.until : eventDetails?.end).format('h:mm a')})
                             </div>
+                        </span>
+                        <IconButton
+                            aria-label="close"
+                            onClick={() => {
+                                setOpen(false)
+                                setEditEvent(false)
+                                setCancelEvent(false)
+                                setShowMore(false)
+                            }}
+                            sx={(theme) => ({
+                                position: 'absolute',
+                                right: 8,
+                                top: 8,
+                                color: theme.palette.grey[500],
+                            })}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </div>
 
-                            {editEvent && (
-                                <div
-                                    className='flex gap-2 items-center cursor-pointer'
-                                    onClick={() => {
-                                        setCancelEvent(false)
-                                        setEditEvent(false)
-                                    }} >
-                                    <ArrowLeftIcon
-                                        className="h-6 w-6 text-green-500"
-                                    />
-                                    <span
-                                        className='text-sm font-semibold text-gray-600'
-                                    >
-                                        Volver
-                                    </span>
-                                </div>
+                    {editEvent && (
+                        <div
+                            className='flex gap-2 items-center cursor-pointer'
+                            onClick={() => {
+                                setCancelEvent(false)
+                                setEditEvent(false)
+                            }} >
+                            <ArrowLeftIcon
+                                className="h-6 w-6 text-green-500"
+                            />
+                            <span
+                                className='text-sm font-semibold text-gray-600'
+                            >
+                                Volver
+                            </span>
+                        </div>
+                    )}
+
+                </span>
+                <DialogContent className="sm:min-w-[500px] m-0" >
+
+                    {/* // ! DETAILS OF THE EVENT  */}
+                    {!editEvent && <>
+
+                        <div className='mb-4 w-[100%] flex'>
+                            {canceledReportInSelectedDate?.description?.length && canceledReportInSelectedDate?.isForEventCancel && (
+                                <>
+                                    <Alert severity="error" className='w-[100%]'>
+                                        <div className='w-[100%] flex flex-row justify-around'>
+                                            <p>
+                                                {canceledReportInSelectedDate?.description}
+                                            </p>
+                                        </div>
+                                    </Alert>
+                                </>
                             )}
+                        </div>
 
-                        </DialogHeader>
+                        <div className='flex items-center flex-row'>
+                            <b className='mr-2'>Paciente: </b>
+                            {eventDetails?.patient?.canTakePhoto ? (
+                                <Tooltip title="Se le puede tomar foto">
+                                    <CameraIcon
+                                        className="h-4 w-4 mx-2 text-green-500"
+                                    />
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="No se le puede tomar foto">
+                                    <CameraIcon
+                                        className="h-5 w-5 mx-2 text-red-500"
+                                    />
+                                </Tooltip>
+                            )}
+                            <p
+                                className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
+                                onClick={() => {
+                                    if (!eventDetails?.patient.reports.length) return
+                                    router.push(`/dashboard/patientHistory/${eventDetails?.patient?._id}`, { scroll: false })
+                                }}
+                            >
+                                {eventDetails?.patient.name + ' ' + eventDetails?.patient?.lastname}
+                            </p>
+                        </div>
 
-                        {/* // ! DETAILS OF THE EVENT  */}
-                        {!editEvent && <>
+                        <div className='flex flex-col sm:flex-row mt-1'>
+                            <b className='mr-2'>Fecha de Nacimiento: </b> <p className='mr-2'>{moment(eventDetails?.patient?.dateOfBirth).format('DD/MM/YYYY')}</p>
+                            <p className='text-sm'>
+                                {
+                                    // calculate age if the patient doents have more than 1 year
+                                    calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.years === 0 ?
+                                        `(${calculateAge(new Date(eventDetails?.patient?.dateOfBirth))} meses) `
+                                        :
+                                        `(${calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.years} años y ${calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.months} meses)`
+                                }
+                            </p>
+                        </div>
 
-                            <div className='mt-2 mb-4 w-[100%] flex'>
-                                {canceledReportInSelectedDate?.description?.length && canceledReportInSelectedDate?.isForEventCancel && (
-                                    <>
-                                        <Alert severity="error" className='w-[100%]'>
-                                            <div className='w-[100%] flex flex-row justify-around'>
-                                                <p>
-                                                    {canceledReportInSelectedDate?.description}
-                                                </p>
-                                            </div>
-                                        </Alert>
-                                    </>
-                                )}
+                        <div className='flex flex-col sm:flex-row mt-1'>
+                            <b className='mr-2'>Diagnóstico: </b> <p>{eventDetails?.patient?.diagnosis}</p>
+                        </div>
+
+                        <div className='flex flex-col sm:flex-row mt-1 mb-4'>
+                            <b className='mr-2'>MC: </b>
+                            <p>
+
+                                {!showMore && eventDetails?.patient?.historyDescription.substring(0, 50)}
+                                {showMore && eventDetails?.patient?.historyDescription}
+
+                                {eventDetails?.patient?.historyDescription.length < 53 ? null :
+                                    <a
+                                        className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
+                                        onClick={() => setShowMore(!showMore)}>
+                                        {!showMore ? '...Ver más' : 'Ver menos'}
+                                    </a>
+                                }
+
+                            </p>
+                        </div>
+
+                        <hr />
+
+                        <div className='flex flex-col sm:flex-row mt-4'>
+                            <b className='mr-2'>Especialista asignado: </b> <p>{eventDetails?._asignTo.name}</p>
+                        </div>
+
+                        <div className='flex flex-col mb-4'>
+                            <b className='my-2'>Especialistas asignados: </b>
+
+                            <div className='flex flex-row gap-5'>
+                                {selectedDate?.patient?.specialistAssigned?.map((specialist: any) => {
+
+                                    let eventsBySpecialist = specialist.events.map((event: any) => {
+
+                                        const fechaActual = new Date();
+
+                                        const tiempoFechaAComparar = new Date(event.end).getTime();
+                                        const tiempoFechaActual = fechaActual.getTime();
+
+                                        // si la fecha final es menor a hoy, entonces es una sesion que ya terminó
+                                        if (tiempoFechaAComparar < tiempoFechaActual) return
+                                        return event
+                                    }).filter(Boolean).map((event: any) => (event.byweekday.length > 0) && event).filter((event: any) => (event.patient === patientID && event.eventType === 'SESION'))
+
+                                    return (
+                                        <div className='flex flex-col items-center justify-center gap-1' key={specialist._id}>
+                                            <Image
+                                                src={specialist.lastname}
+                                                className="rounded-full"
+                                                alt='logo_login'
+                                                width={48}
+                                                height={48}
+                                                priority
+                                            />
+                                            <p
+                                                color="blue-gray"
+                                                className="font-semibold text-clip text-sm text-gray-600"
+                                            >
+                                                {specialist.name}
+                                            </p>
+
+                                            {eventsBySpecialist.map((event: any) => {
+                                                return (
+                                                    <div className='flex flex-col items-center hover:bg-[#efefef] p-2 rounded-sm'>
+                                                        <p
+                                                            color="blue-gray"
+                                                            className="font-medium text-clip text-center text-sm text-gray-500 max-w-[120px]"
+                                                        >
+                                                            {event.byweekday.map((day: any) => {
+
+                                                                const isLast = event.byweekday.findIndex((ele: any) => ele === day) === event.byweekday.length - 1;
+
+                                                                return (`${weekDays[day]} ${!isLast ? '-' : ''} `)
+                                                            })}
+                                                        </p>
+
+                                                        <p
+                                                            color="blue-gray"
+                                                            className="font-light text-clip text-sm text-gray-500"
+                                                        >
+
+                                                            ({moment(new Date(event?.start)).format('h:mm a')} -
+                                                            {moment(new Date(event?.end)).format('h:mm a')})
+                                                        </p>
+
+                                                        <span className='text-xs text-gray-500'>
+                                                            ({moment(event.start).format('DD/MM/YYYY')}
+                                                        </span>
+                                                        <span className='text-xs text-gray-500'>
+                                                            {moment(event.end).format('DD/MM/YYYY')})
+                                                        </span>
+
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                    )
+                                })}
                             </div>
+                        </div>
 
-                            <div className='flex flex-col items-center sm:flex-row mt-1'>
-                                <b className='mr-2'>Paciente: </b>
-                                {eventDetails?.patient?.canTakePhoto ? (
-                                    <Tooltip title="Se le puede tomar foto">
-                                        <CameraIcon
-                                            className="h-4 w-4 mx-2 text-green-500"
-                                        />
-                                    </Tooltip>
-                                ) : (
-                                    <Tooltip title="No se le puede tomar foto">
-                                        <CameraIcon
-                                            className="h-5 w-5 mx-2 text-red-500"
-                                        />
-                                    </Tooltip>
-                                )}
-                                <p
-                                    className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
-                                    onClick={() => {
-                                        if (!eventDetails?.patient.reports.length) return
-                                        router.push(`/dashboard/patientHistory/${eventDetails?.patient?._id}`, { scroll: false })
-                                    }}
-                                >
-                                    {eventDetails?.patient.name + ' ' + eventDetails?.patient?.lastname}
-                                </p>
-                            </div>
-
-                            <div className='flex flex-col sm:flex-row mt-1'>
-                                <b className='mr-2'>Fecha de Nacimiento: </b> <p className='mr-2'>{moment(eventDetails?.patient?.dateOfBirth).format('LL')}</p>
-                                <p className='text-sm'>
-                                    {
-                                        // calculate age if the patient doents have more than 1 year
-                                        calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.years === 0 ?
-                                            `(${calculateAge(new Date(eventDetails?.patient?.dateOfBirth))} meses) `
-                                            :
-                                            `(${calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.years} años y ${calculateAgeWithMonths(eventDetails?.patient?.dateOfBirth)?.months} meses)`
-                                    }
-                                </p>
-                            </div>
-
-                            <div className='flex flex-col sm:flex-row mt-1'>
-                                <b className='mr-2'>Diagnóstico: </b> <p>{eventDetails?.patient?.diagnosis}</p>
-                            </div>
-
-                            <div className='flex flex-col sm:flex-row mt-1 mb-4'>
-                                <b className='mr-2'>MC: </b>
-                                <p>
-
-                                    {!showMore && eventDetails?.patient?.historyDescription.substring(0, 50) }
-                                    {showMore && eventDetails?.patient?.historyDescription}
-
-                                    {eventDetails?.patient?.historyDescription.length < 53 ? null :
-                                        <a
-                                            className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
-                                            onClick={() => setShowMore(!showMore)}>
-                                            {!showMore ? '...Ver más' : 'Ver menos'}
-                                        </a>
-                                    }
-
-                                </p>
-                            </div>
-
-                            <hr />
-
-                            <div className='flex flex-col sm:flex-row mt-4'>
-                                <b className='mr-2'>Especialista asignado: </b> <p>{eventDetails?._asignTo.name}</p>
-                            </div>
-
-                            <div className='flex flex-col mb-4'>
-                                <b className='my-2'>Especialistas asignados: </b>
-
-                                <div className='flex flex-row gap-5'>
-                                    {selectedDate?.patient?.specialistAssigned?.map((specialist: any) => {
-
-                                        let eventsBySpecialist = specialist.events.map((event: any) => {
-
-                                            const fechaActual = new Date();
-
-                                            const tiempoFechaAComparar = new Date(event.end).getTime();
-                                            const tiempoFechaActual = fechaActual.getTime();
-
-                                            // si la fecha final es menor a hoy, entonces es una sesion que ya terminó
-                                            if (tiempoFechaAComparar < tiempoFechaActual) return
-                                            return event
-                                        }).filter(Boolean).map((event: any) => (event.byweekday.length > 0) && event).filter((event: any) => (event.patient === patientID && event.eventType === 'SESION'))
-
-                                        return (
-                                            <div className='flex flex-col items-center justify-center gap-1' key={specialist._id}>
-                                                <Image
-                                                    src={specialist.lastname}
-                                                    className="rounded-full"
-                                                    alt='logo_login'
-                                                    width={48}
-                                                    height={48}
-                                                    priority
-                                                />
-                                                <p
-                                                    color="blue-gray"
-                                                    className="font-semibold text-clip text-sm text-gray-600"
-                                                >
-                                                    {specialist.name}
-                                                </p>
-
-                                                {eventsBySpecialist.map((event: any) => {
-                                                    return (
-                                                        <div className='flex flex-col items-center hover:bg-[#efefef] p-2 rounded-sm'>
-                                                            <p
-                                                                color="blue-gray"
-                                                                className="font-medium text-clip text-center text-sm text-gray-500 max-w-[120px]"
-                                                            >
-                                                                {event.byweekday.map((day: any) => {
-
-                                                                    const isLast = event.byweekday.findIndex((ele: any) => ele === day) === event.byweekday.length - 1;
-
-                                                                    return (`${weekDays[day]} ${!isLast ? '-' : ''} `)
-                                                                })}
-                                                            </p>
-                                                            <span className='text-xs text-gray-500'>
-                                                                {moment(event.start).format('DD/MM/YYYY')}
-                                                            </span>
-                                                            <span className='text-xs text-gray-500'>
-                                                                {moment(event.end).format('DD/MM/YYYY')}
-                                                            </span>
-
-                                                            <p
-                                                                color="blue-gray"
-                                                                className="font-light text-clip text-sm text-gray-500"
-                                                            >
-
-                                                                ({moment(new Date(event?.start)).format('h:mm a')} - 
-                                                                {moment(new Date(event?.end)).format('h:mm a')})
-                                                            </p>
-                                                        </div>
-                                                    )
-                                                })}
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-
-                            <hr />
+                        <hr />
 
 
-                            <div className='flex flex-col sm:flex-row'>
-                                {(userInfo[0]?.role === 'admin') ? (
-                                    <div className='flex flex-col gap-2 '>
-                                        {/* TODO: editar el evento actual */}
-                                        {/* <div className='flex gap-1 items-center cursor-not-allowed' onClick={() => setEditEvent(false)}>
+                        <div className='flex flex-col sm:flex-row'>
+                            {(userInfo[0]?.role === 'admin') ? (
+                                <div className='flex flex-col gap-2 '>
+                                    {/* TODO: editar el evento actual */}
+                                    {/* <div className='flex gap-1 items-center cursor-not-allowed' onClick={() => setEditEvent(false)}>
                                         <PencilSquareIcon
                                             className="h-6 w-6 text-blue-500"
                                         />
@@ -337,124 +372,123 @@ const EventDetailsModal = ({
                                         </span>
                                     </div> */}
 
-                                        <div className='flex gap-1 mt-4 items-center cursor-pointer' onClick={() => setEditEvent(true)}>
-                                            <PencilSquareIcon
-                                                className="h-4 w-4 text-green-500"
-                                            />
-                                            <span
-                                                className='text-sm font-semibold text-green-600'
-                                            >
-                                                Editar todo el evento
-                                            </span>
-                                        </div>
+                                    <div className='flex gap-1 mt-4 items-center cursor-pointer' onClick={() => setEditEvent(true)}>
+                                        <PencilSquareIcon
+                                            className="h-4 w-4 text-green-500"
+                                        />
+                                        <span
+                                            className='text-sm font-semibold text-green-600'
+                                        >
+                                            Editar todo el evento
+                                        </span>
+                                    </div>
 
-                                        {
-                                            // ? si el evento no tiene reporte para la fecha seleccionada, se habilita el boton de "cancelar este evento"
-                                            eventDetails?.reports?.map((report: any) => new Date(report?.createdAt)?.toLocaleString("es-VE")?.split(',')[0])?.filter((rep: string) => rep === selectedDate?.date).length === 0 && (
-                                                <div
-                                                    className='flex gap-1 items-center cursor-pointer'
-                                                    onClick={() => {
-                                                        setEditEvent(true)
-                                                        setCancelEvent(true)
-                                                    }}>
-                                                    <XMarkIcon
-                                                        className="h-4 w-4 text-orange-500"
-                                                    />
-                                                    <span
-                                                        className='text-sm font-semibold text-orange-600'
-                                                    >
-                                                        Cancelar éste evento
-                                                    </span>
-                                                </div>
-                                            )
-                                        }
-
-                                        {eventDetails?.reports?.map((report: any) => new Date(report?.createdAt)?.toLocaleString("es-VE")?.split(',')[0])?.filter((rep: string) => rep === selectedDate?.date).length === 0 && isRecurrentEvent && (
+                                    {
+                                        // ? si el evento no tiene reporte para la fecha seleccionada, se habilita el boton de "cancelar este evento"
+                                        eventDetails?.reports?.map((report: any) => new Date(report?.createdAt)?.toLocaleString("es-VE")?.split(',')[0])?.filter((rep: string) => rep === selectedDate?.date).length === 0 && (
                                             <div
                                                 className='flex gap-1 items-center cursor-pointer'
-                                                onClick={async () => {
-                                                    try {
-
-                                                        await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events/eventId?eventId`, {
-                                                            method: 'PUT',
-                                                            headers: {
-                                                                "Content-Type": "application/json"
-                                                            },
-                                                            body: JSON.stringify({
-                                                                newEndDate,
-                                                                _id: eventDetails?._id
-                                                            })
-                                                        })
-
-                                                        setOpen(false)
-                                                        await refetchEvents()
-
-                                                    } catch (error) {
-                                                        console.log(error)
-                                                    }
-                                                }}
-                                            >
-                                                <TrashIcon
+                                                onClick={() => {
+                                                    setEditEvent(true)
+                                                    setCancelEvent(true)
+                                                }}>
+                                                <XMarkIcon
                                                     className="h-4 w-4 text-orange-500"
                                                 />
                                                 <span
                                                     className='text-sm font-semibold text-orange-600'
                                                 >
-                                                    Eliminar evento a partir de ésta cita
+                                                    Cancelar éste evento
                                                 </span>
                                             </div>
-                                        )}
+                                        )
+                                    }
 
-                                        {!hasReports && (
-                                            <div
-                                                className='flex gap-1 items-center cursor-pointer'
-                                                onClick={async () => {
-                                                    setOpenModal(true)
-                                                    setDialogMessage('¿Estás seguro de eliminar esta cita?')
+                                    {eventDetails?.reports?.map((report: any) => new Date(report?.createdAt)?.toLocaleString("es-VE")?.split(',')[0])?.filter((rep: string) => rep === selectedDate?.date).length === 0 && isRecurrentEvent && (
+                                        <div
+                                            className='flex gap-1 items-center cursor-pointer'
+                                            onClick={async () => {
+                                                try {
+
+                                                    await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/events/eventId?eventId`, {
+                                                        method: 'PUT',
+                                                        headers: {
+                                                            "Content-Type": "application/json"
+                                                        },
+                                                        body: JSON.stringify({
+                                                            newEndDate,
+                                                            _id: eventDetails?._id
+                                                        })
+                                                    })
+
                                                     setOpen(false)
-                                                }} >
-                                                <TrashIcon
-                                                    className="h-4 w-4 text-red-500"
-                                                />
-                                                <span
-                                                    className='text-[13px] font-semibold text-red-500'
-                                                >
-                                                    Eliminar Cita
-                                                </span>
-                                            </div>
-                                        )}
+                                                    await refetchEvents()
 
-                                    </div>
-                                ) : null}
+                                                } catch (error) {
+                                                    console.log(error)
+                                                }
+                                            }}
+                                        >
+                                            <TrashIcon
+                                                className="h-4 w-4 text-orange-500"
+                                            />
+                                            <span
+                                                className='text-sm font-semibold text-orange-600'
+                                            >
+                                                Eliminar evento a partir de ésta cita
+                                            </span>
+                                        </div>
+                                    )}
+
+                                    {!hasReports && (
+                                        <div
+                                            className='flex gap-1 items-center cursor-pointer'
+                                            onClick={async () => {
+                                                setOpenModal(true)
+                                                setDialogMessage('¿Estás seguro de eliminar esta cita?')
+                                                setOpen(false)
+                                            }} >
+                                            <TrashIcon
+                                                className="h-4 w-4 text-red-500"
+                                            />
+                                            <span
+                                                className='text-[13px] font-semibold text-red-500'
+                                            >
+                                                Eliminar Cita
+                                            </span>
+                                        </div>
+                                    )}
+
+                                </div>
+                            ) : null}
 
 
-                            </div>
-                        </>}
+                        </div>
+                    </>}
 
-                        {/* // ! EDIT THE WHOLE EVENT  */}
-                        {editEvent && !cancelEvent && (
-                            <EditEventModal
-                                eventDetails={eventDetails}
-                                refetchEvents={refetchEvents}
-                                setOpen={setOpen}
-                                setEditEvent={setEditEvent}
-                                userInfo={userInfo}
-                            />
-                        )}
+                    {/* // ! EDIT THE WHOLE EVENT  */}
+                    {editEvent && !cancelEvent && (
+                        <EditEventModal
+                            eventDetails={eventDetails}
+                            refetchEvents={refetchEvents}
+                            setOpen={setOpen}
+                            setEditEvent={setEditEvent}
+                            userInfo={userInfo}
+                        />
+                    )}
 
-                        {/* // ! CANCEL THE EVENT  */}
-                        {cancelEvent && (
-                            <CancelEventReportForm
-                                eventId={selectedDate.eventId}
-                                patient={selectedDate.patient}
-                                dateOfMissingReport={selectedDate.date}
-                                refetchEvents={refetchEvents}
-                                setOpen={setOpen}
-                                setEditEvent={setEditEvent}
-                                setCancelEvent={setCancelEvent}
-                            />
-                        )}
-                    </ScrollArea>
+                    {/* // ! CANCEL THE EVENT  */}
+                    {cancelEvent && (
+                        <CancelEventReportForm
+                            eventId={selectedDate.eventId}
+                            patient={selectedDate.patient}
+                            dateOfMissingReport={selectedDate.date}
+                            refetchEvents={refetchEvents}
+                            setOpen={setOpen}
+                            setEditEvent={setEditEvent}
+                            setCancelEvent={setCancelEvent}
+                        />
+                    )}
 
                 </DialogContent>
 
