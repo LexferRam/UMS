@@ -314,9 +314,9 @@ const EventDetailsModal = ({
                                                 {specialist.name}
                                             </p>
 
-                                            {eventsBySpecialist.map((event: any) => {
+                                            {eventsBySpecialist.map((event: any, i: any) => {
                                                 return (
-                                                    <div className='flex flex-col items-center hover:bg-[#efefef] p-2 rounded-sm'>
+                                                    <div key={i} className='flex flex-col items-center hover:bg-[#efefef] p-2 rounded-sm'>
                                                         <p
                                                             color="blue-gray"
                                                             className="font-medium text-clip text-center text-sm text-gray-500 max-w-[120px]"
