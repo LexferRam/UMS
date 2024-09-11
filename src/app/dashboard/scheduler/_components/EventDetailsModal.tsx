@@ -309,7 +309,7 @@ const EventDetailsModal = ({
                                             />
                                             <p
                                                 color="blue-gray"
-                                                className="font-semibold text-clip text-sm text-gray-600"
+                                                className="font-semibold text-clip text-sm text-center text-gray-600"
                                             >
                                                 {specialist.name}
                                             </p>
@@ -331,7 +331,7 @@ const EventDetailsModal = ({
 
                                                         <p
                                                             color="blue-gray"
-                                                            className="font-light text-clip text-sm text-gray-500"
+                                                            className="font-light text-clip text-center text-sm text-gray-500"
                                                         >
 
                                                             ({moment(new Date(event?.start)).format('h:mm a')} -
