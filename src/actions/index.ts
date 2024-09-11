@@ -366,22 +366,28 @@ export async function getReports() {
 
             return userReports
         } else {
-            const userReports: any = await Report.find({ createdBy: userId })
+            const userReports: any = await Report.find({ hasRecovery: true })
                 .populate({
                     path: 'createdBy',
                     model: User
-                }).
-                populate({
+                })
+                .populate({
                     path: 'associatedEvent',
                     model: Event,
-                    populate: {
-                        path: 'patient',
-                        model: Patient
-                    }
+                    populate: [
+                        {
+                            path: 'patient',
+                            model: Patient
+                        },
+                        {
+                            path: '_asignTo',
+                            model: User
+                        }]
                 }).sort({ createdAt: -1 })
 
+                const reportsByUserId = userReports.filter((report: any) => report?.associatedEvent?._asignTo?._id.toString() === userId)
 
-            return userReports
+            return reportsByUserId
         }
 
     } catch (error) {

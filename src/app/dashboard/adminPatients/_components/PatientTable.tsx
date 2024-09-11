@@ -127,7 +127,6 @@ const PatientTable: FC<{
       title: "Foto",
       field: "canTakePhoto",
       render: rowData => {
-        console.log(rowData)
         return (
           <>{
             rowData.canTakePhoto ? (
