@@ -97,3 +97,9 @@
   --tw-backdrop-blur: '' !important;
   backdrop-filter: '' !important
 }
+
+@media (max-width: 460px){
+  .react-draggable{
+    margin: 0px !important;
+  }
+}

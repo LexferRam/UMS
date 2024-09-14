@@ -256,7 +256,7 @@ const EditEventModal = ({ eventDetails, refetchEvents, setOpen, setEditEvent }: 
 
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="px-4">
             <div className="grid gap-4 py-4 px-[10px]">
 
                 <div className="flex">

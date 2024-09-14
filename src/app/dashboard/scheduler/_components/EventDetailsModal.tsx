@@ -135,6 +135,23 @@ const EventDetailsModal = ({
                 PaperComponent={PaperComponent}
                 aria-labelledby="draggable-dialog-title"
             >
+                <IconButton
+                    aria-label="close"
+                    onClick={() => {
+                        setOpen(false)
+                        setEditEvent(false)
+                        setCancelEvent(false)
+                        setShowMore(false)
+                    }}
+                    sx={(theme) => ({
+                        position: 'absolute',
+                        right: 8,
+                        top: 8,
+                        color: theme.palette.grey[500],
+                    })}
+                >
+                    <CloseIcon />
+                </IconButton>
                 {/* // ! DIALOG HEADER  */}
                 <span style={{ cursor: 'move' }} id="draggable-dialog-title" className='flex flex-row items-center justify-center'>
                     <div className='pt-4'>
@@ -155,28 +172,14 @@ const EventDetailsModal = ({
                                 {moment(eventDetails?.rrule?.until ? eventDetails?.rrule?.until : eventDetails?.end).format('h:mm a')})
                             </div>
                         </span>
-                        <IconButton
-                            aria-label="close"
-                            onClick={() => {
-                                setOpen(false)
-                                setEditEvent(false)
-                                setCancelEvent(false)
-                                setShowMore(false)
-                            }}
-                            sx={(theme) => ({
-                                position: 'absolute',
-                                right: 8,
-                                top: 8,
-                                color: theme.palette.grey[500],
-                            })}
-                        >
-                            <CloseIcon />
-                        </IconButton>
+
                     </div>
 
+
+                </span>
                     {editEvent && (
                         <div
-                            className='flex gap-2 items-center cursor-pointer'
+                            className='flex gap-2 items-center cursor-pointer ml-2'
                             onClick={() => {
                                 setCancelEvent(false)
                                 setEditEvent(false)
@@ -185,18 +188,16 @@ const EventDetailsModal = ({
                                 className="h-6 w-6 text-green-500"
                             />
                             <span
-                                className='text-sm font-semibold text-gray-600'
+                                className='text-sm font-semibold text-gray-600 cursor-pointer'
                             >
                                 Volver
                             </span>
                         </div>
                     )}
-
-                </span>
-                <DialogContent className="sm:min-w-[500px] m-0" >
+                <DialogContent className="sm:min-w-[500px] m-0 px-0" >
 
                     {/* // ! DETAILS OF THE EVENT  */}
-                    {!editEvent && <>
+                    {!editEvent && <div className='px-6'>
 
                         <div className='mb-4 w-[100%] flex'>
                             {canceledReportInSelectedDate?.description?.length && canceledReportInSelectedDate?.isForEventCancel && (
@@ -464,7 +465,7 @@ const EventDetailsModal = ({
 
 
                         </div>
-                    </>}
+                    </div>}
 
                     {/* // ! EDIT THE WHOLE EVENT  */}
                     {editEvent && !cancelEvent && (
