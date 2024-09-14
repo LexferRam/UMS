@@ -164,9 +164,34 @@ export async function DELETE(req: NextRequest) {
 
         let deletedEvent = await Event.findOneAndDelete({ _id: eventId })
 
+        // ? INICIO de LOGICA: para eliminar un paciente asignado al especialista
+        // 1. tomar el id del paciente asignado en la cita eliminada
+        let patientOfTheDeletedEvent = deletedEvent.patient
+        // 2. buscar si el especialista tiene otro evento con éste paciente
+        let userOfTheDeletedEvent: any = await User.find({ _id: deletedEvent?._asignTo }).populate({
+            path: 'events',
+            model: Event,
+        })
+        let userEvents = await userOfTheDeletedEvent.length ? userOfTheDeletedEvent[0]?.events : userOfTheDeletedEvent
+        // recorro todos los eventos y preguntar si algun evento tiene al paciente
+        let eventHasPatientId = await userEvents?.map((userEvent: any) => userEvent?.patient).find((item: any) => item?.toString() === patientOfTheDeletedEvent._id.toString())
+
+        let userAssignPatients = await userOfTheDeletedEvent[0]?.asignedPatients?.map((patient: any) => patient._id?.toString())
+        if(!eventHasPatientId){
+            // 3. si NO tiene otra cita con éste paciente, eliminar ese paciente del especialista
+            console.log('NO hay otro evento con este paciente, ELIMINAR')
+            await User.findByIdAndUpdate(
+                { _id: deletedEvent?._asignTo },
+                {
+                    asignedPatients: userAssignPatients.filter((patient: any) => patient != patientOfTheDeletedEvent._id?.toString())
+                }
+            )
+        }
+        // ? FIN de LOGICA: para eliminar un paciente asignado al especialista
+        
         // delete the event from the user in the property events
         let user = await User.findOne({ _id: deletedEvent._asignTo })
-        user.events = user.events.filter((event: any) => event != eventId)
+        user.events = await user.events.filter((event: any) => event != eventId)
         await user.save()
 
         return NextResponse.json({ msg: 'Cita eliminada exitosamenete' })
