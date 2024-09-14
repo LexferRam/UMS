@@ -566,7 +566,7 @@ const CancelEventReportForm = ({ eventId, patient, dateOfMissingReport, refetchE
 
     return (
         <div>
-            <form onSubmit={handleSubmit(handleClick)}>
+            <form onSubmit={handleSubmit(handleClick)} className='px-6'>
                 <div className="grid gap-4 py-4">
                     <div className="flex flex-col justify-start items-center gap-4">
                         <Textarea
