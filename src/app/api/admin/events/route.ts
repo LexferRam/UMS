@@ -8,6 +8,7 @@ import { authOptions } from "@/util/authOptions"
 import nextAuth, { getServerSession } from "next-auth"
 import { getSession } from "next-auth/react"
 import { NextRequest, NextResponse } from "next/server"
+import moment from "moment";
 
 export const maxDuration = 60;
 
@@ -411,9 +412,20 @@ export async function POST(req: NextRequest) {
         // ? PARA EL USUARIO ADMIN
         let events
         if (selectedUser === '') {
+            const twoWeeksAgo = moment().subtract(1, 'weeks');
+            const fourWeeksFromNow = moment().add(1, 'weeks');
+
+            const startOfTwoWeeksAgo = twoWeeksAgo.startOf('isoWeek').toDate();
+            const endOfFourWeeksFromNow = fourWeeksFromNow.endOf('isoWeek').toDate();
+
             await connectMongoDB()
             events = await Event
-                .find()
+                .find({
+                    $or: [
+                        { end: { $gt: startOfTwoWeeksAgo } },
+                        { end: { $gt: endOfFourWeeksFromNow } }
+                    ]
+                })
                 .populate({
                     path: "patient", model: Patient, populate: {
                         path: 'reports',
