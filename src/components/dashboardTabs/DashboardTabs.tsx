@@ -29,33 +29,9 @@ const DashboardTabs: FC<{
     const tableContainerRef = useRef(null) as any;
 
     function isDateWithinRange(today: any, startDate: any, endDate: any, event: any) {
-        // today = today.setHours(0, 0, 0, 0).toLocaleString("es-VE")
-        // startDate = new Date(startDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
-        // endDate = new Date(endDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
-
-        today = today.getTime()
-
-        startDate = new Date(new Intl.DateTimeFormat('en-US', {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-            hour12: false,
-            timeZone: 'America/Caracas'
-      }).format(new Date(startDate))).getTime()
-
-        endDate = new Date(new Intl.DateTimeFormat('en-US', {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-            hour12: false,
-            timeZone: 'America/Caracas'
-      }).format(new Date(endDate))).getTime()
+        today = today.setHours(0, 0, 0, 0).toLocaleString("es-VE")
+        startDate = new Date(startDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
+        endDate = new Date(endDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
 
         return today >= startDate && today <= endDate;
     }
@@ -74,19 +50,7 @@ const DashboardTabs: FC<{
         let eventsForTodayArray: any[] = []
 
         eventsArray?.map((event: any) => {
-            // const todaydos = new Date();
-            const today = new Date(new Intl.DateTimeFormat('en-US', {
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-                hour12: false,
-                timeZone: 'America/Caracas'
-          }).format(new Date()).split(',')[0])
-          
-          console.log(event)
+            const today = new Date();
 
             if (event.byweekday.length > 0) {
                 event.byweekday.forEach((dayWeek: any) => {
