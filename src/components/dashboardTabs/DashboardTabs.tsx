@@ -58,7 +58,7 @@ const DashboardTabs: FC<{
                 minute: "numeric",
                 second: "numeric",
                 hour12: false,
-                timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, //'America/Caracas'
+                timeZone: 'America/Caracas'
           }).format(new Date()).split(',')[0])
 
             if (event.byweekday.length > 0) {
