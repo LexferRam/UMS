@@ -262,8 +262,6 @@ export async function GET(req: NextRequest, res: any) {
                 })
     
                 // TODO: Se calculan las fechas que deberian tener reportes en los eventos recurrentes
-
-                console.log(userEvent)
     
                 //? Evento SIN reporte y ser recurrente (byweekday > 0) y NO ser recurrente (byweekday = 0)
                 if (!userEvent.reports.length) {

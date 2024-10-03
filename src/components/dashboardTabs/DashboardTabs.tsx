@@ -49,7 +49,18 @@ const DashboardTabs: FC<{
         let eventsForTodayArray: any[] = []
 
         eventsArray?.map((event: any) => {
-            const today = new Date();
+            // const todaydos = new Date();
+            const today = new Date(new Intl.DateTimeFormat('en-US', {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+                hour12: false,
+                timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, //'America/Caracas'
+          }).format(new Date()).split(',')[0])
+
             if (event.byweekday.length > 0) {
                 event.byweekday.forEach((dayWeek: any) => {
                     if (daysWeek[dayWeek] === today.getDay()) {
