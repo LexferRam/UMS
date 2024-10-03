@@ -44,7 +44,7 @@ const DashboardTabs: FC<{
             second: "numeric",
             hour12: false,
             timeZone: 'America/Caracas'
-      }).format(new Date(startDate)).split(',')[0]).setHours(0, 0, 0, 0)
+      }).format(new Date(startDate))).setHours(0, 0, 0, 0)
 
         endDate = new Date(new Intl.DateTimeFormat('en-US', {
             year: "numeric",
@@ -55,7 +55,7 @@ const DashboardTabs: FC<{
             second: "numeric",
             hour12: false,
             timeZone: 'America/Caracas'
-      }).format(new Date(endDate)).split(',')[0]).setHours(0, 0, 0, 0)
+      }).format(new Date(endDate))).setHours(0, 0, 0, 0)
 
         return today >= startDate && today <= endDate;
     }
