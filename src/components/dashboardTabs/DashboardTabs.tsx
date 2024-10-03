@@ -29,9 +29,34 @@ const DashboardTabs: FC<{
     const tableContainerRef = useRef(null) as any;
 
     function isDateWithinRange(today: any, startDate: any, endDate: any, event: any) {
-        today = today.setHours(0, 0, 0, 0).toLocaleString("es-VE")
-        startDate = new Date(startDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
-        endDate = new Date(endDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
+        // today = today.setHours(0, 0, 0, 0).toLocaleString("es-VE")
+        // startDate = new Date(startDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
+        // endDate = new Date(endDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
+
+        today = today.setHours(0, 0, 0, 0)
+
+        startDate = new Date(new Intl.DateTimeFormat('en-US', {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            hour12: false,
+            timeZone: 'America/Caracas'
+      }).format(new Date(startDate)).split(',')[0]).setHours(0, 0, 0, 0)
+
+        endDate = new Date(new Intl.DateTimeFormat('en-US', {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            hour12: false,
+            timeZone: 'America/Caracas'
+      }).format(new Date(endDate)).split(',')[0]).setHours(0, 0, 0, 0)
+
         return today >= startDate && today <= endDate;
     }
 
@@ -60,6 +85,8 @@ const DashboardTabs: FC<{
                 hour12: false,
                 timeZone: 'America/Caracas'
           }).format(new Date()).split(',')[0])
+          
+          console.log(event)
 
             if (event.byweekday.length > 0) {
                 event.byweekday.forEach((dayWeek: any) => {
