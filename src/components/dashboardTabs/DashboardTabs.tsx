@@ -33,7 +33,7 @@ const DashboardTabs: FC<{
         // startDate = new Date(startDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
         // endDate = new Date(endDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
 
-        today = today.setHours(0, 0, 0, 0)
+        today = today.getTime()
 
         startDate = new Date(new Intl.DateTimeFormat('en-US', {
             year: "numeric",
@@ -44,7 +44,7 @@ const DashboardTabs: FC<{
             second: "numeric",
             hour12: false,
             timeZone: 'America/Caracas'
-      }).format(new Date(startDate))).setHours(0, 0, 0, 0)
+      }).format(new Date(startDate))).getTime()
 
         endDate = new Date(new Intl.DateTimeFormat('en-US', {
             year: "numeric",
@@ -55,7 +55,7 @@ const DashboardTabs: FC<{
             second: "numeric",
             hour12: false,
             timeZone: 'America/Caracas'
-      }).format(new Date(endDate))).setHours(0, 0, 0, 0)
+      }).format(new Date(endDate))).getTime()
 
         return today >= startDate && today <= endDate;
     }
