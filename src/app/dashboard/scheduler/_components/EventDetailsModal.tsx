@@ -77,9 +77,9 @@ const EventDetailsModal = ({
     const canceledReportInSelectedDate = eventDetails?.reports?.map((report: any) => {
         return {
             ...report,
-            createdAt: new Date(report?.createdAt)?.toLocaleString("es-VE")?.split(',')[0]
+            createdAt: new Date(report?.createdAt?.split('T')[0]?.replace(/-/g, "/"))?.toISOString()?.split('T')[0]
         }
-    }).filter((report: any) => report.createdAt === selectedDate?.date)[0]
+    }).filter((report: any) => report.createdAt === new Date((selectedDate?.date.split('/')[2] + '-' + selectedDate?.date.split('/')[1] + '-' + selectedDate?.date.split('/')[0])?.replace(/-/g, "/"))?.toISOString()?.split('T')[0])[0]
 
     const deleteEvent = async () => {
         try {

@@ -45,7 +45,19 @@ const eventForToday = (eventsArray: any) => {
     let eventsForTodayArray: any[] = []
 
     eventsArray?.map((event: any) => {
-        const today = new Date();
+        ////**** */
+        const today2 = new Intl.DateTimeFormat('en-US', {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            hour12: true,
+            timeZone: 'America/Caracas'
+        }).format(new Date())
+        const today = new Date(today2)
+        ////**** */
         if (event.byweekday.length > 0) {
             event.byweekday.forEach((dayWeek: any) => {
                 if (daysWeek[dayWeek] === today.getDay()) {
@@ -216,7 +228,20 @@ export async function getEvents() {
         let arrDaysWithOutReports: any = []
         events?.forEach((userEvent: any) => {
 
-            let today: any = new Date()
+            ////**** */
+            const today2 = new Intl.DateTimeFormat('en-US', {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+                second: "numeric",
+                hour12: true,
+                timeZone: 'America/Caracas'
+            }).format(new Date())
+
+            const today = new Date(today2)
+            ////**** */
             let startDate: any = new Date(userEvent.start)
             let endDate: any = new Date(userEvent.end)
 
