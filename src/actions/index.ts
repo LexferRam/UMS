@@ -108,14 +108,25 @@ export async function getEvents() {
             let arrDaysWithOutReports: any = []
             updatedUser[0].events?.forEach((userEvent: any) => {
 
-                let today: any = new Date()
+                ////**** */
+                const today2 = new Intl.DateTimeFormat('en-US', {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    second: "numeric",
+                    hour12: true,
+                    timeZone: 'America/Caracas'
+                }).format(new Date())
+                const today = new Date(today2)
+                ////**** */
                 let startDate: any = new Date(userEvent.start)
                 let endDate: any = new Date(userEvent.end)
 
                 // ? cuando byweekday es > a 0 (eventos recurrentes) ==> calculo de dias que deben tener reportes
                 let arrDatesOfRecurrenceDays = userEvent.byweekday.map((day: any) => {
 
-                    let today: any = new Date()
                     let startDate: any = new Date(userEvent.start)
                     let endDate: any = new Date(userEvent.end)
 
@@ -248,7 +259,6 @@ export async function getEvents() {
             // ? cuando byweekday es > a 0 (eventos recurrentes) ==> calculo de dias que deben tener reportes
             let arrDatesOfRecurrenceDays = userEvent.byweekday.map((day: any) => {
 
-                let today: any = new Date()
                 let startDate: any = new Date(userEvent.start)
                 let endDate: any = new Date(userEvent.end)
 

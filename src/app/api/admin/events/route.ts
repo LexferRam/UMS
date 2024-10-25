@@ -30,8 +30,26 @@ const weekdays = ["mo", "tu", "we", "th", "fr", "sa", "su"];
 
 function isDateWithinRange(today: any, startDate: any, endDate: any, event: any) {
     today = today.setHours(0, 0, 0, 0).toLocaleString("es-VE")
+
+    // const today3 = new Intl.DateTimeFormat('en-US', {
+    //     year: "numeric",
+    //     month: "numeric",
+    //     day: "numeric",
+    //     hour: "numeric",
+    //     minute: "numeric",
+    //     second: "numeric",
+    //     hour12: true,
+    //     timeZone: 'America/Caracas'
+    // }).format(startDate)
+
+    //   const today4 = new Date(today3)
+
+    // console.log(startDate)
+    // console.log(today3)
+    // console.log(today4)
     startDate = new Date(startDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
     endDate = new Date(endDate).setHours(0, 0, 0, 0).toLocaleString("es-VE")
+
     return today >= startDate && today <= endDate;
 }
 
@@ -49,7 +67,21 @@ const eventForToday = (eventsArray: any) => {
     let eventsForTodayArray: any[] = []
 
     eventsArray?.map((event: any) => {
-        const today = new Date();
+
+        ////**** */
+        const today2 = new Intl.DateTimeFormat('en-US', {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+            hour12: true,
+            timeZone: 'America/Caracas'
+        }).format(new Date())
+
+        const today = new Date(today2)
+        ////**** */
         if (event.byweekday.length > 0) {
             event.byweekday.forEach((dayWeek: any) => {
                 if (daysWeek[dayWeek] === today.getDay()) {
@@ -100,14 +132,30 @@ export async function GET(req: NextRequest, res: any) {
                 let arrDaysWithOutReports: any = []
                 updatedUser[0].events?.forEach((userEvent: any) => {
         
-                    let today: any = new Date()
+                    ////**** */
+                    const today2 = new Intl.DateTimeFormat('en-US', {
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        second: "numeric",
+                        hour12: true,
+                        timeZone: 'America/Caracas'
+                    }).format(new Date())
+
+                    const today = new Date(today2)
+                    ////**** */
+
+                    console.log(userEvent.start)
+                    console.log(new Date(userEvent.start))
+
                     let startDate: any = new Date(userEvent.start)
                     let endDate: any = new Date(userEvent.end)
         
                     // ? cuando byweekday es > a 0 (eventos recurrentes) ==> calculo de dias que deben tener reportes
                     let arrDatesOfRecurrenceDays = userEvent.byweekday.map((day: any) => {
         
-                        let today: any = new Date()
                         let startDate: any = new Date(userEvent.start)
                         let endDate: any = new Date(userEvent.end)
         
@@ -220,14 +268,26 @@ export async function GET(req: NextRequest, res: any) {
             let arrDaysWithOutReports: any = []
             events?.forEach((userEvent: any) => {
     
-                let today: any = new Date()
+                ////**** */
+                const today2 = new Intl.DateTimeFormat('en-US', {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    second: "numeric",
+                    hour12: true,
+                    timeZone: 'America/Caracas'
+                }).format(new Date())
+
+                const today = new Date(today2)
+                ////**** */
                 let startDate: any = new Date(userEvent.start)
                 let endDate: any = new Date(userEvent.end)
     
                 // ? cuando byweekday es > a 0 (eventos recurrentes) ==> calculo de dias que deben tener reportes
                 let arrDatesOfRecurrenceDays = userEvent.byweekday.map((day: any) => {
     
-                    let today: any = new Date()
                     let startDate: any = new Date(userEvent.start)
                     let endDate: any = new Date(userEvent.end)
     
