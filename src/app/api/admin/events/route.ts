@@ -147,9 +147,6 @@ export async function GET(req: NextRequest, res: any) {
                     const today = new Date(today2)
                     ////**** */
 
-                    console.log(userEvent.start)
-                    console.log(new Date(userEvent.start))
-
                     let startDate: any = new Date(userEvent.start)
                     let endDate: any = new Date(userEvent.end)
         
@@ -475,15 +472,17 @@ export async function POST(req: NextRequest) {
 
             const startOfTwoWeeksAgo = twoWeeksAgo.startOf('isoWeek').toDate();
             const endOfFourWeeksFromNow = fourWeeksFromNow.endOf('isoWeek').toDate();
+            const startDate = new Date('2024-12-01T00:00:00.000Z');
 
             await connectMongoDB()
             events = await Event
-                .find({
-                    $or: [
-                        { end: { $gt: startOfTwoWeeksAgo } },
-                        { end: { $gt: endOfFourWeeksFromNow } }
-                    ]
-                })
+                .find({ start: { $gt: startDate } })
+                // .find({
+                    // $or: [
+                    //     { end: { $gt: startOfTwoWeeksAgo } },
+                    //     { end: { $gt: endOfFourWeeksFromNow } }
+                    // ]
+                // })
                 .populate({
                     path: "patient", model: Patient, populate: {
                         path: 'reports',

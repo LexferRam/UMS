@@ -12,11 +12,6 @@ import rrulePlugin from '@fullcalendar/rrule'
 import 'tippy.js/dist/tippy.css';
 import { useQuery } from 'react-query'
 import SchedulerSkeleton from '../_components/SchedulerSkeleton'
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import { getHoursBetweenToTimes } from '@/util/hours'
@@ -25,9 +20,9 @@ import { LoadingContext } from '@/context/LoadingProvider'
 import { useSnackbar } from 'notistack'
 
 import dynamic from 'next/dynamic'
-import { Autocomplete, IconButton, TextField } from '@mui/material'
+import { Autocomplete, TextField } from '@mui/material'
 import Image from 'next/image'
-import { SPECIALITIES_VALUES_DICTIONARY, specilities } from '../../adminUsers/constants'
+import { SPECIALITIES_VALUES_DICTIONARY } from '../../adminUsers/constants'
 import dayjs from 'dayjs'
 const EventDetailsModal = dynamic(() => import('../_components/EventDetailsModal'))
 const AddEventModal = dynamic(() => import('../_components/AddEventModal'))
@@ -233,7 +228,6 @@ const SchedulerPage = ({ userInfo, events }: any) => {
     }
   }
 
-  // if (isLoadingSchedulerEvents || isLoadingDateUser) return <SchedulerSkeleton />
   if (error) return 'Error cargando'
 
   const options = dataUser.map((option: any) => {
@@ -256,23 +250,6 @@ const SchedulerPage = ({ userInfo, events }: any) => {
 
       {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
         <div className='flex flex-col m-1 sm:flex-row gap-6 mb-6'>
-
-          {/* <div>
-              <select
-                className='sm:w-[250px]'
-                onChange={(e) => {
-                  const foundItem: any = dataUser.filter((item: any) => item?.name === e.target.value)
-                  foundItem.length ? setSelectedUser(foundItem[0]._id) : setSelectedUser('')
-                }}
-              >
-                <option key={''}>Todas las citas</option>
-                {dataUser.map((user: any) => {
-                  return (
-                    <option key={user._id}>{user.name}</option>
-                  )
-                })}
-              </select>
-            </div> */}
 
           <div className='flex items-center flex-wrap gap-4 md:gap-4'>
 
@@ -309,15 +286,6 @@ const SchedulerPage = ({ userInfo, events }: any) => {
                 );
               }}
             />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={['DatePicker']}>
-                <DatePicker
-                  defaultValue={dayjs(new Date())}
-                  views={['year', 'month', 'day']}
-                  className='w-full mb-4 md:mb-0'
-                />
-              </DemoContainer>
-            </LocalizationProvider>
           </div>
 
           <AddEventModal
