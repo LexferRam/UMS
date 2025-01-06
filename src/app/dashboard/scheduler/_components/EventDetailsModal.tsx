@@ -165,10 +165,12 @@ const EventDetailsModal = ({
                             >
                                 {eventDetails?.eventType}
                             </span>
-                            <hr className='w-full' />
+                            <hr className='w-full my-1' />
                             <div className='font-medium text-clip text-center text-sm text-gray-500'>
                                 {selectedDate?.date}
-                                ({moment(eventDetails?.rrule?.dtstart ? eventDetails?.rrule?.dtstart : eventDetails?.start).format('h:mm a')} -
+                                {"  "}
+                                ({moment(eventDetails?.rrule?.dtstart ? eventDetails?.rrule?.dtstart : eventDetails?.start).format('h:mm a')} 
+                                {" - "}
                                 {moment(eventDetails?.rrule?.until ? eventDetails?.rrule?.until : eventDetails?.end).format('h:mm a')})
                             </div>
                         </span>
@@ -339,12 +341,14 @@ const EventDetailsModal = ({
                                                             {moment(new Date(event?.end)).format('h:mm a')})
                                                         </p>
 
-                                                        <span className='text-xs text-gray-500'>
+                                                        {/* TODO: AQUI COLOCAR LA FECHA DE LA ENNTREVISTA - EVAL  */}
+
+                                                        {/* <span className='text-xs text-gray-500'>
                                                             ({moment(event.start).format('DD/MM/YYYY')}
                                                         </span>
                                                         <span className='text-xs text-gray-500'>
                                                             {moment(event.end).format('DD/MM/YYYY')})
-                                                        </span>
+                                                        </span> */}
 
                                                     </div>
                                                 )
