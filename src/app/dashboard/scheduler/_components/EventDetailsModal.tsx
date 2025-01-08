@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
     DialogFooter,
     DialogHeader,
@@ -22,6 +22,8 @@ import { Alert, Dialog, DialogContent, DialogProps, IconButton, Paper, PaperProp
 import { weekDays } from '@/util/weekDays';
 import Draggable from 'react-draggable';
 import CloseIcon from '@mui/icons-material/Close';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 moment.locale('es');
 
 interface IEventDetailsModal {
@@ -29,7 +31,8 @@ interface IEventDetailsModal {
     setOpen: (open: boolean) => void
     eventDetails: any,
     refetchEvents: any,
-    selectedDate: any
+    selectedDate: any,
+    isPatientActive: any
 }
 
 function PaperComponent(props: PaperProps) {
@@ -48,13 +51,16 @@ const EventDetailsModal = ({
     setOpen,
     eventDetails,
     refetchEvents,
-    selectedDate
+    selectedDate,
+    isPatientActive
 }: IEventDetailsModal) => {
 
     const router = useRouter()
     const [editEvent, setEditEvent] = useState(false)
     const [cancelEvent, setCancelEvent] = useState(false)
     const [scroll, setScroll] = useState<DialogProps['scroll']>('paper');
+    const [activePatient, setActivePatient] = useState(isPatientActive)
+
     const [userInfo] = useUserInfo()
     let patientID = selectedDate?.patient?._id
 
@@ -119,6 +125,69 @@ const EventDetailsModal = ({
             })
         }
     }
+
+    const updatePatientStatus = async (data: any) => {
+        try {
+            setLoading(true)
+            let respPatients = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/admin/patient/${data._id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: data._id,
+                    isActive: data.isActive
+                })
+            })
+
+            if (respPatients.ok) {
+                let patientResp = await respPatients.json()
+                console.log(patientResp)
+                await refetchEvents()
+                // setOpen(false)
+                setLoading(false)
+                enqueueSnackbar(`Paciente ${data.isActive ? 'activado' : 'desactivado'} exitosamente!`, {
+                    variant: 'success',
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'right',
+                    },
+                    autoHideDuration: 5000,
+                    key: 'error-delete-event'
+                })
+                return
+            } else {
+                setLoading(false)
+                enqueueSnackbar('No autorizado', {
+                    variant: 'error',
+                    anchorOrigin: {
+                        vertical: 'top',
+                        horizontal: 'right',
+                    },
+                    autoHideDuration: 5000,
+                    key: 'error-delete-event'
+                })
+            }
+        } catch (error) {
+            console.log(error)
+            setLoading(false)
+            enqueueSnackbar('Error actualizando paciente', {
+                variant: 'error',
+                anchorOrigin: {
+                    vertical: 'top',
+                    horizontal: 'right',
+                },
+                autoHideDuration: 5000,
+                key: 'error-delete-event'
+            })
+        }
+
+    }
+    
+    useEffect(() => {
+        setActivePatient(isPatientActive)
+    }, [isPatientActive])
+    
 
     return (
         <>
@@ -230,6 +299,29 @@ const EventDetailsModal = ({
                                     />
                                 </Tooltip>
                             )}
+
+                            {(activePatient && userInfo[0]?.role === 'admin') ? (
+                                <Tooltip title="Paciente activado">
+                                    <StarIcon
+                                        onClick={() => {
+                                            setActivePatient(false)
+                                            updatePatientStatus({ _id: eventDetails?.patient?._id, isActive: false })
+                                        }}
+                                        className="h-5 w-5 mx-2 text-yellow-500"
+                                    />
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Paciente desactivado">
+                                    <StarBorderIcon
+                                        onClick={() =>{
+                                             setActivePatient(true)
+                                             updatePatientStatus({ _id: eventDetails?.patient?._id, isActive: true })
+                                        }}
+                                        className="h-5 w-5 mx-2"
+                                    />
+                                </Tooltip>
+                            )}
+
                             <p
                                 className='font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer'
                                 onClick={() => {

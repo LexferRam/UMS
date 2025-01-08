@@ -22,6 +22,7 @@ const patientSchema = new Schema({
         required: false
     },
     reports : [{ type: Schema.Types.ObjectId, ref: 'Report' }],
+    // isActive ==> indicates that is actives for all the specialists and the therapeutic center
     isActive: {
         type: Boolean,
         default: true

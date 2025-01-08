@@ -1,7 +1,7 @@
 'use client'
 
 import moment from 'moment'
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import esLocale from '@fullcalendar/core/locales/es';
@@ -18,6 +18,7 @@ import { getHoursBetweenToTimes } from '@/util/hours'
 import { EVENTS_TYPE_COLORS } from '@/util/eventsType'
 import { LoadingContext } from '@/context/LoadingProvider'
 import { useSnackbar } from 'notistack'
+import StarIcon from '@mui/icons-material/Star';
 
 import dynamic from 'next/dynamic'
 import { Autocomplete, TextField } from '@mui/material'
@@ -35,6 +36,7 @@ const SchedulerPage = ({ userInfo, events }: any) => {
 
   const calendarRef: any = useRef(null)
   const [open, setOpen] = useState(false)
+  const [isPatientActive, setisPatientActive] = useState<boolean>()
   const [selectSearchOpt, setSelectSearchOpt] = useState({ name: 'Todas las citas', speciality: 'Todas las citas' })
   const [openDetails, setOpenDetails] = useState(false)
   const [selectedUser, setSelectedUser] = useState('')
@@ -246,6 +248,7 @@ const SchedulerPage = ({ userInfo, events }: any) => {
         eventDetails={currentEvent}
         selectedDate={selectedDate}
         refetchEvents={refetchEvents}
+        isPatientActive={isPatientActive}
       />
 
       {userInfo?.length > 0 && userInfo[0].role === 'admin' ? (
@@ -327,6 +330,7 @@ const SchedulerPage = ({ userInfo, events }: any) => {
             date: info.event._instance?.range.start.toLocaleString("es-VE").split(',')[0],
             patient: info.event._def.extendedProps.patient
           })
+          setisPatientActive(info.event._def.extendedProps.patient.isActive)
 
           setCurrentEvent(selectedEvent[0])
           setOpenDetails(true)
@@ -357,6 +361,7 @@ const SchedulerPage = ({ userInfo, events }: any) => {
 
           let eventType = event._def.extendedProps.eventType;
           let asingColor = event._def.extendedProps._asignTo.asignColor
+          let isPatientActive = event._def.extendedProps.patient.isActive
           let bgColor = EVENTS_TYPE_COLORS[eventType]
 
           return (
@@ -378,8 +383,20 @@ const SchedulerPage = ({ userInfo, events }: any) => {
                 borderRadius: '5px'
               }}
             >
-              <p>{eventInfo.timeText}</p>
-              <p>{event._def.title}</p>
+              {/* <p>
+                {eventInfo.timeText}
+              </p> */}
+              <p className='flex items-center gap-1'>
+                {(userInfo[0].role === 'admin' ? (
+                  <span className=''>
+                    {isPatientActive ? <StarIcon className='text-xs' /> : null}
+                  </span>
+                ) : null)}
+                <span className='mt-1'>
+                  {event._def.title}
+                </span>
+              </p>
+
             </div>
           );
         }}
