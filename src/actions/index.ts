@@ -483,8 +483,7 @@ export async function getEventsForScheduler() {
     // ? PARA EL USUARIO ESPECIALISTA
     if (userRole !== 'admin') {
         await connectMongoDB()
-        let updatedUser:any 
-        await User
+        let updatedUser = await User
             .find({ email: session?.user.email })
             .populate({
                 path: "events",
@@ -503,13 +502,6 @@ export async function getEventsForScheduler() {
                         model: Report
                     }
                 ]
-            })
-            .then((users) => {
-                // Filter events within the user object
-                users.forEach((user) => {
-                    user.events = user.events.filter((event: any) => event.start.getFullYear() > (startDate.getFullYear()+1));
-                });
-                updatedUser= users;
             })
 
         let patientsIds = updatedUser[0].events.map((event: any) => ({ patientId: event.patient._id.toString(), eventId: event._id.toString() }))
