@@ -545,7 +545,7 @@ export async function getEventsForScheduler() {
 
     const startOfTwoWeeksAgo = twoWeeksAgo.startOf('isoWeek').toDate();
     const endOfFourWeeksFromNow = fourWeeksFromNow.endOf('isoWeek').toDate();
-    const startDate = new Date('2024-12-01T00:00:00.000Z');
+    const startDate = new Date('2025-01-01T00:00:00.000Z');
 
     let events
     await connectMongoDB()
