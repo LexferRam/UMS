@@ -434,7 +434,7 @@ export async function POST(req: NextRequest) {
                 .then((users) => {
                     // Filter events within the user object
                     users.forEach((user) => {
-                        user.events = user.events.filter((event: any) => event.start.getFullYear() > startDate.getFullYear());
+                        user.events = user.events.filter((event: any) => event.start.getFullYear() > (startDate.getFullYear()+1));
                     });
                     updatedUser= users;
                 })
