@@ -1,7 +1,23 @@
 {
     "functions": {
-        "pages/api/**/*.ts": {
-            "maxDuration": 60
-        }
+        "api/*.js": {
+            "maxDuration": 60 
+          },
+          "src/app/api/admin/events/*.ts": {
+            "maxDuration": 60 
+          },
+          "src/app/api/admin/patient/*.ts": {
+            "maxDuration": 60 
+          },
+          "src/app/api/admin/reports/*.ts": {
+            "maxDuration": 60 
+          },
+          "src/app/api/admin/user/*.ts": {
+            "maxDuration": 60 
+          },
+          "src/app/api/admin/specialistByPatient/*.ts": {
+            "maxDuration": 60 
+          }
+          
     }
 }
