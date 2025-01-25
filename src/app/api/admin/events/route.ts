@@ -1,4 +1,4 @@
-
+export const maxDuration = 60;
 import { connectMongoDB } from "@/db/mongodb"
 import Event from "@/models/event"
 import Patient from "@/models/patient"
@@ -9,8 +9,6 @@ import nextAuth, { getServerSession } from "next-auth"
 import { getSession } from "next-auth/react"
 import { NextRequest, NextResponse } from "next/server"
 import moment from "moment";
-
-export const maxDuration = 60;
 
 function calculateMondays(startDate: any, today: any, dayWeek: number) {
     let mondays: any = [];

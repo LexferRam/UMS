@@ -1,3 +1,4 @@
+export const maxDuration = 60;
 import { connectMongoDB } from "@/db/mongodb"
 import User from "@/models/user"
 import { NextApiRequest, NextApiResponse } from "next"

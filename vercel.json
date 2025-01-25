@@ -1,12 +1,24 @@
 {
     "functions": {
+          "app/api/**/*.ts": {
+            "maxDuration": 60
+          },
           "src/app/api/admin/events/*.ts": {
             "maxDuration": 60 
-          },
+          }, 
+          "src/app/api/admin/events/[eventId]/*.ts": {
+            "maxDuration": 60 
+          }, 
           "src/app/api/admin/patient/*.ts": {
             "maxDuration": 60 
           },
+          "src/app/api/admin/patient/[patientId]/*.ts": {
+            "maxDuration": 60 
+          },
           "src/app/api/admin/reports/*.ts": {
+            "maxDuration": 60 
+          },
+          "src/app/api/admin/reports/[reportId]/*.ts": {
             "maxDuration": 60 
           },
           "src/app/api/admin/user/*.ts": {

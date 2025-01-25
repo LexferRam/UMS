@@ -1,3 +1,4 @@
+export const maxDuration = 60;
 import { NextRequest, NextResponse } from "next/server"
 import { connectMongoDB } from "@/db/mongodb"
 import Patient from "@/models/patient"

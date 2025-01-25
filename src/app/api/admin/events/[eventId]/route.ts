@@ -1,4 +1,4 @@
-
+export const maxDuration = 60;
 import mongoose from "mongoose"
 import { connectMongoDB } from "@/db/mongodb"
 import Event from "@/models/event"
