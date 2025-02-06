@@ -26,9 +26,11 @@ export const authOptions: NextAuthOptions = {
 
                 try {
                     await connectMongoDB()
-                    const userExists = await User.find({ email })
+                    const userExists: any = await User.find({ email })
 
-                    // if(!userExists?.isActive || !userExists) return
+                    if(!userExists?.isActive) {
+                        return null
+                    }
 
                      if (!userExists.length) {
                          const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/api/user`, {
