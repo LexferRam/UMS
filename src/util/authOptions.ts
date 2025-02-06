@@ -22,13 +22,15 @@ export const authOptions: NextAuthOptions = {
         async signIn({ user, account }: any) {
 
             if (account?.provider === 'google') {
-                const { name, email, image } = user;
+                const { name, email, image, isActive } = user;
 
                 try {
                     await connectMongoDB()
                     const userExists: any = await User.find({ email })
 
-                    if(!userExists?.isActive) {
+                    console.log(userExists)
+
+                    if(!userExists[0]?.isActive) {
                         return null
                     }
 
